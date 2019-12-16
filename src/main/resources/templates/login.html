@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.w3.org/1999/xhtml">
-<html lang="en">
+<html lang="zh_CN">
 <head>
     <meta charset="utf-8">
-    <title>Cubic - One Page Responsive HTML 5 Website Template</title>
+    <title>Scientific Research File Management System</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Responsive Minimal Bootstrap Theme">
     <meta name="keywords" content="onepage,responsive,minimal,bootstrap,theme">
@@ -21,6 +21,7 @@
     <link rel="stylesheet" href="../static/css/jpreloader.css" type="text/css">  
     <link rel="stylesheet" href="../static/css/owl.carousel.css" type="text/css">   
     <link rel="stylesheet" href="../static/css/style.css" type="text/css">
+     <link rel="stylesheet" href="../static/css/login.css" type="text/css">
 
     <!-- custom style css -->
     <link rel="stylesheet" href="../static/css/custom-style.css" type="text/css">
@@ -40,9 +41,6 @@
             This is custom text rotator on loading screen!
         </section>
         <section>
-            Insert your custom message here.
-        </section>
-        <section>
             Make your customers smile.
         </section>
     </div>
@@ -59,62 +57,34 @@
 
             <!-- section begin -->
             <section id="section-welcome" class="full-height dark" data-speed="3" data-type="background">
-                <div class="center-y text-center">
+                <div class="center-y text-center"   id="welcome1">
                    Scientific Research File Management System
                 <div class="spacer-single"></div>
                     <div class="text-slider border-deco">
                         <div class="text-item">Welcome To <span class="id-color">SRFM</span></div>
                         <div class="text-item">Thesis + <span class="id-color">Software Copyright</span></div>
-                        <div class="text-item">Clean &amp; <span class="id-color">Fresh</span></div>
                         <div class="text-item"><span class="id-color"><i class="icon-bike"></i></span>Ready to Go?</div>
                     </div>
                     <div class="spacer-single"></div>
-                    <button  class="btn btn-border btn-big"  data-toggle="modal" data-target="#myModal">Login</button>
+                    <button  class="btn btn-border btn-big" onclick="login1()">Go To Login</button>
                 </div>
     
-<div class="signinpanel">
-            <form method="post"  th:action="@{/login}"  id="frm"  class="text-center">
-                <h3 style="text-align: center"> 科研档案管理系统</h3>
-                <input type="text" class="form-control uname" name="userid" id="userid" placeholder="用户ID" />
+<div class="signinpanel" style="display: none;" id="login1">
+    <div class="row">
+        <div class="col-sm-12 ">
+            <form method="post"  th:action="@{/login}"  id="frm">
+                <h1 style="text-align: center"> 教 参 管 理 系 统</h1>
+                <input type="text" class="form-control uname" name="userid" id="userId" placeholder="用户ID" />
                 <input type="password" class="form-control pword m-b" name="passwd" id="password"  placeholder="密码" />
-            <!--
-                <div style="display: flex;justify-content: space-around">
-                <input type="radio" name="role" value="0" checked/>老师<br/>
-                <input type="radio" name="role" value="1" />学生<br/>
-                <input type="radio" name="role" value="2" />图书管理员<br/>
-                </div>
-                -->
-                <button class="btn btn-success btn-block">登录</button>
-            </form>
+                <button class="btn btn-warning btn-block" type="submit">登 录</button>
+            </form>        
+        </div>
+    </div>
 </div>
 
-
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title" id="myModalLabel">科研档案管理系统</h4>
-            </div>
-            <div class="modal-body">
-  <input type="text" class="form-control uname" name="userid" id="userid" placeholder="用户ID" />
-                <input type="password" class="form-control pword m-b" name="passwd" id="password"  placeholder="密码" />
-
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                <button type="button" class="btn btn-primary">登录</button>
-            </div>
-        </div><!-- /.modal-content -->
-    </div><!-- /.modal -->
-</div>
 
             </section>
             <!-- section close -->
-
-
-
-
 
 
             <!-- footer begin -->
@@ -147,7 +117,37 @@
     <script src="../static/js/jquery.ui.totop.js"></script>  
     <script src="../static/js/owl.carousel.js"></script>
     <script src="../static/js/designesia.js"></script>
-    <!-- SLIDER REVOLUTION SCRIPTS  -->
+    <script src="../static/js/plugins/validate/jquery.validate.min.js"   ></script>
+<script src="../static/js/plugins/validate/messages_zh.min.js" ></script>
+  <script type="text/javascript">
+     $(document).ready(function() {
+        // 在键盘按下并释放及提交后验证提交表单
+        $("#frm").validate({
+            rules: {
+                passwd: {
+                    required: true,
+                    minlength: 5
+                }
+            },
+            messages: {
+                passwd: {
+                    required: "请输入密码",
+                    minlength: "密码长度不能小于6个字符"
+                }
+            },
+            submitHandler:function(form){
+                form.submit();
+            }
+        });
+    });
+
+      function login1(){
+         $("#welcome1").hide();
+         $("#login1").show();
+
+      }
+
+  </script>
    
 
 </body>
