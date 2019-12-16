@@ -10,6 +10,7 @@ public class Test {
     @RequestMapping("/")
 
     public @ResponseBody String index(){
+
         return "/register";
     }
 }
