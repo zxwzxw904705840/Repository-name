@@ -6,6 +6,7 @@ import javax.persistence.*;
 import java.util.Date;
 
 @Entity
+@Table(name = "book", schema = "root", catalog = "")
 public class BookEntity {
     private String bookId;
     private String bookName;
