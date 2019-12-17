@@ -35,7 +35,7 @@ public interface SearchService {
     Result<ArrayList<BookEntity>> findAllBookByNameLike(String name,UserEntity userEntity);
     Result<BookEntity> findBookById(String id,UserEntity userEntity);
     Result<ArrayList<BookEntity>> findAllBookByPublishStatus(Const.BookPublishStatus publishStatus, UserEntity userEntity);
-    Result<ArrayList<BookEntity>> findAllBookByCreativeNature(Const.CreativeNature creativeNature,UserEntity userEntity);
+    Result<ArrayList<BookEntity>> findAllBookByCreativeNature(Const.BookCreativeNature creativeNature,UserEntity userEntity);
     Result<ArrayList<BookEntity>> findAllBookByBookStatus(Const.BookStatus bookStatus,UserEntity userEntity);
     Result<ArrayList<BookEntity>> findAllBookByAuthorNo(String authorNo,UserEntity userEntity);//用于查询自己的著作
     //endregion
