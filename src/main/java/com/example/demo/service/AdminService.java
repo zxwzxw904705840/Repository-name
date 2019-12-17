@@ -11,18 +11,21 @@ public interface AdminService {
     Result addUser(UserEntity userEntity,UserEntity admin);
     Result updateUserInformation(UserEntity userEntity,UserEntity admin);
     Result deleteUser(UserEntity userEntity,UserEntity admin);
+    Result reviewUser(UserEntity userEntity,boolean pass,UserEntity admin);
     //endregion
 
     //region 论文管理
     Result addThesis(ThesisEntity thesisEntity, UserEntity admin);
     Result updateThesis(ThesisEntity thesisEntity, UserEntity admin);
     Result deleteThesis(ThesisEntity thesisEntity, UserEntity admin);
+    Result thesisUser(ThesisEntity thesisEntity,boolean pass,UserEntity admin);
     //endregion
 
     //region 著作管理
     Result addBook(BookEntity bookEntity, UserEntity admin);
     Result updateBook(BookEntity bookEntity, UserEntity admin);
     Result deleteBook(BookEntity bookEntity, UserEntity admin);
+    Result bookUser(BookEntity bookEntity,boolean pass,UserEntity admin);
     //endregion
 
     //region 我的项目操作
