@@ -28,6 +28,7 @@ public class ProjectEntity {
     private Const.ProjectSourceType projectSourceType;
     private Const.ProjectResearchType projectResearchType;
     private Set<UserEntity>members;
+    private Set<ThesisEntity>thesis;
 
     public ProjectEntity(){
         this.projectId=MD5.getMD5(String.valueOf(new Date().getTime()));
@@ -187,5 +188,15 @@ public class ProjectEntity {
 
     public void setMembers(Set<UserEntity> members) {
         this.members = members;
+    }
+
+    @ManyToMany
+    @JoinTable(name="r_project_thesis",joinColumns={@JoinColumn(name="projectId")},inverseJoinColumns={@JoinColumn(name="thesisId")})
+    public Set<ThesisEntity> getThesis() {
+        return thesis;
+    }
+
+    public void setThesis(Set<ThesisEntity> thesis) {
+        this.thesis = thesis;
     }
 }
