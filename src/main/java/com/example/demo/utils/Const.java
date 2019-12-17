@@ -40,5 +40,7 @@ public final class Const {
     public enum BookStatus{ //著作状态
         NORMAL,REVIEWING,DELETED
     }
-
+    public enum FileStatus{ //著作状态
+        NORMAL,DELETED
+    }
 }
