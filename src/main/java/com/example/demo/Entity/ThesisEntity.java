@@ -105,6 +105,7 @@ public class ThesisEntity {
         this.pages = pages;
     }
 
+    @Enumerated(EnumType.ORDINAL)
     @Column(name = "privacy")
     public Const.ThesisPrivacy getPrivacy() {
         return privacy;
@@ -114,6 +115,7 @@ public class ThesisEntity {
         this.privacy = privacy;
     }
 
+    @Enumerated(EnumType.ORDINAL)
     @Column(name = "status")
     public Const.ThesisStatus getStatus() {
         return status;
