@@ -1,6 +1,9 @@
 .signinpanel {
-    width: 100px;
+    width: 300px;
     margin: 10% auto 0 auto;
+}
+.signinpanel h1{
+    font-weight: 200;
 }
 
 .signinpanel .logopanel {
@@ -49,7 +52,6 @@
     padding: 30px;
 }
 
-.signup-footer{border-top: solid 1px rgba(255,255,255,.3);margin:20px 0;padding-top: 15px;}
 
 @media screen and (max-width: 768px) {
     .signinpanel,
