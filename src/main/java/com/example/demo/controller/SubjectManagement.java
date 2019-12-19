@@ -99,46 +99,7 @@ public class SubjectManagement {
         return result.toString();
     }
 
-    /**
-     * 模态框 修改研究人员名称
-     * @param projectId
-     * @param userName
-     * @return
-     *
-     * 输出：成功/失败
-     */
-    @ResponseBody
-    @RequestMapping("/SetUserName")
-    public String SetUserName(String projectId,String userName) {
-        System.out.println("SetUserName");
 
-        System.out.println(projectId+":::"+userName);
-
-
-        JSONObject result=new JSONObject();
-        result.put("message","success");
-        return result.toString();
-    }
-    /**
-     * 模态框 修改研究人员所属学院
-     * @param projectId
-     * @param instituteId
-     * @return
-     *
-     * 输出：成功/失败
-     */
-    @ResponseBody
-    @RequestMapping("/SetInstituteId")
-    public String SetInstituteId(String projectId,String instituteId) {
-        System.out.println("SetInstituteId");
-
-        System.out.println(projectId+":::"+instituteId);
-
-
-        JSONObject result=new JSONObject();
-        result.put("message","success");
-        return result.toString();
-    }
 
     /**
      * 模态框 修改项目名称
@@ -274,9 +235,9 @@ public class SubjectManagement {
      * 输出：成功/失败
      */
     @ResponseBody
-    @RequestMapping("/SetProjectLevel")
-    public String SetProjectLevel(String projectId, Date projectEstablishDate) {
-        System.out.println("SetProjectLevel");
+    @RequestMapping("/projectEstablishDate")
+    public String projectEstablishDate(String projectId, Date projectEstablishDate) {
+        System.out.println("projectEstablishDate");
 
         System.out.println(projectId+":::"+projectEstablishDate);
 
@@ -359,9 +320,9 @@ public class SubjectManagement {
      * 输出：成功/失败
      */
     @ResponseBody
-    @RequestMapping("/projectFinishDate")
+    @RequestMapping("/projectFund")
     public String projectLauchDate(String projectId, Integer projectFund) {
-        System.out.println("projectFinishDate");
+        System.out.println("projectFund");
 
         System.out.println(projectId+":::"+projectFund);
 
@@ -405,7 +366,7 @@ public class SubjectManagement {
     @ResponseBody
     @RequestMapping("/projectResearchType")
     public String projectResearchType(String projectId,@RequestParam(value="projectResearchType") Const.ProjectResearchType projectResearchType) {
-        System.out.println("projectSourceType");
+        System.out.println("projectResearchType");
 
         System.out.println(projectId+":::"+projectResearchType);
 

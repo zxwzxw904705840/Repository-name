@@ -1,0 +1,335 @@
+
+body {
+    background-color: #f3f3f3;
+}
+
+input {
+    padding-left: 10px;
+}
+
+label {
+    display: none;
+}
+
+.table > tbody > tr > td {
+
+    text-align: center;
+}
+
+.bootstrap-table .table thead > tr > th {
+    text-align: center;
+}
+
+.table thead {
+    background: #ebeaea;
+}
+
+button:after {
+    border: none;
+}
+
+button {
+    background: none;
+}
+
+.searchBtn {
+    float: right;
+    height: 30px;
+    border-radius: 0px;
+    position: relative;
+    margin-left: -1px;
+    border: 1px solid grey;
+}
+
+.searchInput {
+    width: 200px;
+    float: right;
+    border: 1px solid grey;
+}
+
+.margin20 {
+    margin-right: 20px !important;
+}
+
+.margin10 {
+    margin-right: 10px !important;
+}
+
+.margin5 {
+    margin-right: 5px !important;
+}
+
+.btn_purple {
+    color: black !important;
+    border-color: grey;
+}
+
+.floatR {
+    float: right;
+}
+
+
+.container-row {
+    margin: 0 auto;
+    background-color: #fff;
+
+}
+
+.left_md2 {
+
+    background-color: #1c2229;
+
+}
+
+.right_md10 {
+    float: right;
+    padding: 30px 35px;
+    line-height: 28px;
+    font-size: 14px;
+    color: #666;
+    background: #fff;
+}
+
+.row_title {
+    font-size: 12px;
+    color: #999;
+}
+
+.row_title_column {
+    border-bottom: 1px solid #ccc
+}
+
+.row_title_strong {
+    position: relative;
+    left: -15px;
+    bottom: -2px;
+    color: #333;
+    font-size: 20px;
+    font-weight: 400;
+    border-bottom: 2px solid #169ed8;
+    padding-bottom: 15px;
+    display: inline-block;
+    margin-right: 20px;
+}
+
+.row_btn_column {
+    padding: 15px 0;
+}
+
+.user_statusSelect {
+    height: 32px;
+    float: right;
+    margin-right: 10px;
+    border-color: grey;
+    color: grey;
+
+}
+
+.btn_blue {
+    color: cornflowerblue;
+}
+
+.btn_orange {
+    color: orange;
+}
+
+.labelnone {
+    display: none;
+}
+
+
+* {
+    margin: 0;
+    padding: 0
+}
+
+body {
+    height: 400px;
+    font: 14px "微软雅黑", "FontAwesome", "Arial Narrow", HELVETICA;
+    -webkit-text-size-adjust: 100%;
+}
+
+li {
+    list-style: none
+}
+
+a {
+    text-decoration: none;
+}
+
+/* navMenu */
+.navMenubox {
+
+    height: 700px;
+    background: #1c2229;
+    overflow: hidden;
+}
+
+.navMenu-top {
+    padding: 38px 0 15px 15px;
+    font-size: 20px;
+    color: #fff;
+    border-bottom: 1px solid rgba(255, 255, 255, .1)
+}
+
+.navMenu > li {
+    display: block;
+    margin: 0;
+    padding: 0;
+    border: 0px;
+}
+
+.navMenu > li > a {
+    display: block;
+    overflow: hidden;
+    padding-left: 0px;
+    line-height: 40px;
+    color: #ABB1B7;
+    transition: all .3s;
+    position: relative;
+    text-decoration: none;
+    font-size: 14px;
+    border-top: 1px solid #222932;
+    border-bottom: 2px solid #191e24;
+}
+
+.navMenu > li:nth-of-type(1) > a {
+    border-top: 1px solid transparent;
+}
+
+.navMenu > li:last-child > a {
+    border-bottom: 1px solid transparent;
+}
+
+.navMenu > li > a > i {
+    font-size: 20px;
+    float: left;
+    font-style: normal;
+    margin: 0 5px;
+}
+
+.navMenu li a .arrow:before {
+    display: block;
+    float: right;
+    margin-top: 1px;
+    margin-right: 15px;
+    display: inline;
+    font-size: 13px;
+    font-family: FontAwesome;
+    height: auto;
+    content: "\f105";
+    font-weight: 300;
+    text-shadow: none;
+}
+
+.navMenu li a .arrow.open:before {
+    float: right;
+    margin-top: 1px;
+    margin-right: 15px;
+    display: inline;
+    font-family: FontAwesome;
+    height: auto;
+    font-size: 13px;
+    content: "\f107";
+    font-weight: 300;
+    text-shadow: none;
+}
+
+.navMenu > li > a.active, .navMenu > li > a:hover {
+    color: #FFF;
+}
+
+.navMenu > li > ul.sub-menu, .navMenu > li > ul.sub-menu > li > ul.sub-menu {
+    display: none;
+    list-style: none;
+    clear: both;
+    padding-bottom: 5px;
+}
+
+.navMenu > li.active > ul.sub-menu, .navMenu > li > ul.sub-menu > li.active > ul.sub-menu {
+}
+
+.navMenu > li > ul.sub-menu li {
+    background: none;
+    margin: 0px;
+    padding: 0px;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.navMenu > li > ul.sub-menu li > a {
+    display: block;
+    font-size: 13px;
+    line-height: 36px;
+    padding-left: 20px;
+    color: #ABB1B7;
+    clear: both;
+}
+
+.navMenu > li > ul.sub-menu li > a.active, .navMenu > li > ul.sub-menu li > a:hover, .navMenu > li > ul.sub-menu > li.active > a {
+    color: #FFF;
+}
+
+.icon_1:before {
+    content: "\f0ac";
+}
+
+.add_span {
+    text-align: right;
+    line-height: 30px;
+    position: relative;
+    left: -30px;
+}
+
+.margin10b {
+    margin-bottom: 10px;
+}
+
+.add_col8 {
+    position: relative;
+    left: -30px;
+}
+
+#ma_titleSelect {
+    height: 30px;
+}
+
+#ma_instituteNameSelect {
+    width: auto !important;
+}
+
+#me_titleSelect {
+    height: 30px;
+}
+
+#me_instituteNameSelect {
+    width: auto !important;
+}
+
+#userFile {
+    height: 30px;
+    padding-left: 0;
+    position: relative;
+    left: -10px;
+    margin-top: 6px;
+}
+
+.my_modal-body {
+    padding-top: 10px;
+
+}
+
+.paddingTop5 {
+    padding-top: 5px;
+}
+
+.ahide {
+    display: none;
+}
+
+
+.adiv:hover .ahide {
+    display: block; /** 当父div类 LinkContent-Left鼠标移上去的时候，将隐藏的子div类hide显示出来 */
+}
+
+
