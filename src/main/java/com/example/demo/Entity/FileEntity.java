@@ -1,8 +1,10 @@
 package com.example.demo.Entity;
 
 import com.example.demo.utils.Const;
+import com.example.demo.utils.MD5;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 @Table(name = "file", schema = "root", catalog = "")
@@ -11,6 +13,12 @@ public class FileEntity {
     private ProjectEntity project;
     private String filePath;
     private Const.FileStatus fileStatus;
+
+    public FileEntity(){
+        this.fileId= MD5.getMD5(String.valueOf(new Date().getTime()));
+    }
+
+    public FileEntity(String fileId){this.fileId=fileId;}
 
     @Id
     @Column(name = "fileId")

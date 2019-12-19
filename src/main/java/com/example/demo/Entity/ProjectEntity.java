@@ -34,6 +34,8 @@ public class ProjectEntity {
         this.projectId=MD5.getMD5(String.valueOf(new Date().getTime()));
     }
 
+    public ProjectEntity(String projectId){this.projectId=projectId;}
+
     @Id
     @Column(name = "projectId")
     public String getProjectId() {

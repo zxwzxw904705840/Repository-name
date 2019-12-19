@@ -19,6 +19,10 @@ public class BookEntity {
     private Const.BookPublishStatus bookPublishStatus;
     private Const.BookStatus bookStatus;
 
+    public BookEntity(){}
+
+    public BookEntity(String bookId){this.bookId=bookId;}
+
     @Id
     @Column(name = "bookId")
     public String getBookId() {

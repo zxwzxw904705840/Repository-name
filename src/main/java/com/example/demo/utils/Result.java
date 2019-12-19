@@ -1,23 +1,19 @@
 package com.example.demo.utils;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
-public class Result<T> {
+public class Result {
     private boolean success;
     private String message;
-    private T object;
+    private HashMap<String,Object> objectMap;
     private long timestamp;
 
-    public Result(boolean success, String message, T object){
-        this.success=success;
-        this.message=message;
-        this.object=object;
-        this.timestamp=new Date().getTime();
-    }
     public Result(boolean success, String message){
         this.success=success;
         this.message=message;
-        this.object=null;
+        this.objectMap=new HashMap();
         this.timestamp=new Date().getTime();
     }
     public boolean isSuccess(){
@@ -26,19 +22,19 @@ public class Result<T> {
     public String getMessage(){
         return this.message;
     }
-    public T getObject(){
-        return this.object;
+    public boolean hasObject(){
+        return this.objectMap.isEmpty();
+    }
+    public void addObject(String key,Object value){
+        objectMap.put(key,value);
+    }
+    public Object getObject(String key){
+        return objectMap.get(key);
     }
     public long  getTimestamp(){return this.timestamp;}
-    public boolean hasObject(){
-        if(object==null){
-            return false;
-        }
-        return success;
-    }
 
     @Override
     public String toString(){
-        return this.success + " " + this.message + " "+ object;
+        return this.success + " " + this.message;
     }
 }
