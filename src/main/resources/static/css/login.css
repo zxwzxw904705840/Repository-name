@@ -85,3 +85,26 @@
         width:auto;
     }
 }
+
+.select2{
+    border:1px solid #ccc;
+    box-shadow:inset 0px 1px 1px rgba(0,0,0,0.075);
+    height: 40px;
+    transition:border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+    color:#ffa200;
+
+}
+
+.menu3:hover{
+    color:#ffa200;
+
+}
+.fontsize20{
+    font-size:18px;
+}
+.searchtext{
+    height:40px;
+}
+.h1fw{
+    font-weight: 300;
+}
