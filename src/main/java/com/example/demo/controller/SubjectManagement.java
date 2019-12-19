@@ -2,11 +2,9 @@ package com.example.demo.controller;
 
 
 import com.alibaba.fastjson.JSONObject;
+import com.example.demo.utils.Const;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
@@ -167,11 +165,11 @@ public class SubjectManagement {
      * @return
      *
      * 输出：成功/失败
-     * @RequestParam(value="projectType") Const.ProjectType projectType
+     *
      */
     @ResponseBody
     @RequestMapping("/SetProjectType")
-    public String projectType(String projectId,Integer projectType) {
+    public String projectType(String projectId,@RequestParam(value="projectType") Const.ProjectType projectType) {
         System.out.println("SetProjectType");
 
         System.out.println(projectId+":::"+projectType);
@@ -212,7 +210,7 @@ public class SubjectManagement {
      */
     @ResponseBody
     @RequestMapping("/SetProjectLevel")
-    public String SetProjectLevel(String projectId,Integer projectLevel) {
+    public String SetProjectLevel(String projectId, @RequestParam(value="projectLevel") Const.ProjectLevel projectLevel) {
         System.out.println("SetProjectLevel");
 
         System.out.println(projectId+":::"+projectLevel);
@@ -226,17 +224,18 @@ public class SubjectManagement {
     /**
      * 模态框 修改项目进度
      * @param projectId
-     * @param progress
+     * @param projectProgress
      * @return
      *
      * 输出：成功/失败
      */
     @ResponseBody
     @RequestMapping("/SetProjectProgress")
-    public String SetProjectProgress(String projectId,Integer progress) {
+    public String SetProjectProgress(String projectId,@RequestParam(value="projectProgress") Const.ProjectProgress projectProgress) {
+
         System.out.println("SetProjectProgress");
 
-        System.out.println(projectId+":::"+progress);
+        System.out.println(projectId+":::"+projectProgress);
 
 
         JSONObject result=new JSONObject();
@@ -254,7 +253,7 @@ public class SubjectManagement {
      */
     @ResponseBody
     @RequestMapping("/SetProjectSource")
-    public String SetProjectSource(String projectId,Integer projectSource) {
+    public String SetProjectSource(String projectId,String projectSource) {
         System.out.println("SetProjectSource");
 
         System.out.println(projectId+":::"+projectSource);
@@ -377,17 +376,17 @@ public class SubjectManagement {
     /**
      * 模态框  修改项目来源类别
      * @param projectId
-     * @param projectSoureType
+     * @param projectSourceType
      * @return
      *
      * 输出：成功/失败
      */
     @ResponseBody
-    @RequestMapping("/projectSoureType")
-    public String projectSoureType(String projectId, Integer projectSoureType) {
-        System.out.println("projectSoureType");
+    @RequestMapping("/projectSourceType")
+    public String projectSourceType(String projectId, @RequestParam(value="projectSourceType") Const.ProjectSourceType projectSourceType) {
+        System.out.println("projectSourceType");
 
-        System.out.println(projectId+":::"+projectSoureType);
+        System.out.println(projectId+":::"+projectSourceType);
 
 
         JSONObject result=new JSONObject();
@@ -405,8 +404,8 @@ public class SubjectManagement {
      */
     @ResponseBody
     @RequestMapping("/projectResearchType")
-    public String projectResearchType(String projectId, Integer projectResearchType) {
-        System.out.println("projectSoureType");
+    public String projectResearchType(String projectId,@RequestParam(value="projectResearchType") Const.ProjectResearchType projectResearchType) {
+        System.out.println("projectSourceType");
 
         System.out.println(projectId+":::"+projectResearchType);
 

@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import com.alibaba.fastjson.JSONObject;
 
+import com.example.demo.utils.Const;
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.hssf.util.HSSFColor;
 import org.springframework.stereotype.Controller;
@@ -48,7 +49,7 @@ public class UserManagement {
         int pageNumber = Integer.valueOf(request.getParameter("pageNumber"));
         int limit = Integer.valueOf(request.getParameter("pageSize")); //输入
         int offset = limit * (pageNumber - 1);//输入
-        Integer userStatus = Integer.valueOf(request.getParameter("userStatus").toString());//输入
+        String userStatus = request.getParameter("userStatus").toString();//输入
         String userName = request.getParameter("userName");//输入
         String instituteId = request.getParameter("instituteId");//输入
 
@@ -224,7 +225,7 @@ public class UserManagement {
      */
     @ResponseBody
     @RequestMapping("/SetTitle")
-    public String SetTitle(String userId,Integer title) {
+    public String SetTitle(String userId,@RequestParam(value="title") Const.UserTitle title) {
         System.out.println("SetTitle");
         System.out.println(userId+":::"+title);
 
