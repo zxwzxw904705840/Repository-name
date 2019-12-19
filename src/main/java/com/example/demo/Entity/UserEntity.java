@@ -20,6 +20,15 @@ public class UserEntity {
     private Const.UserStatus userStatus;
     private Set<ProjectEntity> projects;
 
+    public UserEntity(){}
+
+    public UserEntity(String userId){this.userId = userId;}
+
+    public UserEntity(String userId,Const.UserStatus userStatus){
+        this.userStatus = userStatus;
+        this.userId = userId;
+    }
+
     @Id
     @Column(name = "userId")
     public String getUserId() {
