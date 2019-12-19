@@ -161,7 +161,7 @@ public class UserManagement {
     @ResponseBody
     @PostMapping("/ImportUserExcel")
     public boolean addUser( MultipartFile userFile) {
-        System.out.println("excelImport");
+        System.out.println("ImportUserExcel");
         ExcelOpt excelOpt = new ExcelOpt();
         boolean a = false;
         String fileName = userFile.getOriginalFilename();
