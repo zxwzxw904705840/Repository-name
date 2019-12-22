@@ -11,8 +11,9 @@ public interface UserService {
     List<UserEntity> getUserList();
     Result getUserById(String userId, UserEntity admin);
     Result addUser(UserEntity user);
-    Result addUserExcel(UserEntity user);
+    Result addUserByExcel(UserEntity user);
     Result DeleteUserById(String userId);
+    Result DeleteCompletely(String userId, UserEntity admin);
     Result AgreeUserUpdate(UserEntity user, UserEntity admin);
     Result SetUserName(String userId,String userName);
     Result SetInstituteId(String userId,String instituteId);
@@ -24,4 +25,5 @@ public interface UserService {
     Result checkInstitute(InstituteEntity institute);
     Result checkUserPermission(UserEntity user);
     Result checkUser(UserEntity user);
+    Result checkResearcherPermission(UserEntity user);
 }

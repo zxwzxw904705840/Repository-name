@@ -42,7 +42,7 @@ public class UserServiceImpl {
     }
 
     public Result getUserById(String userId, UserEntity admin){
-        Result result = checkUserPermission(admin);
+        Result result = checkAdminPermission(admin);
         if(!result.isSuccess()){
             return result;
         }
@@ -53,7 +53,7 @@ public class UserServiceImpl {
 
     public Result AgreeUserUpdate(UserEntity user, UserEntity admin){
         Result resultuser = checkUser(user);
-        Result resultadmin = checkUserPermission(admin);
+        Result resultadmin = checkAdminPermission(admin);
         if(!resultuser.isSuccess()){
             return resultuser;
         }
@@ -72,6 +72,18 @@ public class UserServiceImpl {
         }
         userEntity.setUserStatus(Const.UserStatus.DELETED);
         return new Result(true, DataCheck.UserDataCheck.USER_DELETED.toString());
+    }
+
+    public Result DeleteUsersById(String[] userId){
+        for(int i = 0; i <= userId.length; i++){
+            UserEntity userEntity = userRepository.findByUserId(userId[i]);
+            Result result = checkUser(userEntity);
+            if(!result.isSuccess()){
+                return result;
+            }
+            userEntity.setUserStatus(Const.UserStatus.DELETED);
+        }
+        return new Result(true, DataCheck.UserDataCheck.USERS_DELETED.toString());
     }
 
     public Result SetUserName(String userId, String userName){
@@ -158,16 +170,55 @@ public class UserServiceImpl {
         return new Result(true, DataCheck.UserDataSet.USER_PHONE_CHANGED.toString());
     }
 
-    private Result checkUserPermission(UserEntity user){
-        if(user==null||user.getUserId()==null||user.getUserId().equals("")) {
-            return new Result(false, DataCheck.UserDataCheck.PERMISSION_DENIED.toString());
+    public Result SetStatus(String userId, UserEntity admin, Const.UserStatus status){
+        UserEntity userEntity = userRepository.findByUserId(userId);
+        Result adminresult = checkAdminPermission(admin);
+        Result result = checkUser(userEntity);
+        if(!result.isSuccess()){
+            return result;
         }
+        if(!adminresult.isSuccess()){
+            return adminresult;
+        }
+        if(status != Const.UserStatus.DELETED && status != Const.UserStatus.NORMAL && status != Const.UserStatus.REVIEWING){
+            return new Result(false, "用户状态不存在");
+        }
+        userEntity.setUserStatus(status);
+        return new Result(true, DataCheck.UserDataSet.USER_STATUS_CHANGED.toString());
 
-        UserEntity userEntity = userRepository.findByUserId(user.getUserId());
-        if(userEntity==null||userEntity.getCharacters()!= Const.UserCharacter.ADMINISTRATION){
+    }
+
+    public Result DeleteCompletely(String userId, UserEntity admin){
+        UserEntity userEntity = userRepository.findByUserId(userId);
+        Result adminresult = checkAdminPermission(admin);
+        Result result = checkUser(userEntity);
+        if(!result.isSuccess()){
+            return result;
+        }
+        if(!adminresult.isSuccess()){
+            return adminresult;
+        }
+        userRepository.delete(userEntity);
+        return new Result(true,DataCheck.UserDataSet.USER_DELETED.toString());
+    }
+
+    private Result checkAdminPermission(UserEntity user){
+        if(user==null||user.getUserId()==null||user.getUserId().equals("")) {
+            return new Result(false, DataCheck.UserDataCheck.USER_ID_IS_EMPTY.toString());
+        }
+        if(user==null||user.getCharacters()!= Const.UserCharacter.ADMINISTRATION){
             return new Result(false, DataCheck.UserDataCheck.PERMISSION_DENIED.toString());
         }
-        return new Result(true, DataCheck.UserDataCheck.ACCOUNT_CAN_USE.toString());
+        return new Result(true, DataCheck.UserDataCheck.IS_ADMIN.toString());
+    }
+    private Result checkResearcherPermission(UserEntity user){
+        if(user==null||user.getUserId()==null||user.getUserId().equals("")) {
+            return new Result(false, DataCheck.UserDataCheck.USER_ID_IS_EMPTY.toString());
+        }
+        if(user==null||user.getCharacters()!= Const.UserCharacter.TEACHER){
+            return new Result(false, DataCheck.UserDataCheck.PERMISSION_DENIED.toString());
+        }
+        return new Result(true, DataCheck.UserDataCheck.IS_RESEARCHER.toString());
     }
     private Result checkUser(UserEntity user){
         if (user==null){
