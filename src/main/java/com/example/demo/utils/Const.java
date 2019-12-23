@@ -31,7 +31,7 @@ public final class Const {
     public enum ThesisStatus{ //论文状态
         NORMAL,REVIEWING,DELETED
     }
-    public enum BookCreativeNature{ //著作创作性质
+    public enum BookCreativeNature{ //著作创作性质f
         ORIGINAL,ADAPTATION,TRANSLATION,COMPILATION,COMMENTARY,ARRANGE,OTHER
     }
     public enum BookPublishStatus{ //著作发表状态

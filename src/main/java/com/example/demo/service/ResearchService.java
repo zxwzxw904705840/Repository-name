@@ -13,21 +13,21 @@ public interface ResearchService {
     Result addThesis(ThesisEntity thesisEntity, UserEntity userEntity);
     Result updateThesis(ThesisEntity thesisEntity, UserEntity userEntity);
     Result deleteThesis(ThesisEntity thesisEntity, UserEntity userEntity);
-   // Result<ArrayList<ThesisEntity>> findAllThesisByAuthorId(UserEntity userEntity);
+    //Result<ArrayList<ThesisEntity>> findAllThesisByAuthorId(UserEntity userEntity);
     //endregion
 
     //region 我的著作操作
     Result addBook(BookEntity bookEntity, UserEntity userEntity);
     Result updateBook(BookEntity bookEntity, UserEntity userEntity);
     Result deleteBook(BookEntity bookEntity, UserEntity userEntity);
-   // Result<ArrayList<BookEntity>> findAllBookByAuthorId(UserEntity userEntity);
+    //Result<ArrayList<BookEntity>> findAllBookByAuthorId(UserEntity userEntity);
     //endregion
 
     //region 我的项目操作
     Result addProject(ProjectEntity projectEntity, UserEntity userEntity);
     Result updateProject(ProjectEntity projectEntity, UserEntity userEntity);
     Result deleteProject(ProjectEntity projectEntity, UserEntity userEntity);
-  //  Result<ArrayList<ProjectEntity>> findAllProjectByUserId(UserEntity userEntity);
+    //Result<ArrayList<ProjectEntity>> findAllProjectByUserId(UserEntity userEntity);
     //endregion
 
     //region 我的信息操作
