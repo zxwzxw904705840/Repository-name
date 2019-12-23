@@ -21,11 +21,39 @@ public class UserServiceImpl implements UserService {
     @Autowired
     InstituteRepository instituteRepository;
 
+    //region 获得用户部分
     @Override
     public List<UserEntity> getUserList(){
         return userRepository.findAll();
     }
 
+    @Override
+    public Result getUserById(String userId){
+        UserEntity userEntity = userRepository.findByUserId(userId);
+        Result result = checkUser(userEntity);
+        result.addObject(userId,userEntity);
+        return result;
+    }
+
+    @Override
+    public List<UserEntity> getUsersById(List<String> userId){
+        List<UserEntity> users = userRepository.findAllById(userId);
+        return users;
+    }
+
+    @Override
+    public List<UserEntity> getUsersByStatus(Const.UserStatus status, String adminId){
+        UserEntity adminEntity = userRepository.findByUserId(adminId);
+        Result result = checkUserPermission(adminEntity);
+        if(result.getMessage() != DataCheck.UserDataCheck.IS_ADMIN.toString()){
+            return null;
+        }
+        List<UserEntity> usersByStatus = userRepository.findUserEntitiesByUserStatus(status);
+        return usersByStatus;
+    }
+    //endregion
+
+    //region 添加新用户
     @Override
     public Result addUser(UserEntity user){
         UserEntity newUser = new UserEntity();
@@ -53,32 +81,9 @@ public class UserServiceImpl implements UserService {
         }
         return new Result(true, DataCheck.UserDataCheck.USERS_ADDED.toString());
     }
+    //endregion
 
-    @Override
-    public Result getUserById(String userId){
-        UserEntity userEntity = userRepository.findByUserId(userId);
-        Result result = checkUser(userEntity);
-        result.addObject(userId,userEntity);
-        return result;
-    }
-
-    @Override
-    public List<UserEntity> getUsersById(List<String> userId){
-        List<UserEntity> users = userRepository.findAllById(userId);
-        return users;
-    }
-
-    @Override
-    public List<UserEntity> getUsersByStatus(Const.UserStatus status, String adminId){
-        UserEntity adminEntity = userRepository.findByUserId(adminId);
-        Result result = checkUserPermission(adminEntity);
-        if(result.getMessage() != DataCheck.UserDataCheck.IS_ADMIN.toString()){
-            return null;
-        }
-        List<UserEntity> usersByStatus = userRepository.findUserEntitiesByUserStatus(status);
-        return usersByStatus;
-    }
-
+    //region 删除用户函数
     @Override
     public Result DeleteUserById(String userId){
         UserEntity userEntity = userRepository.findByUserId(userId);
@@ -103,6 +108,23 @@ public class UserServiceImpl implements UserService {
         return new Result(true, DataCheck.UserDataCheck.USERS_DELETED.toString());
     }
 
+    @Override
+    public Result DeleteCompletely(String userId, UserEntity admin){
+        UserEntity userEntity = userRepository.findByUserId(userId);
+        Result adminresult = checkUserPermission(admin);
+        Result result = checkUser(userEntity);
+        if(!result.isSuccess()){
+            return result;
+        }
+        if(adminresult.getMessage() != DataCheck.UserDataCheck.IS_ADMIN.toString()){
+            return adminresult;
+        }
+        userRepository.delete(userEntity);
+        return new Result(true,DataCheck.UserDataSet.USER_DELETED.toString());
+    }
+    //endregion
+
+    //region 修改用户信息
     @Override
     public Result SetUserName(String userId, String userName){
         UserEntity userEntity = userRepository.findByUserId(userId);
@@ -211,22 +233,9 @@ public class UserServiceImpl implements UserService {
         return new Result(true, DataCheck.UserDataSet.USER_STATUS_CHANGED.toString());
 
     }
+    //endregion
 
-    @Override
-    public Result DeleteCompletely(String userId, UserEntity admin){
-        UserEntity userEntity = userRepository.findByUserId(userId);
-        Result adminresult = checkUserPermission(admin);
-        Result result = checkUser(userEntity);
-        if(!result.isSuccess()){
-            return result;
-        }
-        if(adminresult.getMessage() != DataCheck.UserDataCheck.IS_ADMIN.toString()){
-            return adminresult;
-        }
-        userRepository.delete(userEntity);
-        return new Result(true,DataCheck.UserDataSet.USER_DELETED.toString());
-    }
-
+    //region 检查函数部分
     @Override
     public Result checkUser(UserEntity user){
         if (user==null){
@@ -304,4 +313,5 @@ public class UserServiceImpl implements UserService {
         }
         return new Result(true, DataCheck.InstituteCheck.INSTITUTE_CAN_USE.toString());
     }
+    //endregion
 }
