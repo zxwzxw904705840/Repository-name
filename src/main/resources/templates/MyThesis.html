@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.w3.org/1999/xhtml" lang="zh_CN">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.w3.org/1999/xhtml" lang="en">
 <head>
     <meta charset="utf-8">
     <title>Cubic - One Page Responsive HTML 5 Website Template</title>
@@ -8,7 +8,6 @@
     <meta name="keywords" content="onepage,responsive,minimal,bootstrap,theme">
     <meta name="author" content="">
 
-
     <!--[if lt IE 9]>
     <script src="../static/js/html5shiv.js"></script>
     <![endif]-->
@@ -16,12 +15,15 @@
 
     <!-- CSS Files
     ================================================== -->
-    <link rel="stylesheet" href="../static/css/bootstrap.css" type="text/css">
-    <link rel="stylesheet" href="../static/css/style.css" type="text/css">
+    <link rel="stylesheet" href="../css/bootstrap.css" type="text/css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+    <link rel="stylesheet" href="../css/bootstrap-table.min.css">
+    <link rel="stylesheet" href="../css/style.css" type="text/css">
     <!-- color scheme -->
-    <link rel="stylesheet" href="../static/css/color.css" type="text/css">
+    <link rel="stylesheet" href="../css/color.css" type="text/css">
     <!-- revolution slider -->
-    <link rel="stylesheet" href="../static/css/rev-settings.css" type="text/css">
+    <link rel="stylesheet" href="../css/rev-settings.css" type="text/css">
+    <link rel="stylesheet" href="../css/login.css" type="text/css">
 
 </head>
 
@@ -38,11 +40,11 @@
                                 <li><a class="J_menuItem black" th:href="@{index}">Home</a></li>
                                 <li><a class="J_menuItem" th:href="@{MyThesis}">My Thesis</a></li>
                                 <li><a class="J_menuItem" th:href="@{MySoftwareCopyright}">My Software Copyright</a></li>
-            <li><a class="J_menuItem" href="MyProject.html">My Project</a></li>
+            <li><a class="J_menuItem" href="ThesisListResult.html">My Project</a></li>
             <li><a class="J_menuItem" href="Management.html">Management</a></li>
             <li><a class="J_menuItem" href="ReportStatistics.html">Report Statistics</a></li> 
             <li><a class="J_menuItem" >谢文仲</a></li> 
-            <li><a class="J_menuItem" href="login.html">退出</a></li> 
+            <li><a class="J_menuItem" th:href="@{login}">退出</a></li>
              
                             </ul>
                         </nav>
@@ -59,19 +61,12 @@
 
         <!-- content begin -->
         <div id="content">
-mm
-</br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br>
-dd
-<section id="section-thesis">
-    
-</section>
-</br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br>
-ggggooooooooood@!
-ss</br>
-<section id="section-copyright">
-    xs</br></br>x.x.x.
-</section>
+<div class="row">
+    <div class="col-md-10 col-md-offset-1">
+        <table  class="table table-bordered" id="table_list"></table>
+    </div>
 </div>
+
 
           
         </div>
@@ -80,10 +75,85 @@ ss</br>
 
     <!-- Javascript Files
     ================================================== -->
-    <script src="../static/js/jquery.min.js"></script>
-    <script src="../static/js/bootstrap.min.js"></script>
-  
-  
+    <script src="../js/jquery.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+    <script src="../js/bootstrap-table.min.js"></script>
+  <script>
+
+      /*
+       * 初始化BootstrapTable,动态从服务器加载数据
+       * */
+      $(document).ready(function () {
+
+          var teachcourseid = document.getElementById("teachcourseidInput").value;
+
+          dataTableHot = $("#table_list").bootstrapTable({
+              //使用get请求到服务器获取数据
+              method: "POST",
+              //必须设置，不然request.getParameter获取不到请求参数
+              contentType: "application/x-www-form-urlencoded",
+              //获取数据的Servlet地址
+              url: "/MyThesis",
+              //表格显示条纹
+              striped: true,
+              //启动分页
+              pagination: true,
+              //每页显示的记录数
+              pageSize: 10,
+              //当前第几页
+              pageNumber: 1,
+              //记录数可选列表
+              pageList: [5, 10, 15, 20, 25],
+              //是否启用查询
+              search: false,
+              //表示服务端请求
+              sidePagination: "server",
+              //设置为undefined可以获取pageNumber，pageSize，searchText，sortName，sortOrder
+              //设置为limit可以获取limit, offset, search, sort, order
+              //  queryParamsType: "undefined",
+              // queryParams: queryParams,
+              queryParamsType: "",
+              queryParams: getParams,
+              //json数据解析
+              responseHandler: function (res) {
+                  console.log("res", res)
+                  return {
+                      "rows": res.rows,
+                      "total": res.total
+                  };
+              },
+              //数据列
+              columns: [
+                  {
+                      checkbox: true
+                  },
+                  {
+                      //field: 'Number',//可不加
+                      title: '序号',//标题  可不加
+                      formatter: function (value, row, index) {
+                          return index + 1;
+                      }
+                  }, {
+                      title: "Thesis ID",
+                      field: "Thesis ID",
+
+                  }, {
+                      title: "Thesis Title",
+                      field: "Thesis Title"
+                  }, {
+                      title: "Author1",
+                      field: "author1"
+                  }, {
+                      title: "Journal",
+                      field: "Journal"
+                  }]
+
+
+          });
+      });
+
+  </script>
 
 </body>
 </html>
