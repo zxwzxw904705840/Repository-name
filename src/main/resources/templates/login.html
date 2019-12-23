@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.w3.org/1999/xhtml">
-<html lang="zh_CN">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.w3.org/1999/xhtml" lang="zh_CN">
 <head>
     <meta charset="utf-8">
     <title>Scientific Research File Management System</title>
@@ -17,20 +16,20 @@
 
     <!-- CSS Files
     ================================================== -->
-    <link rel="stylesheet" href="../static/css/bootstrap.css" type="text/css">
-    <link rel="stylesheet" href="../static/css/jpreloader.css" type="text/css">  
-    <link rel="stylesheet" href="../static/css/owl.carousel.css" type="text/css">   
-    <link rel="stylesheet" href="../static/css/style.css" type="text/css">
-     <link rel="stylesheet" href="../static/css/login.css" type="text/css">
+    <link rel="stylesheet" href="../css/bootstrap.css" type="text/css">
+    <link rel="stylesheet" href="../css/jpreloader.css" type="text/css">  
+    <link rel="stylesheet" href="../css/owl.carousel.css" type="text/css">   
+    <link rel="stylesheet" href="../css/style.css" type="text/css">
+     <link rel="stylesheet" href="../css/login.css" type="text/css">
 
     <!-- custom style css -->
-    <link rel="stylesheet" href="../static/css/custom-style.css" type="text/css">
+    <link rel="stylesheet" href="../css/custom-style.css" type="text/css">
 
     <!-- color scheme -->
-    <link rel="stylesheet" href="../static/css/color.css" type="text/css">
+    <link rel="stylesheet" href="../css/color.css" type="text/css">
 
     <!-- load fonts -->
-    <link rel="stylesheet" href="../static/fonts/font-awesome/css/font-awesome.css" type="text/css">  
+    <link rel="stylesheet" href="../fonts/font-awesome/css/font-awesome.css" type="text/css">  
 </head>
 
 <body id="homepage">
@@ -69,8 +68,8 @@
 <div class="signinpanel" style="display: none;" id="login1">
     <div class="row">
         <div class="col-sm-12 ">
-            <form method="post"  th:action="@{/login}"  id="frm">
-                <h1 style="text-align: center"> 教 参 管 理 系 统</h1>
+            <form method="post"  th:action="@{/index}"  id="frm">
+                <h1 style="text-align: center"> 科 研 档 案 管 理 系 统</h1>
                 <input type="text" class="form-control uname" name="userId" id="userId" placeholder="用户ID" />
                 <input type="password" class="form-control pword m-b" name="passwd" id="password"  placeholder="密码" />
                 <button class="btn btn-warning btn-block" type="submit">登 录</button>
@@ -108,15 +107,15 @@
 
     <!-- Javascript Files
     ================================================== -->
-    <script src="../static/js/jquery.min.js"></script>
-    <script src="../static/js/jpreLoader.js"></script>
-    <script src="../static/js/bootstrap.min.js"></script>
-    <script src="../static/js/jquery.prettyPhoto.js"></script>
-    <script src="../static/js/jquery.ui.totop.js"></script>  
-    <script src="../static/js/owl.carousel.js"></script>
-    <script src="../static/js/designesia.js"></script>
-    <script src="../static/js/plugins/validate/jquery.validate.min.js"   ></script>
-<script src="../static/js/plugins/validate/messages_zh.min.js" ></script>
+    <script src="../js/jquery.min.js"></script>
+    <script src="../js/jpreLoader.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script src="../js/jquery.prettyPhoto.js"></script>
+    <script src="../js/jquery.ui.totop.js"></script>  
+    <script src="../js/owl.carousel.js"></script>
+    <script src="../js/designesia.js"></script>
+    <script src="../js/plugins/validate/jquery.validate.min.js"   ></script>
+<script src="../js/plugins/validate/messages_zh.min.js" ></script>
   <script type="text/javascript">
      $(document).ready(function() {
         // 在键盘按下并释放及提交后验证提交表单

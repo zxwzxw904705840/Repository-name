@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.w3.org/1999/xhtml" lang="zh_CN">
 <head>
     <meta charset="utf-8">
     <title>Cubic - One Page Responsive HTML 5 Website Template</title>
@@ -35,9 +35,9 @@
                         <!-- mainmenu begin -->
                         <nav  class="navbar" role="navigation" style="margin-bottom: 0">
                             <ul id="mainmenu" class="navbar-left">
-                                <li><a class="J_menuItem" href="index.html">Home</a></li>
-                                 <li><a class="J_menuItem" href="MyThesis.html">My Thesis</a></li>
-            <li><a class="J_menuItem" href="MySoftwareCopyright.html">My Software Copyright</a></li>
+                                <li><a class="J_menuItem black" th:href="@{index}">Home</a></li>
+                                <li><a class="J_menuItem" th:href="@{MyThesis}">My Thesis</a></li>
+                                <li><a class="J_menuItem" th:href="@{MySoftwareCopyright}">My Software Copyright</a></li>
             <li><a class="J_menuItem" href="MyProject.html">My Project</a></li>
             <li><a class="J_menuItem" href="Management.html">Management</a></li>
             <li><a class="J_menuItem" href="ReportStatistics.html">Report Statistics</a></li> 
