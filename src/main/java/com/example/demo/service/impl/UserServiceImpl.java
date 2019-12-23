@@ -21,19 +21,6 @@ public class UserServiceImpl implements UserService {
     @Autowired
     InstituteRepository instituteRepository;
 
-//    Result addUserExcel(UserEntity user);
-//    Result UserExcelExport();
-
-    @Override
-    public Result addUserByExcel(UserEntity user) {
-        return null;
-    }
-
-    @Override
-    public Result UserExcelExport() {
-        return null;
-    }
-
     @Override
     public List<UserEntity> getUserList(){
         return userRepository.findAll();
@@ -55,6 +42,19 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public Result addUsers(UserEntity[] users){
+        Result result;
+        for(int i = 0; i <= users.length; i++){
+            result = checkUser(users[i]);
+            if (!result.isSuccess()){
+                return result;
+            }
+            userRepository.save(users[i]);
+        }
+        return new Result(true, DataCheck.UserDataCheck.USERS_ADDED.toString());
+    }
+
+    @Override
     public Result getUserById(String userId){
         UserEntity userEntity = userRepository.findByUserId(userId);
         Result result = checkUser(userEntity);
@@ -63,17 +63,20 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Result AgreeUserUpdate(UserEntity user, UserEntity admin){
-        Result resultuser = checkUser(user);
-        Result resultadmin = checkAdminPermission(admin);
-        if(!resultuser.isSuccess()){
-            return resultuser;
+    public List<UserEntity> getUsersById(List<String> userId){
+        List<UserEntity> users = userRepository.findAllById(userId);
+        return users;
+    }
+
+    @Override
+    public List<UserEntity> getUsersByStatus(Const.UserStatus status, String adminId){
+        UserEntity adminEntity = userRepository.findByUserId(adminId);
+        Result result = checkUserPermission(adminEntity);
+        if(result.getMessage() != DataCheck.UserDataCheck.IS_ADMIN.toString()){
+            return null;
         }
-        if(!resultadmin.isSuccess()){
-            return resultadmin;
-        }
-        user.setUserStatus(Const.UserStatus.NORMAL);
-        return new Result(true, DataCheck.UserDataCheck.USER_STATUS_UPDATED.toString());
+        List<UserEntity> usersByStatus = userRepository.findUserEntitiesByUserStatus(status);
+        return usersByStatus;
     }
 
     @Override
@@ -99,6 +102,7 @@ public class UserServiceImpl implements UserService {
         }
         return new Result(true, DataCheck.UserDataCheck.USERS_DELETED.toString());
     }
+
     @Override
     public Result SetUserName(String userId, String userName){
         UserEntity userEntity = userRepository.findByUserId(userId);
@@ -107,6 +111,7 @@ public class UserServiceImpl implements UserService {
         userEntity.setUserName(userName);
         return new Result(true, DataCheck.UserDataSet.USERNAME_CHANGED.toString());
     }
+
     @Override
     public Result SetInstituteId(String userId,String instituteId){
         UserEntity userEntity = userRepository.findByUserId(userId);
@@ -122,6 +127,7 @@ public class UserServiceImpl implements UserService {
         userEntity.setInstitute(instituteEntity);
         return new Result(true, DataCheck.UserDataSet.INSTITUTE_CHANGED.toString());
     }
+
     @Override
     public Result SetTitle(String userId, Const.UserTitle title){
         UserEntity userEntity = userRepository.findByUserId(userId);
@@ -132,6 +138,7 @@ public class UserServiceImpl implements UserService {
         userEntity.setTitle(title);
         return new Result(true,DataCheck.UserDataSet.USER_TITLE_CHANGED.toString());
     }
+
     @Override
     public Result SetEmail(String userId,String email){
         UserEntity userEntity = userRepository.findByUserId(userId);
@@ -142,6 +149,7 @@ public class UserServiceImpl implements UserService {
         userEntity.setEmail(email);
         return new Result(true, DataCheck.UserDataSet.USER_EMAIL_CHANGED.toString());
     }
+
     @Override
     public Result SetPassword(String userId,String password){
         UserEntity userEntity = userRepository.findByUserId(userId);
@@ -161,6 +169,7 @@ public class UserServiceImpl implements UserService {
         userEntity.setPassword(password);
         return new Result(true, DataCheck.UserDataSet.USER_PASSWORD_CHANGED.toString());
     }
+
     @Override
     public Result SetPhone(String userId,String phone){
         UserEntity userEntity = userRepository.findByUserId(userId);
@@ -183,15 +192,16 @@ public class UserServiceImpl implements UserService {
         userEntity.setPhone(phone);
         return new Result(true, DataCheck.UserDataSet.USER_PHONE_CHANGED.toString());
     }
+
     @Override
     public Result SetStatus(String userId, UserEntity admin, Const.UserStatus status){
         UserEntity userEntity = userRepository.findByUserId(userId);
-        Result adminresult = checkAdminPermission(admin);
+        Result adminresult = checkUserPermission(admin);
         Result result = checkUser(userEntity);
         if(!result.isSuccess()){
             return result;
         }
-        if(!adminresult.isSuccess()){
+        if(adminresult.getMessage() != DataCheck.UserDataCheck.IS_ADMIN.toString()){
             return adminresult;
         }
         if(status != Const.UserStatus.DELETED && status != Const.UserStatus.NORMAL && status != Const.UserStatus.REVIEWING){
@@ -201,40 +211,22 @@ public class UserServiceImpl implements UserService {
         return new Result(true, DataCheck.UserDataSet.USER_STATUS_CHANGED.toString());
 
     }
+
     @Override
     public Result DeleteCompletely(String userId, UserEntity admin){
         UserEntity userEntity = userRepository.findByUserId(userId);
-        Result adminresult = checkAdminPermission(admin);
+        Result adminresult = checkUserPermission(admin);
         Result result = checkUser(userEntity);
         if(!result.isSuccess()){
             return result;
         }
-        if(!adminresult.isSuccess()){
+        if(adminresult.getMessage() != DataCheck.UserDataCheck.IS_ADMIN.toString()){
             return adminresult;
         }
         userRepository.delete(userEntity);
         return new Result(true,DataCheck.UserDataSet.USER_DELETED.toString());
     }
-    @Override
-    public Result checkAdminPermission(UserEntity user){
-        if(user==null||user.getUserId()==null||user.getUserId().equals("")) {
-            return new Result(false, DataCheck.UserDataCheck.USER_ID_IS_EMPTY.toString());
-        }
-        if(user==null||user.getCharacters()!= Const.UserCharacter.ADMINISTRATION){
-            return new Result(false, DataCheck.UserDataCheck.PERMISSION_DENIED.toString());
-        }
-        return new Result(true, DataCheck.UserDataCheck.IS_ADMIN.toString());
-    }
-    @Override
-    public Result checkResearcherPermission(UserEntity user){
-        if(user==null||user.getUserId()==null||user.getUserId().equals("")) {
-            return new Result(false, DataCheck.UserDataCheck.USER_ID_IS_EMPTY.toString());
-        }
-        if(user==null||user.getCharacters()!= Const.UserCharacter.TEACHER){
-            return new Result(false, DataCheck.UserDataCheck.PERMISSION_DENIED.toString());
-        }
-        return new Result(true, DataCheck.UserDataCheck.IS_RESEARCHER.toString());
-    }
+
     @Override
     public Result checkUser(UserEntity user){
         if (user==null){
@@ -284,16 +276,21 @@ public class UserServiceImpl implements UserService {
         }
         return new Result(true, DataCheck.UserDataCheck.ACCOUNT_CAN_USE.toString());
     }
+
     @Override
     public Result checkUserPermission(UserEntity user) {
         if(user==null||user.getUserId()==null||user.getUserId().equals("")) {
         return new Result(false, DataCheck.UserDataCheck.USER_ID_IS_EMPTY.toString());
     }
-        if(user==null||user.getCharacters()!= Const.UserCharacter.NORMAL_USER){
-            return new Result(false, DataCheck.UserDataCheck.PERMISSION_DENIED.toString());
+        if(user.getCharacters() == Const.UserCharacter.ADMINISTRATION){
+            return new Result(false, DataCheck.UserDataCheck.IS_ADMIN.toString());
         }
-        return new Result(true, DataCheck.UserDataCheck.IS_USER.toString());
+        if(user.getCharacters() == Const.UserCharacter.TEACHER){
+            return new Result(false, DataCheck.UserDataCheck.IS_RESEARCHER.toString());
+        }
+        return new Result(true, DataCheck.UserDataCheck.PERMISSION_DENIED.toString());
     }
+
     @Override
     public Result checkInstitute(InstituteEntity institute){
         if (institute==null){
@@ -307,6 +304,4 @@ public class UserServiceImpl implements UserService {
         }
         return new Result(true, DataCheck.InstituteCheck.INSTITUTE_CAN_USE.toString());
     }
-
-
 }
