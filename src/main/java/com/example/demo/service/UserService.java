@@ -9,10 +9,11 @@ import java.util.List;
 
 public interface UserService {
     List<UserEntity> getUserList();
-    Result getUserById(String userId, UserEntity admin);
+    Result getUserById(String userId);
     Result addUser(UserEntity user);
     Result addUserByExcel(UserEntity user);
     Result DeleteUserById(String userId);
+    Result DeleteUsersById(String[] userId);
     Result DeleteCompletely(String userId, UserEntity admin);
     Result AgreeUserUpdate(UserEntity user, UserEntity admin);
     Result SetUserName(String userId,String userName);
@@ -21,8 +22,10 @@ public interface UserService {
     Result SetEmail(String userId,String email);
     Result SetPassword(String userId,String password);
     Result SetPhone(String userId,String phone);
+    Result SetStatus(String userId, UserEntity admin, Const.UserStatus status);
     Result UserExcelExport();
     Result checkInstitute(InstituteEntity institute);
+    Result checkAdminPermission(UserEntity user);
     Result checkUserPermission(UserEntity user);
     Result checkUser(UserEntity user);
     Result checkResearcherPermission(UserEntity user);
