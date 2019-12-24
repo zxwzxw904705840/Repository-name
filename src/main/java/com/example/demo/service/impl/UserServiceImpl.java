@@ -51,6 +51,11 @@ public class UserServiceImpl implements UserService {
         List<UserEntity> usersByStatus = userRepository.findUserEntitiesByUserStatus(status);
         return usersByStatus;
     }
+
+    public List<UserEntity> getUsersByRole(Const.UserCharacter role){
+        List<UserEntity> usersByRole = userRepository.findUserEntitiesByCharacters(role);
+        return usersByRole;
+    }
     //endregion
 
     //region 添加新用户
@@ -70,14 +75,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Result addUsers(UserEntity[] users){
+    public Result addUsers(List<UserEntity> users){
         Result result;
-        for(int i = 0; i <= users.length; i++){
-            result = checkUser(users[i]);
+        for(int i = 0; i <= users.size(); i++){
+            result = checkUser(users.get(i));
             if (!result.isSuccess()){
                 return result;
             }
-            userRepository.save(users[i]);
+            users.get(i).setUserStatus(Const.UserStatus.REVIEWING);
+            userRepository.save(users.get(i));
         }
         return new Result(true, DataCheck.UserDataCheck.USERS_ADDED.toString());
     }
@@ -121,6 +127,21 @@ public class UserServiceImpl implements UserService {
         }
         userRepository.delete(userEntity);
         return new Result(true,DataCheck.UserDataSet.USER_DELETED.toString());
+    }
+
+    @Override
+    public Result DeleteUsersCompletely(List<UserEntity> users, UserEntity personCanDelete){
+        Result result = checkUserPermission(personCanDelete);
+        if(result.getMessage() == DataCheck.UserDataCheck.IS_ADMIN.toString())
+            userRepository.deleteAll(users);
+//        for(int i = 0; i <= users.size(); i++){
+//            result = checkUser(users.get(i));
+//            if (!result.isSuccess()){
+//                return result;
+//            }
+//            userRepository.deleteAll(users.get(i));
+//        }
+        return new Result(true, DataCheck.UserDataCheck.USERS_DELETED.toString());
     }
     //endregion
 
@@ -292,12 +313,12 @@ public class UserServiceImpl implements UserService {
         return new Result(false, DataCheck.UserDataCheck.USER_ID_IS_EMPTY.toString());
     }
         if(user.getCharacters() == Const.UserCharacter.ADMINISTRATION){
-            return new Result(false, DataCheck.UserDataCheck.IS_ADMIN.toString());
+            return new Result(true, DataCheck.UserDataCheck.IS_ADMIN.toString());
         }
         if(user.getCharacters() == Const.UserCharacter.TEACHER){
-            return new Result(false, DataCheck.UserDataCheck.IS_RESEARCHER.toString());
+            return new Result(true, DataCheck.UserDataCheck.IS_RESEARCHER.toString());
         }
-        return new Result(true, DataCheck.UserDataCheck.PERMISSION_DENIED.toString());
+        return new Result(false, DataCheck.UserDataCheck.PERMISSION_DENIED.toString());
     }
 
     @Override
