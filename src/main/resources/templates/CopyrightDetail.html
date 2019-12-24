@@ -71,7 +71,7 @@
                                 <div class="row">
                                     <label  class="col-md-2 control-label col-md-offset-4 h3">论文标题:</label>
                                     <div class="col-md-4 h3">
-                                        <p th:text="${thesisinf.getThesisTitle()}"></p>
+                                        <p th:text="${copyrightinf.getBookName()}"></p>
                                     </div>
                                 </div>
                             </div>
@@ -79,15 +79,15 @@
                                 <div class="row">
                                     <label class="col-md-1 control-label">文章编号</label>
                                     <div class="col-md-3">
-                                        <p th:text="${thesisinf.getThesisId()}"></p>
+                                        <p th:text="${copyrightinf.getBookId()}"></p>
                                     </div>
                                     <label  class="col-md-1 control-label">作者一</label>
                                     <div class="col-md-3">
-                                        <p th:text="${thesisinf.getAuthor1().getUserName()}"></p>
+                                        <p th:text="${copyrightinf.getAuthor1().getUserName()}"></p>
                                     </div>
                                     <label  class="col-md-1 control-label">作者二</label>
                                     <div class="col-md-3">
-                                        <p th:text="${thesisinf.getAuthor2().getUserName()}"></p>
+                                        <p th:text="${copyrightinf.getAuthor2().getUserName()}"></p>
                                     </div>
                                 </div>
                             </div>
@@ -96,35 +96,35 @@
                                 <div class="row">
                                     <label  class="col-md-1 control-label">作者三</label>
                                     <div class="col-md-3">
-                                        <p th:text="${thesisinf.getAuthor3().getUserName()}"></p>
+                                        <p th:text="${copyrightinf.getAuthor3().getUserName()}"></p>
                                     </div>
-                                    <label class="col-md-1 control-label">刊名</label>
+                                    <label class="col-md-1 control-label">发表时间</label>
                                     <div class="col-md-3">
-                                        <p th:text="${thesisinf.getJournal()}"></p>
+                                        <p th:text="${copyrightinf.getBookPublishDate()}"></p>
                                     </div>
-                                    <label  class="col-md-1 control-label">期，卷</label>
+                                    <label  class="col-md-1 control-label">发表状态</label>
                                     <div class="col-md-3">
-                                        <p th:text="${thesisinf.getVolume()}"></p>
+                                        <p th:text="${copyrightinf.getBookPublishStatus()}"></p>
                                     </div>
                                 </div>
                             </div>
 
                         <div class="form-group">
                             <div class="row">
-                                    <label  class="col-md-1 control-label">页数</label>
+                                    <label  class="col-md-1 control-label">创作性质</label>
                                     <div class="col-md-3">
-                                        <p th:text="${thesisinf.getPages()}"></p>
+                                        <p th:text="${copyrightinf.getCreativeNature()}"></p>
                                     </div>
-                                    <label  class="col-md-1 control-label">私密性</label>
-                                    <div class="col-md-3">
-                                        <p th:text="${thesisinf.getPrivacy()}"></p>
-                                    </div>
-                                <label  class="col-md-1 control-label">全文url</label>
-                                <div class="col-md-3">
-                                    <a th:href="${thesisinf.getUrl()}">
-                                        <button class="btn btn-warning" style="margin-top: -5px;">前往</button>
-                                    </a>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="row">
+                                <label  class="col-md-1 control-label">著作简介</label>
+                                <div class="col-md-10">
+                                    <div th:text="${copyrightinf.getBookInformation()}"></div>
                                 </div>
+
                             </div>
                         </div>
 

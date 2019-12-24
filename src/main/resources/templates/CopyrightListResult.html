@@ -62,23 +62,20 @@
                 <h3 class="text-center">论文搜索结果</h3>
             </div>
             <div class="row">
-                <div class="col-md-8 col-md-offset-2" >
-                    <div class="panel panel-warning" th:each="list:${thesisList}">
-                        <a th:href="@{'/ThesisDetail/'+${list.getThesisId()}}">
+                <div class="col-md-6 col-md-offset-3" >
+                    <div class="panel panel-warning" th:each="list:${copyrightList}">
+                        <a th:href="@{'/CopyrightDetail/'+${list.getBookId()}}">
 
                             <div class="panel-heading panel-warning">
-                                <h3 class="panel-title text-center" th:text="${list.getThesisId()}"></h3>
+                                <h3 class="panel-title text-center" th:text="${list.getBookId()}"></h3>
                             </div>
                             <div class="panel-body">
                                 <div class="row">
-                                    <div class="col-md-4 col-md-offset-1 panel-title">
-                                        <p th:text="${list.getThesisTitle()}">名称</p>
+                                    <div class="col-md-4 col-md-offset-3 panel-title">
+                                        <p th:text="${list.getBookName()}">名称</p>
                                     </div>
                                     <div class="col-md-2 panel-title">
                                         <p th:text="${list.getAuthor1().getUserName()}">作者1名称</p>
-                                    </div>
-                                    <div class="col-md-2 panel-title">
-                                        <p th:text="${list.getJournal()}"></p>
                                     </div>
                                 </div>
                             </div>
