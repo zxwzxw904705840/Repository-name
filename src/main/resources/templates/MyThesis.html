@@ -29,131 +29,205 @@
 
 <body id="homepage" style="overflow:hidden">
 
-    <div id="wrapper">
-        <!-- header begin -->
-     
-            <header  class="smaller">
-                <div class="row">                                 
-                        <!-- mainmenu begin -->
-                        <nav  class="navbar" role="navigation" style="margin-bottom: 0">
-                            <ul id="mainmenu" class="navbar-left">
-                                <li><a class="J_menuItem black" th:href="@{index}">Home</a></li>
-                                <li><a class="J_menuItem" th:href="@{MyThesis}">My Thesis</a></li>
-                                <li><a class="J_menuItem" th:href="@{MySoftwareCopyright}">My Software Copyright</a></li>
-            <li><a class="J_menuItem" href="ThesisListResult.html">My Project</a></li>
-            <li><a class="J_menuItem" href="Management.html">Management</a></li>
-            <li><a class="J_menuItem" href="ReportStatistics.html">Report Statistics</a></li> 
-            <li><a class="J_menuItem" >谢文仲</a></li> 
-            <li><a class="J_menuItem" th:href="@{login}">退出</a></li>
-             
-                            </ul>
-                        </nav>
+<div id="wrapper">
+    <!-- header begin -->
 
-                
-                    <!-- mainmenu close -->
+    <header  class="smaller">
+        <div class="row">
+            <!-- mainmenu begin -->
+            <nav  class="navbar" role="navigation" style="margin-bottom: 0">
+                <ul id="mainmenu" class="navbar-left">
+                    <li><a class="J_menuItem black" th:href="@{index}">Home</a></li>
+                    <li><a class="J_menuItem" th:href="@{MyThesis}">My Thesis</a></li>
+                    <li><a class="J_menuItem" th:href="@{MySoftwareCopyright}">My Software Copyright</a></li>
+                    <li><a class="J_menuItem" href="ThesisListResult.html">My Project</a></li>
+                    <li><a class="J_menuItem" href="Management.html">Management</a></li>
+                    <li><a class="J_menuItem" href="ReportStatistics.html">Report Statistics</a></li>
+                    <li><a class="J_menuItem" >谢文仲</a></li>
+                    <li><a class="J_menuItem" th:href="@{login}">退出</a></li>
 
+                </ul>
+            </nav>
+
+
+            <!-- mainmenu close -->
+
+        </div>
+
+    </header>
+
+    <!-- header close -->
+
+
+    <!-- content begin -->
+    <div id="content">
+        <div class="row">
+            <div class="col-md-10 col-md-offset-1">
+
+                <form class="form-inline" id="search_from" name="search_from">
+                    <label class="control-label" for="inputthesisId">Thesis ID：</label>
+                    <input class="form-control headmargin" type="text" id="inputthesisId" name="thesisId"/>
+                    <label class="control-label" for="inputthesisname">Thesis Name：</label>
+                    <input class="form-control headmargin" type="text" id="inputthesisname" name="thesisname"/>
+                    <button type="button" onclick="findThesis()" id="search" class="btn btn-warning"><span
+                            aria-hidden="true"></span>Search
+                    </button>
+                    <button type="button" onclick="addThesis()" id="add" class="btn btn-warning"><span
+                            aria-hidden="true"></span> Add
+                    </button>
+                    <button type="button" id="remove" class="btn btn-warning"><span
+                            aria-hidden="true"></span> Delete
+                    </button>
+
+                </form>
+                <br/>
+                <table  class="table table-bordered" id="table_list"></table>
+            </div>
+            <!-- 增加论文的模态框 -->
+            <div class="modal fade" id="addThesisModal" name="ddThesisModal" role="dialog">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                &times;
+                            </button>
+                            <h4 class="modal-title" id="myModalLabel" name="myModalLabel">
+                                登记论文
+                            </h4>
+                        </div>
+                        <div class="modal-body" id="modalcontent" style="padding: 0">
+
+                            <div class="modal-body">
+                                Thesis ID: <input type="text" id="thesisIdinput1" name="thesisIdinput1"/>
+                                <button  class="btn btn_purple searchMargin retop"  onclick="searchAdd()">查找</button>
+
+                                <div id="bookinf" class="retopborder"></div>
+                            </div>
+                        </div>
+
+                    </div>
                 </div>
+            </div>
 
-     </header>
-    
-        <!-- header close -->
+        </div>
 
 
-        <!-- content begin -->
-        <div id="content">
-<div class="row">
-    <div class="col-md-10 col-md-offset-1">
-        <table  class="table table-bordered" id="table_list"></table>
+
     </div>
+    <input id="labeluserid" type="hidden" th:value="${session.userId}" />
 </div>
 
 
-          
-        </div>
-    </div>
+<!-- Javascript Files
+================================================== -->
+<script src="../js/jquery.min.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+<script src="../js/bootstrap-table.min.js"></script>
+<script>
+
+    /*
+     * 初始化BootstrapTable,动态从服务器加载数据
+     * */
+    $(document).ready(function () {
+
+        var userid = document.getElementById("labeluserid").value;
+
+        dataTableHot = $("#table_list").bootstrapTable({
+            //使用get请求到服务器获取数据
+            method: "POST",
+            //必须设置，不然request.getParameter获取不到请求参数
+            contentType: "application/x-www-form-urlencoded",
+            //获取数据的Servlet地址
+            url: "/MyThesis/findTBlist",
+            //表格显示条纹
+            striped: true,
+            //启动分页
+            pagination: true,
+            //每页显示的记录数
+            pageSize: 10,
+            //当前第几页
+            pageNumber: 1,
+            //记录数可选列表
+            pageList: [5, 10, 15, 20, 25],
+            //是否启用查询
+            search: false,
+            //表示服务端请求
+            sidePagination: "server",
+            //设置为undefined可以获取pageNumber，pageSize，searchText，sortName，sortOrder
+            //设置为limit可以获取limit, offset, search, sort, order
+            //  queryParamsType: "undefined",
+            // queryParams: queryParams,
+            queryParamsType: "",
+            queryParams: getParams,
+            //json数据解析
+            responseHandler: function (res) {
+                console.log("res", res)
+                return {
+                    "rows": res.rows,
+                    "total": res.total
+                };
+            },
+            //数据列
+            columns: [
+                {
+                    checkbox: true
+                },
+                {
+                    field: 'Number',//可不加
+                    title: '序号',//标题  可不加
+                    formatter: function (value, row, index) {
+                        return index + 1;
+                    }
+                }, {
+                    title: "Thesis ID",
+                    field: "Thesis ID",
+
+                }, {
+                    title: "Thesis Title",
+                    field: "Thesis Title"
+                }, {
+                    title: "Author1",
+                    field: "author1"
+                }, {
+                    title: "Journal",
+                    field: "Journal"
+                }]
 
 
-    <!-- Javascript Files
-    ================================================== -->
-    <script src="../js/jquery.min.js"></script>
-    <script src="../js/bootstrap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
-    <script src="../js/bootstrap-table.min.js"></script>
-  <script>
+        });
+    });
 
-      /*
-       * 初始化BootstrapTable,动态从服务器加载数据
-       * */
-      $(document).ready(function () {
+    /*
+* 设置额外BootstrapTable请求参数
+**/
+    // function queryParams(params) {
+    function getParams(params) {
 
-          var teachcourseid = document.getElementById("teachcourseidInput").value;
+        return {
+            //表格显示条纹
+            striped: true,
+            //启动分页
+            pagination: true,
+            //     pageSize: 10,
+            //当前第几页
+            //    pageNumber: 1,
+            pageSize : params.pageSize,
+            pageNumber : params.pageNumber,
+            //记录数可选列表
+            pageList: [5, 10, 15, 20, 25],
+            thesisId: $('#search_from input[name=\'Thesis ID\']').val(),	// 请求时向服务端传递的参数
+            thesisTitle: $('#search_from input[name=\'Thesis Title\']').val(),		// 请求时向服务端传递的参数
 
-          dataTableHot = $("#table_list").bootstrapTable({
-              //使用get请求到服务器获取数据
-              method: "POST",
-              //必须设置，不然request.getParameter获取不到请求参数
-              contentType: "application/x-www-form-urlencoded",
-              //获取数据的Servlet地址
-              url: "/MyThesis",
-              //表格显示条纹
-              striped: true,
-              //启动分页
-              pagination: true,
-              //每页显示的记录数
-              pageSize: 10,
-              //当前第几页
-              pageNumber: 1,
-              //记录数可选列表
-              pageList: [5, 10, 15, 20, 25],
-              //是否启用查询
-              search: false,
-              //表示服务端请求
-              sidePagination: "server",
-              //设置为undefined可以获取pageNumber，pageSize，searchText，sortName，sortOrder
-              //设置为limit可以获取limit, offset, search, sort, order
-              //  queryParamsType: "undefined",
-              // queryParams: queryParams,
-              queryParamsType: "",
-              queryParams: getParams,
-              //json数据解析
-              responseHandler: function (res) {
-                  console.log("res", res)
-                  return {
-                      "rows": res.rows,
-                      "total": res.total
-                  };
-              },
-              //数据列
-              columns: [
-                  {
-                      checkbox: true
-                  },
-                  {
-                      //field: 'Number',//可不加
-                      title: '序号',//标题  可不加
-                      formatter: function (value, row, index) {
-                          return index + 1;
-                      }
-                  }, {
-                      title: "Thesis ID",
-                      field: "Thesis ID",
+        }
+    }
 
-                  }, {
-                      title: "Thesis Title",
-                      field: "Thesis Title"
-                  }, {
-                      title: "Author1",
-                      field: "author1"
-                  }, {
-                      title: "Journal",
-                      field: "Journal"
-                  }]
+    function addThesis() {
+        $('#addThesisModal').modal('show');
+    }
 
 
-          });
-      });
-
-  </script>
+</script>
 
 </body>
 </html>
