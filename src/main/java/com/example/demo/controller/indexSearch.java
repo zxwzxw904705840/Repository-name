@@ -2,10 +2,10 @@ package com.example.demo.controller;
 
 import com.example.demo.Entity.UserEntity;
 import com.example.demo.service.UserService;
-
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,6 +22,7 @@ public class indexSearch {
     @Autowired
     UserService userService;
 
+
     @GetMapping(value = {"/login","","/","logout"})
     public String login() {
         return "login";
@@ -30,6 +31,7 @@ public class indexSearch {
 
     @PostMapping("/login")
     public String login(Model model, HttpServletRequest request, HttpSession session) {
+
         String userid = request.getParameter("userId");
         String passwd =  request.getParameter("passwd");
         UsernamePasswordToken token = new UsernamePasswordToken(userid, passwd);

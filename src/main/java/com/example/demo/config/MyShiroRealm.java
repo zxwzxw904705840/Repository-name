@@ -63,9 +63,7 @@ public class MyShiroRealm extends AuthorizingRealm {
         logger.info("---------------- 执行 Shiro 权限获取 ---------------------");
         Object principal = principals.getPrimaryPrincipal();
         SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();
-
         // List<String> permissions = new ArrayList<String>();
-
         if (principal instanceof UserEntity) {
             UserEntity userLogin = (UserEntity) principal;
             UserEntity user = (UserEntity)userService.getUserById(userLogin.getUserId()).getObject(userLogin.getUserId());
