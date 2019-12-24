@@ -3,6 +3,7 @@ package com.example.demo.controller;
 import com.example.demo.Entity.ThesisEntity;
 import com.example.demo.Entity.UserEntity;
 import com.example.demo.service.UserService;
+import com.example.demo.utils.Const;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
@@ -10,6 +11,7 @@ import org.apache.shiro.authc.UsernamePasswordToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.ui.Model;
@@ -79,10 +81,8 @@ public class indexSearch {
         List<ThesisEntity> thesisList=new ArrayList<>();
 
         UserEntity user=new UserEntity();
-        System.out.println(" UserEntity user=new UserEntity();");
         user.setUserName("叶元卯");
-        System.out.println(" user.setUserId();"+user.getUserId());
-        
+
         //临时假数据
         for(int i=0;i<15;i++){
             ThesisEntity thesistmp=new ThesisEntity();
@@ -126,6 +126,32 @@ public class indexSearch {
         return "CopyrightListResult";
     }
 
+//跳转到论文ID对应的论文详情界面
+    @RequestMapping("/ThesisDetail/{ThesisId}")
+    public  String ThesisDetail(HttpServletRequest request, @PathVariable("ThesisId") String ThesisId, Model model){
+        System.out.println("/ThesisDetail/{ThesisId}+"+ThesisId);
+        //临时假数据
+        ThesisEntity thesistmp=new ThesisEntity();
+        UserEntity user=new UserEntity();
+        UserEntity user2=new UserEntity();
+        UserEntity user3=new UserEntity();
+        user.setUserName("叶元卯");
+        user2.setUserName("刘新");
+        user3.setUserName("袁学海");
+        thesistmp.setAuthor1(user);
+        thesistmp.setJournal("机械动力期刊");
+        thesistmp.setThesisId(ThesisId);
+        thesistmp.setThesisTitle("动态规划");
+        thesistmp.setAuthor2(user2);
+        thesistmp.setAuthor3(user3);
+        thesistmp.setPages(2);
+        thesistmp.setPrivacy(Const.ThesisPrivacy.PUBLIC);
+        thesistmp.setUrl("http://kns.cnki.net//KXReader/Detail?TIMESTAMP=637128076425118750&DBCODE=CJFQ&TABLEName=CJFDLAST2015&FileName=JJYD201504007&RESULT=1&SIGN=fZDoiQetL2qN%2b2B89OOattl2n8I%3d");
+        thesistmp.setVolume("02期");
+        System.out.println("thsistmp:"+thesistmp.getAuthor2().getUserName());
+        model.addAttribute("thesisinf",thesistmp);
 
+        return "ThesisDetail";
+    }
 
 }
