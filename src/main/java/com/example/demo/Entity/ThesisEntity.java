@@ -20,6 +20,10 @@ public class ThesisEntity {
     private Const.ThesisPrivacy privacy;
     private Const.ThesisStatus status;
 
+    public ThesisEntity(){}
+
+    public ThesisEntity(String thesisId){this.thesisId=thesisId;}
+
     @Id
     @Column(name = "thesisId")
     public String getThesisId() {

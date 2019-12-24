@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.w3.org/1999/xhtml" lang="zh_CN">
 <head>
     <meta charset="utf-8">
     <title>Cubic - One Page Responsive HTML 5 Website Template</title>
@@ -16,12 +16,14 @@
 
     <!-- CSS Files
     ================================================== -->
-    <link rel="stylesheet" href="../static/css/bootstrap.css" type="text/css">
-    <link rel="stylesheet" href="../static/css/style.css" type="text/css">
+    <link rel="stylesheet" href="../css/bootstrap.css" type="text/css">
+
+    <link rel="stylesheet" href="../css/style.css" type="text/css">
     <!-- color scheme -->
-    <link rel="stylesheet" href="../static/css/color.css" type="text/css">
+    <link rel="stylesheet" href="../css/color.css" type="text/css">
     <!-- revolution slider -->
-    <link rel="stylesheet" href="../static/css/rev-settings.css" type="text/css">
+    <link rel="stylesheet" href="../css/rev-settings.css" type="text/css">
+    <link rel="stylesheet" href="../css/login.css" type="text/css">
 
 </head>
 
@@ -30,19 +32,19 @@
     <div id="wrapper">
         <!-- header begin -->
      
-            <header  class="">
+            <header  class="smaller">
                 <div class="row">                                 
                         <!-- mainmenu begin -->
                         <nav  class="navbar" role="navigation" style="margin-bottom: 0">
                             <ul id="mainmenu" class="navbar-left">
-                                <li><a class="J_menuItem" href="index.html">Home</a></li>
-                                 <li><a class="J_menuItem" href="MyThesis.html">My Thesis</a></li>
-            <li><a class="J_menuItem" href="MySoftwareCopyright.html">My Software Copyright</a></li>
-            <li><a class="J_menuItem" href="MyProject.html">My Project</a></li>
+                                <li><a class="J_menuItem black" th:href="@{index}">Home</a></li>
+                                <li><a class="J_menuItem" th:href="@{MyThesis}">My Thesis</a></li>
+                                <li><a class="J_menuItem" th:href="@{MySoftwareCopyright}">My Software Copyright</a></li>
+            <li><a class="J_menuItem" href="ThesisListResult.html">My Project</a></li>
             <li><a class="J_menuItem" href="Management.html">Management</a></li>
-            <li><a class="J_menuItem" href="ReportStatistics.html">Report Statistics</a></li> 
-            <li><a class="J_menuItem" >谢文仲</a></li> 
-            <li><a class="J_menuItem" href="login.html">退出</a></li> 
+            <li><a class="J_menuItem" href="ReportStatistics.html">Report Statistics</a></li>
+                                <li><a class="J_menuItem" th:text="${session.user.getUserName()}">谢文仲</a></li>
+                                <li><a class="J_menuItem" th:href="@{logout}">退出</a></li>
              
                             </ul>
                         </nav>
@@ -60,17 +62,7 @@
         <!-- content begin -->
         <div id="content">
 mm
-</br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br>
-dd
-<section id="section-thesis">
-    
-</section>
-</br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br>
-ggggooooooooood@!
-ss</br>
-<section id="section-copyright">
-    xs</br></br>x.x.x.
-</section>
+
 </div>
 
           
@@ -80,10 +72,9 @@ ss</br>
 
     <!-- Javascript Files
     ================================================== -->
-    <script src="..static/js/jquery.min.js"></script>
-    <script src="../static/js/bootstrap.min.js"></script>
-  
-  
+    <script src="../js/jquery.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+
 
 </body>
 </html>
