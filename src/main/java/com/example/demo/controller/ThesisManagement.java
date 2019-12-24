@@ -78,23 +78,64 @@ public class ThesisManagement {
         return result;
     }
 
-    //新增论文信息，论文ID就是文章编号，属于必填项
-    @ResponseBody
-    @RequestMapping("/addThesis")
-    public String addThesis(HttpServletRequest request) {
+    //跳转到论文登记界面
+    @RequestMapping("/AddThesis")
+    public String AddThesis(HttpServletRequest request) {
+        String userid=request.getSession().getAttribute("userId").toString();
 
 
         JSONObject result=new JSONObject();
         result.put("message","success");
-        return result.toString();
+        return "AddThesis";
+    }
+
+    /**提交新增论文信息，论文ID就是文章编号，属于必填项
+     *
+     * @param request
+     * @return
+     */
+    @RequestMapping("/AddThesisSubmit")
+    public String submit(HttpServletRequest request) {
+        String userid=request.getSession().getAttribute("userId").toString();
+        String title=request.getParameter("input1");
+        String thesisId=request.getParameter("input2");
+        String author1="";
+        String author2="";
+        String author3="";
+        String journal="";
+        String volume="";
+        String pages="";
+        String url="";
+        if(request.getParameter("input3")!=null){
+            author1=request.getParameter("input3");
+        }
+        if(request.getParameter("input4")!=null){
+            author2=request.getParameter("input4");
+        }
+        if(request.getParameter("input5")!=null){
+            author3=request.getParameter("input5");
+        }
+        if(request.getParameter("input6")!=null){
+            journal=request.getParameter("input6");
+        }
+        if(request.getParameter("input7")!=null){
+            volume=request.getParameter("input7");
+        }
+        if(request.getParameter("input8")!=null){
+            pages=request.getParameter("input8");
+        }
+        if(request.getParameter("input10")!=null){
+            url=request.getParameter("input10");
+        }
+        String privacy=request.getParameter("optionsRadiosinline");
+        System.out.println("/AddThesisSubmit userid:"+userid+" privacy："+privacy+" title:"+title);
+        return "MyThesis";
     }
 
     //修改某篇论文信息
     @ResponseBody
     @RequestMapping("/editThesis")
     public String editThesis(HttpServletRequest request) {
-
-
         JSONObject result=new JSONObject();
         result.put("message","success");
         return result.toString();

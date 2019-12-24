@@ -41,10 +41,10 @@
                     <li><a class="J_menuItem" th:href="@{MyThesis}">My Thesis</a></li>
                     <li><a class="J_menuItem" th:href="@{MySoftwareCopyright}">My Software Copyright</a></li>
                     <li><a class="J_menuItem" href="ThesisListResult.html">My Project</a></li>
-                    <li><a class="J_menuItem" href="Management.html">Management</a></li>
+                    <li><a class="J_menuItem" href="AddThesis.html">Management</a></li>
                     <li><a class="J_menuItem" href="ReportStatistics.html">Report Statistics</a></li>
                     <li><a class="J_menuItem" >谢文仲</a></li>
-                    <li><a class="J_menuItem" th:href="@{login}">退出</a></li>
+                    <li><a class="J_menuItem" th:href="@{logout}">退出</a></li>
 
                 </ul>
             </nav>
@@ -72,9 +72,11 @@
                     <button type="button" onclick="findThesis()" id="search" class="btn btn-warning"><span
                             aria-hidden="true"></span>Search
                     </button>
-                    <button type="button" onclick="addThesis()" id="add" class="btn btn-warning"><span
-                            aria-hidden="true"></span> Add
-                    </button>
+                    <a th:href="@{AddThesis}" >
+                        <button type="button" class="btn btn-warning"><span
+                            aria-hidden="true"></span> Add</button>
+                    </a>
+
                     <button type="button" id="remove" class="btn btn-warning"><span
                             aria-hidden="true"></span> Delete
                     </button>
@@ -83,31 +85,7 @@
                 <br/>
                 <table  class="table table-bordered" id="table_list"></table>
             </div>
-            <!-- 增加论文的模态框 -->
-            <div class="modal fade" id="addThesisModal" name="ddThesisModal" role="dialog">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                                &times;
-                            </button>
-                            <h4 class="modal-title" id="myModalLabel" name="myModalLabel">
-                                登记论文
-                            </h4>
-                        </div>
-                        <div class="modal-body" id="modalcontent" style="padding: 0">
 
-                            <div class="modal-body">
-                                Thesis ID: <input type="text" id="thesisIdinput1" name="thesisIdinput1"/>
-                                <button  class="btn btn_purple searchMargin retop"  onclick="searchAdd()">查找</button>
-
-                                <div id="bookinf" class="retopborder"></div>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-            </div>
 
         </div>
 
@@ -220,10 +198,6 @@
             thesisTitle: $('#search_from input[name=\'Thesis Title\']').val(),		// 请求时向服务端传递的参数
 
         }
-    }
-
-    function addThesis() {
-        $('#addThesisModal').modal('show');
     }
 
 
