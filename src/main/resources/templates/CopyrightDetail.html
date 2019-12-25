@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Cubic - One Page Responsive HTML 5 Website Template</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Responsive Minimal Bootstrap Theme">
+    <meta name="keywords" content="onepage,responsive,minimal,bootstrap,theme">
+    <meta name="author" content="">
+
+    <!--[if lt IE 9]>
+    <script src="../static/js/html5shiv.js"></script>
+    <![endif]-->
+
+
+    <!-- CSS Files
+    ================================================== -->
+    <link rel="stylesheet" href="../css/bootstrap.css" type="text/css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+    <link rel="stylesheet" href="../css/bootstrap-table.min.css">
+    <link rel="stylesheet" href="../css/style.css" type="text/css">
+    <!-- color scheme -->
+    <link rel="stylesheet" href="../css/color.css" type="text/css">
+    <!-- revolution slider -->
+    <link rel="stylesheet" href="../css/rev-settings.css" type="text/css">
+    <link rel="stylesheet" href="../css/login.css" type="text/css">
+
+</head>
+
+<body id="homepage" style="overflow:hidden">
+
+<div id="wrapper">
+    <!-- header begin -->
+
+    <header  class="smaller">
+        <div class="row">
+            <!-- mainmenu begin -->
+            <nav  class="navbar" role="navigation" style="margin-bottom: 0">
+                <ul id="mainmenu" class="navbar-left">
+                    <li><a class="J_menuItem black" th:href="@{/index}">Home</a></li>
+                    <li><a class="J_menuItem" th:href="@{/MyThesis}">My Thesis</a></li>
+                    <li><a class="J_menuItem" th:href="@{/MySoftwareCopyright}">My Software Copyright</a></li>
+                    <li><a class="J_menuItem" th:href="@{/subjectManagement}">My Project</a></li>
+                    <li><a class="J_menuItem" th:href="@{/userManagement}">Management</a></li>
+                    <li><a class="J_menuItem" th:href="@{/}">Report Statistics</a></li>
+                    <li><a class="J_menuItem" th:text="${session.user.getUserName()}">谢文仲</a></li>
+                    <li><a class="J_menuItem" th:href="@{logout}">退出</a></li>
+                </ul>
+            </nav>
+
+
+            <!-- mainmenu close -->
+
+        </div>
+
+    </header>
+
+    <!-- header close -->
+
+
+    <!-- content begin -->
+    <div id="content">
+        <div class="row">
+            <div class="col-md-offset-2 col-md-8">
+                <div class="panel panel-warning ">
+                    <div class="panel-heading text-center">
+                        <h3 class="panel-title ">论文详情</h3>
+                    </div>
+                    <div class="panel-body">
+                            <div class="form-group">
+                                <div class="row">
+                                    <label  class="col-md-2 control-label col-md-offset-4 h3">论文标题:</label>
+                                    <div class="col-md-4 h3">
+                                        <p th:text="${copyrightinf.getBookName()}"></p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="row">
+                                    <label class="col-md-1 control-label">文章编号</label>
+                                    <div class="col-md-3">
+                                        <p th:text="${copyrightinf.getBookId()}"></p>
+                                    </div>
+                                    <label  class="col-md-1 control-label">作者一</label>
+                                    <div class="col-md-3">
+                                        <p th:text="${copyrightinf.getAuthor1().getUserName()}"></p>
+                                    </div>
+                                    <label  class="col-md-1 control-label">作者二</label>
+                                    <div class="col-md-3">
+                                        <p th:text="${copyrightinf.getAuthor2().getUserName()}"></p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="row">
+                                    <label  class="col-md-1 control-label">作者三</label>
+                                    <div class="col-md-3">
+                                        <p th:text="${copyrightinf.getAuthor3().getUserName()}"></p>
+                                    </div>
+                                    <label class="col-md-1 control-label">发表时间</label>
+                                    <div class="col-md-3">
+                                        <p th:text="${copyrightinf.getBookPublishDate()}"></p>
+                                    </div>
+                                    <label  class="col-md-1 control-label">发表状态</label>
+                                    <div class="col-md-3">
+                                        <p th:text="${copyrightinf.getBookPublishStatus()}"></p>
+                                    </div>
+                                </div>
+                            </div>
+
+                        <div class="form-group">
+                            <div class="row">
+                                    <label  class="col-md-1 control-label">创作性质</label>
+                                    <div class="col-md-3">
+                                        <p th:text="${copyrightinf.getCreativeNature()}"></p>
+                                    </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="row">
+                                <label  class="col-md-1 control-label">著作简介</label>
+                                <div class="col-md-10">
+                                    <div th:text="${copyrightinf.getBookInformation()}"></div>
+                                </div>
+
+                            </div>
+                        </div>
+
+
+
+                    </div>
+                </div>
+
+            </div>
+            <br/>
+
+        </div>
+
+    </div>
+    <input id="labeluserid" type="hidden" th:value="${session.userId}" />
+</div>
+
+
+<!-- Javascript Files
+================================================== -->
+<script src="../js/jquery.min.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+<script src="../js/bootstrap-table.min.js"></script>
+
+
+</body>
+</html>

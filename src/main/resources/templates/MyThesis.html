@@ -37,14 +37,14 @@
             <!-- mainmenu begin -->
             <nav  class="navbar" role="navigation" style="margin-bottom: 0">
                 <ul id="mainmenu" class="navbar-left">
-                    <li><a class="J_menuItem black" th:href="@{index}">Home</a></li>
-                    <li><a class="J_menuItem" th:href="@{MyThesis}">My Thesis</a></li>
-                    <li><a class="J_menuItem" th:href="@{MySoftwareCopyright}">My Software Copyright</a></li>
-                    <li><a class="J_menuItem" href="ThesisListResult.html">My Project</a></li>
-                    <li><a class="J_menuItem" href="Management.html">Management</a></li>
-                    <li><a class="J_menuItem" href="ReportStatistics.html">Report Statistics</a></li>
-                    <li><a class="J_menuItem" >谢文仲</a></li>
-                    <li><a class="J_menuItem" th:href="@{login}">退出</a></li>
+                    <li><a class="J_menuItem black" th:href="@{/index}">Home</a></li>
+                    <li><a class="J_menuItem" th:href="@{/MyThesis}">My Thesis</a></li>
+                    <li><a class="J_menuItem" th:href="@{/MySoftwareCopyright}">My Software Copyright</a></li>
+                    <li><a class="J_menuItem" th:href="@{/subjectManagement}">My Project</a></li>
+                    <li><a class="J_menuItem" th:href="@{/userManagement}">Management</a></li>
+                    <li><a class="J_menuItem" th:href="@{/}">Report Statistics</a></li>
+                    <li><a class="J_menuItem" th:text="${session.user.getUserName()}">谢文仲</a></li>
+                    <li><a class="J_menuItem" th:href="@{logout}">退出</a></li>
 
                 </ul>
             </nav>
@@ -63,51 +63,59 @@
     <div id="content">
         <div class="row">
             <div class="col-md-10 col-md-offset-1">
-
+              <div class="row">
+                  <div class="col-md-7">
                 <form class="form-inline" id="search_from" name="search_from">
                     <label class="control-label" for="inputthesisId">Thesis ID：</label>
                     <input class="form-control headmargin" type="text" id="inputthesisId" name="thesisId"/>
-                    <label class="control-label" for="inputthesisname">Thesis Name：</label>
+                    <label class="control-label" for="inputthesisname">  Thesis Name：</label>
                     <input class="form-control headmargin" type="text" id="inputthesisname" name="thesisname"/>
                     <button type="button" onclick="findThesis()" id="search" class="btn btn-warning"><span
                             aria-hidden="true"></span>Search
                     </button>
-                    <button type="button" onclick="addThesis()" id="add" class="btn btn-warning"><span
-                            aria-hidden="true"></span> Add
-                    </button>
-                    <button type="button" id="remove" class="btn btn-warning"><span
+                </form>
+                  </div>
+                  <div class="col-md-4">
+                    <a th:href="@{AddThesis}" >
+                        <button type="button" class="btn btn-warning"><span
+                            aria-hidden="true"></span> Add</button>
+                    </a>
+
+                    <button type="button" id="remove" class="btn btn-warning" onclick="deleteThesis();"><span
                             aria-hidden="true"></span> Delete
                     </button>
+                  </div>
+              </div>
 
-                </form>
                 <br/>
-                <table  class="table table-bordered" id="table_list"></table>
-            </div>
-            <!-- 增加论文的模态框 -->
-            <div class="modal fade" id="addThesisModal" name="ddThesisModal" role="dialog">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                                &times;
-                            </button>
-                            <h4 class="modal-title" id="myModalLabel" name="myModalLabel">
-                                登记论文
-                            </h4>
-                        </div>
-                        <div class="modal-body" id="modalcontent" style="padding: 0">
-
-                            <div class="modal-body">
-                                Thesis ID: <input type="text" id="thesisIdinput1" name="thesisIdinput1"/>
-                                <button  class="btn btn_purple searchMargin retop"  onclick="searchAdd()">查找</button>
-
-                                <div id="bookinf" class="retopborder"></div>
+                <!--table  class="table table-bordered" id="table_list"></table-->
+                <div class="panel panel-warning" th:each="list:${thesisList}">
+                    <a th:href="@{'/ThesisDetail/'+${list.getThesisId()}}">
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-md-2 panel-title">
+                                    <p th:text="${list.getThesisId()}"></p>
+                                </div>
+                                <div class="col-md-3  panel-title">
+                                    <p th:text="${list.getThesisTitle()}">名称</p>
+                                </div>
+                                <div class="col-md-2 panel-title">
+                                    <p th:text="${list.getAuthor1().getUserName()}">作者1名称</p>
+                                </div>
+                                <div class="col-md-2 panel-title">
+                                    <p th:text="${list.getJournal()}"></p>
+                                </div>
+                                <label class="checkbox-inline col-md-1">
+                                    <input type="checkbox" name="optionsCheckboxinline"  th:value="${list.getThesisId()}">
+                                </label>
                             </div>
                         </div>
+                    </a>
 
-                    </div>
-                </div>
+                </div> <!-- panel panel-warning -->
+
             </div>
+
 
         </div>
 
@@ -139,7 +147,7 @@
             //必须设置，不然request.getParameter获取不到请求参数
             contentType: "application/x-www-form-urlencoded",
             //获取数据的Servlet地址
-            url: "/MyThesis/findTBlist",
+            url: "/findTBlist",
             //表格显示条纹
             striped: true,
             //启动分页
@@ -221,9 +229,25 @@
 
         }
     }
+    function deleteThesis() {
+        var thsisidlist =new Array();
+        var dd = '';
+        var radio = document.getElementsByName("optionsCheckboxinline");
+        for (var i = 0; i < radio.length; i++) {
+            if (radio[i].checked == true) {
+                dd = radio[i].value;
+                thsisidlist.push(dd);
+            }
+        }
+        $.ajax({
+            url: "/deleteThesis?params="+thsisidlist , // 你的请求链接
+            success : function(data) {
+                console.log("data==="+data);
+                alert("删除成功");
+                location.reload();
+            }
+        });
 
-    function addThesis() {
-        $('#addThesisModal').modal('show');
     }
 
 
