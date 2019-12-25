@@ -478,7 +478,24 @@ public class UserServiceImpl implements UserService {
         bookRepository.save(bookEntity);
         return new Result(true, DataCheck.BookCheck.BOOK_DELETED.toString());
     }
-    //public Result<ArrayList<BookEntity>> findAllBookByAuthorId(UserEntity userEntity);
+    @Override
+    public List<BookEntity> findAllBookByAuthorId(String authorId){
+        List<BookEntity> bookListAuthor1 = bookRepository.findAllByAuthor1Containing(authorId);
+        List<BookEntity> bookListAuthor2 = bookRepository.findAllByAuthor2Containing(authorId);
+        List<BookEntity> bookListAuthor3 = bookRepository.findAllByAuthor3Containing(authorId);
+        List<BookEntity> finalList = new ArrayList<>();
+        finalList.addAll(bookListAuthor1);
+        finalList.addAll(bookListAuthor2);
+        finalList.addAll(bookListAuthor3);
+        return finalList;
+    }
+    @Override
+    public List<BookEntity> findAllBookByAuthorName(String authorName){
+        UserEntity user = userRepository.findByUserNameContaining(authorName);
+        List<BookEntity> booksByAuthorName = findAllBookByAuthorId(user.getUserId());
+        return booksByAuthorName;
+    }
+
     //endregion
 
 

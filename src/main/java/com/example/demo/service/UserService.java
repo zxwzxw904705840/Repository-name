@@ -55,7 +55,8 @@ public interface UserService {
     Result addBook(BookEntity bookEntity, UserEntity userEntity);
     Result updateBook(BookEntity bookEntity, UserEntity userEntity);
     Result deleteBook(BookEntity bookEntity, UserEntity userEntity);
-    //Result<ArrayList<BookEntity>> findAllBookByAuthorId(UserEntity userEntity);
+    List<BookEntity> findAllBookByAuthorId(String authorId);
+    List<BookEntity> findAllBookByAuthorName(String authorName);
     //endregion
 
     //endregion
