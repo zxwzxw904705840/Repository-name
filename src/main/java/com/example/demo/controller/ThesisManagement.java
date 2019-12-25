@@ -146,17 +146,17 @@ public class ThesisManagement {
 
         if(request.getParameter("input3")!=null&&request.getParameter("input3")!=""){
             author1name=request.getParameter("input3");
-            user1=userService.GetUserByName(author1name);
+            user1=userService.getUserByName(author1name);
             thesis.setAuthor1(user1);
         }
         if(request.getParameter("input4")!=null&&request.getParameter("input4")!=""){
             author2name=request.getParameter("input4");
-            user2=userService.GetUserByName(author2name);
+            user2=userService.getUserByName(author2name);
             thesis.setAuthor2(user2);
         }
         if(request.getParameter("input5")!=null&&request.getParameter("input5")!=""){
             author3name=request.getParameter("input5");
-            user3=userService.GetUserByName(author3name);
+            user3=userService.getUserByName(author3name);
             thesis.setAuthor3(user3);
         }
         if(request.getParameter("input6")!=null&&request.getParameter("input6")!=""){
