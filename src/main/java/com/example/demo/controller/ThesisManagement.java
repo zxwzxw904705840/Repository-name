@@ -3,6 +3,8 @@ package com.example.demo.controller;
 import com.alibaba.fastjson.JSONObject;
 import com.example.demo.Entity.ThesisEntity;
 import com.example.demo.Entity.UserEntity;
+import com.example.demo.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,6 +18,11 @@ import java.util.*;
 
 @Controller
 public class ThesisManagement {
+
+    @Autowired
+    UserService userService;
+
+
     /**
      * 用户个人论文展示列表界面
      * @return
@@ -105,8 +112,7 @@ public class ThesisManagement {
         String userid=request.getSession().getAttribute("userId").toString();
 
 
-        JSONObject result=new JSONObject();
-        result.put("message","success");
+
         return "AddThesis";
     }
 
@@ -117,24 +123,34 @@ public class ThesisManagement {
      */
     @RequestMapping("/AddThesisSubmit")
     public String submit(HttpServletRequest request) {
+        ThesisEntity thesis =new ThesisEntity();
         String userid=request.getSession().getAttribute("userId").toString();
         String title=request.getParameter("input1");
         String thesisId=request.getParameter("input2");
-        String author1="";
-        String author2="";
-        String author3="";
+        String author1name="";
+        String author2name="";
+        String author3name="";
         String journal="";
         String volume="";
         String pages="";
         String url="";
+
+        UserEntity user1=new UserEntity();
+        UserEntity user2=new UserEntity();
+        UserEntity user3=new UserEntity();
+
+        user1=userService.findByUserNameLike(author1name).get(0);
+        user2=userService.findByUserNameLike(author2name).get(0);
+        user3=userService.findByUserNameLike(author3name).get(0);
+
         if(request.getParameter("input3")!=null){
-            author1=request.getParameter("input3");
+            author1name=request.getParameter("input3");
         }
         if(request.getParameter("input4")!=null){
-            author2=request.getParameter("input4");
+            author2name=request.getParameter("input4");
         }
         if(request.getParameter("input5")!=null){
-            author3=request.getParameter("input5");
+            author3name=request.getParameter("input5");
         }
         if(request.getParameter("input6")!=null){
             journal=request.getParameter("input6");
@@ -149,6 +165,18 @@ public class ThesisManagement {
             url=request.getParameter("input10");
         }
         String privacy=request.getParameter("optionsRadiosinline");
+
+        thesis.setThesisId(thesisId);
+        thesis.setThesisTitle(title);
+        thesis.setAuthor1(user1);
+        thesis.setAuthor2(user2);
+        thesis.setAuthor3(user3);
+        thesis.setJournal(journal);
+        thesis.setVolume(volume);
+        thesis.setUrl(url);
+        thesis.setPages(Integer.parseInt(pages));
+       // thesis.setPrivacy();
+
         System.out.println("/AddThesisSubmit userid:"+userid+" privacy："+privacy+" title:"+title);
         return "MyThesis";
     }

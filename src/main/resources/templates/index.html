@@ -43,7 +43,7 @@
                                 <li><a class="J_menuItem" th:href="@{/subjectManagement}">My Project</a></li>
                                 <li><a class="J_menuItem" th:href="@{/userManagement}">Management</a></li>
                                 <li><a class="J_menuItem" th:href="@{/}">Report Statistics</a></li>
-                                <li><a class="J_menuItem" >谢文仲</a></li>
+                                <li><a class="J_menuItem" th:text="${session.user.getUserName()}">谢文仲</a></li>
                                 <li><a class="J_menuItem" th:href="@{logout}">退出</a></li>
                             </ul>
                         </nav>             
