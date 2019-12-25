@@ -63,11 +63,11 @@ public class ThesisManagement {
 
         System.out.println("params" + params);
 
-        //   List<ThesisEntity> lists = thesisService.findTBlist(params);
-
-        //     System.out.println("lists.size" + lists.size());
-
-        //     session.setAttribute("textbooklist", all);
+//           List<ThesisEntity> lists = thesisService.findTBlist(params);
+//
+//             System.out.println("lists.size" + lists.size());
+//
+//             session.setAttribute("textbooklist", all);
 //
 //        result.put("rows", lists);
 //        result.put("total", all.size());

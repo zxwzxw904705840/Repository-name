@@ -39,7 +39,7 @@ public interface UserService {
 
     List<UserEntity> findByUsernameEndingWith(String username);
 
-    List<UserEntity> findByUsernameContaining(String username);
+    List<UserEntity> findByUsernameContainingOrInstituteContainingOrUserStatusContaining(String username,String instituteid,Const.UserStatus status);
 
     //region 研究员操作集
 
@@ -47,7 +47,8 @@ public interface UserService {
     Result addThesis(ThesisEntity thesisEntity, UserEntity userEntity);
     Result updateThesis(ThesisEntity thesisEntity, UserEntity userEntity);
     Result deleteThesis(ThesisEntity thesisEntity, UserEntity userEntity);
-    //Result<ArrayList<ThesisEntity>> findAllThesisByAuthorId(UserEntity userEntity);
+    List<ThesisEntity> findAllThesisByAuthorId(String authorId);
+    List<ThesisEntity> findAllThesisByAuthorName(String authorName);
     //endregion
 
     //region 我的著作操作
@@ -56,7 +57,6 @@ public interface UserService {
     Result deleteBook(BookEntity bookEntity, UserEntity userEntity);
     //Result<ArrayList<BookEntity>> findAllBookByAuthorId(UserEntity userEntity);
     //endregion
-
 
     //endregion
 

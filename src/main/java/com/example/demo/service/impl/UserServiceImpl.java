@@ -23,7 +23,8 @@ public class UserServiceImpl implements UserService {
     @Autowired
     BookRepository bookRepository;
 
-    //region 获得用户部分
+    //region User部分
+    //region 获得用户
     @Override
     public List<UserEntity> getUserList(){
         return userRepository.findAll();
@@ -350,21 +351,25 @@ public class UserServiceImpl implements UserService {
 
     //region 查询
     public List<UserEntity> findByUsernameLike(String username){
-        return null;
+        List<UserEntity> list = userRepository.findByUsernameLike(username);
+        return list;
     }
 
     public List<UserEntity> findByUsernameStartingWith(String username){
-        return null;
+        List<UserEntity> list = userRepository.findByUsernameStartingWith(username);
+        return list;
     }
 
     public List<UserEntity> findByUsernameEndingWith(String username){
-        return null;
+        List<UserEntity> list = userRepository.findByUsernameEndingWith(username);
+        return list;
     }
 
-    public List<UserEntity> findByUsernameContaining(String username){
-        List<UserEntity> search = userRepository.findByUsernameContaining(username);
+    public List<UserEntity> findByUsernameContainingOrInstituteContainingOrUserStatusContaining(String username,String instituteid, Const.UserStatus status){
+        List<UserEntity> search = userRepository.findByUsernameContainingOrInstituteContainingOrUserStatusContaining(username, instituteid, status);
         return search;
     }
+    //endregion
     //endregion
 
     //region 研究员操作集
@@ -411,6 +416,17 @@ public class UserServiceImpl implements UserService {
             thesisRepository.save(t);
         }
         return new Result(true, DataCheck.ThesisCheck.THESIS_DELETED.toString());
+    }
+    @Override
+    public List<ThesisEntity> findAllThesisByAuthorId(String authorId){
+        List<ThesisEntity> thesisList = thesisRepository.findAllByAuthor1ContainingOrAndAuthor2ContainingOrAndAuthor3Containing(authorId);
+        return thesisList;
+    }
+    @Override
+    public List<ThesisEntity> findAllThesisByAuthorName(String authorName){
+        UserEntity user = userRepository.findByUserNameContaining(authorName);
+        List<ThesisEntity> thesisByAuthorName = findAllThesisByAuthorId(user.getUserId());
+        return thesisByAuthorName;
     }
     //endregion
 
