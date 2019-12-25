@@ -14,5 +14,5 @@ public interface ThesisRepository extends JpaRepository<ThesisEntity,String> {
     List<ThesisEntity> findAllByAuthor2(UserEntity author);
     List<ThesisEntity> findAllByAuthor3(UserEntity author);
     List<ThesisEntity> findAllByJournal(String journal);
-    List<ThesisEntity> findAllByThesisTitleLike(String thesisTitle);
+    List<ThesisEntity> findAllByThesisTitleContaining(String thesisTitle);
 }

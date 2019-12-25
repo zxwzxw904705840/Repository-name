@@ -13,6 +13,6 @@ public interface BookRepository extends JpaRepository<BookEntity,String> {
     List<BookEntity> findAllByAuthor2(UserEntity author);
     List<BookEntity> findAllByAuthor3(UserEntity author);
     BookEntity findByBookId(String bookId);
-    List<BookEntity> findByBookNameLike(String bookName);
+    List<BookEntity> findByBookNameContaining(String bookName);
 
 }

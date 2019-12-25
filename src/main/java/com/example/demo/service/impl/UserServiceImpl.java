@@ -6,6 +6,7 @@ import com.example.demo.service.UserService;
 import com.example.demo.utils.Const;
 import com.example.demo.utils.DataCheck;
 import com.example.demo.utils.Result;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -14,9 +15,13 @@ import java.util.List;
 
 @Service
 public class UserServiceImpl implements UserService {
+    @Autowired
     private UserRepository userRepository;
+    @Autowired
     private InstituteRepository instituteRepository;
+    @Autowired
     private ThesisRepository thesisRepository;
+    @Autowired
     private BookRepository bookRepository;
 
     //region User部分
@@ -452,7 +457,7 @@ public class UserServiceImpl implements UserService {
     }
     @Override
     public List<ThesisEntity> findAllThesisByThesisTitleLike(String thesisTitle){
-        return thesisRepository.findAllByThesisTitleLike(thesisTitle);
+        return thesisRepository.findAllByThesisTitleContaining(thesisTitle);
     }
     //endregion
 
@@ -533,7 +538,7 @@ public class UserServiceImpl implements UserService {
     }
     @Override
     public List<BookEntity> findByBookNameLike(String bookName){
-        return bookRepository.findByBookNameLike(bookName);
+        return bookRepository.findByBookNameContaining(bookName);
     }
     //endregion
 
