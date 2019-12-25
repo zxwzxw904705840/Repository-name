@@ -12,6 +12,7 @@ public interface UserService {
     List<UserEntity> getUsersById(List<String> userId);
     List<UserEntity> getUsersByStatus(Const.UserStatus status, String adminId);
     List<UserEntity> getUsersByRole(Const.UserCharacter role);
+    UserEntity GetUserByName(String userName);
 
     Result addUser(UserEntity user);
     Result addUsers(List<UserEntity> users);
@@ -55,7 +56,8 @@ public interface UserService {
     Result addBook(BookEntity bookEntity, UserEntity userEntity);
     Result updateBook(BookEntity bookEntity, UserEntity userEntity);
     Result deleteBook(BookEntity bookEntity, UserEntity userEntity);
-    //Result<ArrayList<BookEntity>> findAllBookByAuthorId(UserEntity userEntity);
+    List<BookEntity> findAllBookByAuthorId(String authorId);
+    List<BookEntity> findAllBookByAuthorName(String authorName);
     //endregion
 
     //endregion
