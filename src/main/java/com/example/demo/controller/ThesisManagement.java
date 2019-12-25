@@ -2,17 +2,17 @@ package com.example.demo.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.example.demo.Entity.ThesisEntity;
+import com.example.demo.Entity.UserEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Controller
 public class ThesisManagement {
@@ -21,8 +21,28 @@ public class ThesisManagement {
      * @return
      */
     @RequestMapping("/MyThesis")
-    public  String MyThesis(){
+    public  String MyThesis(HttpServletRequest request, Model model){
+        String userid=request.getSession().getAttribute("userId").toString();
 
+        List<ThesisEntity> thesisList=new ArrayList<>();
+
+        UserEntity user=new UserEntity();
+        user.setUserName("叶元卯");
+
+        //临时假数据
+        for(int i=0;i<15;i++){
+            ThesisEntity thesistmp=new ThesisEntity();
+            thesistmp.setAuthor1(user);
+            thesistmp.setJournal("机械动力期刊");
+            thesistmp.setThesisId("100"+i*2+"4-2-85"+i);
+            thesistmp.setThesisTitle("动态规划");
+            if(i/3==0)
+                thesistmp.setThesisTitle("基于视觉的天眼机器研究");
+            if(i/2==0)
+                thesistmp.setThesisTitle("类脑研究");
+            thesisList.add(thesistmp);
+        }
+        model.addAttribute("thesisList",thesisList);
         return "MyThesis";
     }
 
@@ -33,8 +53,9 @@ public class ThesisManagement {
      * @param response
      * @return
      */
+    //暂时放弃这个函数了，不用管它
     @ResponseBody
-    @RequestMapping("../../MyThesis/findTBlist")
+    @RequestMapping("../../findTBlist")
     public Map<String, Object> findTBlist(HttpSession session, HttpServletRequest request, HttpServletResponse response) {
         System.out.println("findTBlist");
         Map<String, Object> params = new HashMap<>();
@@ -144,9 +165,10 @@ public class ThesisManagement {
     //批量删除论文
     @ResponseBody
     @RequestMapping("/deleteThesis")
-    public String deleteThesis(HttpServletRequest request) {
+    public String deleteThesis(HttpServletRequest request,@RequestParam("params")List<String> thsisidlist) {
+        System.out.println("/MyThesisthsisidlist:"+thsisidlist);
 
-
+        
         JSONObject result=new JSONObject();
         result.put("message","success");
         return result.toString();

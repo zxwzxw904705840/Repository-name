@@ -63,27 +63,57 @@
     <div id="content">
         <div class="row">
             <div class="col-md-10 col-md-offset-1">
-
+              <div class="row">
+                  <div class="col-md-7">
                 <form class="form-inline" id="search_from" name="search_from">
                     <label class="control-label" for="inputthesisId">Thesis ID：</label>
                     <input class="form-control headmargin" type="text" id="inputthesisId" name="thesisId"/>
-                    <label class="control-label" for="inputthesisname">Thesis Name：</label>
+                    <label class="control-label" for="inputthesisname">  Thesis Name：</label>
                     <input class="form-control headmargin" type="text" id="inputthesisname" name="thesisname"/>
                     <button type="button" onclick="findThesis()" id="search" class="btn btn-warning"><span
                             aria-hidden="true"></span>Search
                     </button>
+                </form>
+                  </div>
+                  <div class="col-md-4">
                     <a th:href="@{AddThesis}" >
                         <button type="button" class="btn btn-warning"><span
                             aria-hidden="true"></span> Add</button>
                     </a>
 
-                    <button type="button" id="remove" class="btn btn-warning"><span
+                    <button type="button" id="remove" class="btn btn-warning" onclick="deleteThesis();"><span
                             aria-hidden="true"></span> Delete
                     </button>
+                  </div>
+              </div>
 
-                </form>
                 <br/>
-                <table  class="table table-bordered" id="table_list"></table>
+                <!--table  class="table table-bordered" id="table_list"></table-->
+                <div class="panel panel-warning" th:each="list:${thesisList}">
+                    <a th:href="@{'/ThesisDetail/'+${list.getThesisId()}}">
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-md-2 panel-title">
+                                    <p th:text="${list.getThesisId()}"></p>
+                                </div>
+                                <div class="col-md-3  panel-title">
+                                    <p th:text="${list.getThesisTitle()}">名称</p>
+                                </div>
+                                <div class="col-md-2 panel-title">
+                                    <p th:text="${list.getAuthor1().getUserName()}">作者1名称</p>
+                                </div>
+                                <div class="col-md-2 panel-title">
+                                    <p th:text="${list.getJournal()}"></p>
+                                </div>
+                                <label class="checkbox-inline col-md-1">
+                                    <input type="checkbox" name="optionsCheckboxinline"  th:value="${list.getThesisId()}">
+                                </label>
+                            </div>
+                        </div>
+                    </a>
+
+                </div> <!-- panel panel-warning -->
+
             </div>
 
 
@@ -117,7 +147,7 @@
             //必须设置，不然request.getParameter获取不到请求参数
             contentType: "application/x-www-form-urlencoded",
             //获取数据的Servlet地址
-            url: "/MyThesis/findTBlist",
+            url: "/findTBlist",
             //表格显示条纹
             striped: true,
             //启动分页
@@ -198,6 +228,24 @@
             thesisTitle: $('#search_from input[name=\'Thesis Title\']').val(),		// 请求时向服务端传递的参数
 
         }
+    }
+    function deleteThesis() {
+        var thsisidlist =new Array();
+        var dd = '';
+        var radio = document.getElementsByName("optionsCheckboxinline");
+        for (var i = 0; i < radio.length; i++) {
+            if (radio[i].checked == true) {
+                dd = radio[i].value;
+                thsisidlist.push(dd);
+            }
+        }
+        $.ajax({
+            url: "/deleteThesis?params="+thsisidlist , // 你的请求链接
+            success : function(data) {
+                console.log("data==="+data);
+            }
+        });
+
     }
 
 
