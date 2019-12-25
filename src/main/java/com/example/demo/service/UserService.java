@@ -12,6 +12,7 @@ public interface UserService {
     List<UserEntity> getUsersById(List<String> userId);
     List<UserEntity> getUsersByStatus(Const.UserStatus status, String adminId);
     List<UserEntity> getUsersByRole(Const.UserCharacter role);
+    UserEntity GetUserByName(String userName);
 
     Result addUser(UserEntity user);
     Result addUsers(List<UserEntity> users);

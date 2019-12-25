@@ -40,6 +40,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public UserEntity GetUserByName(String userName){
+        UserEntity userEntity = userRepository.findByUserName(userName);
+        return userEntity;
+    }
+
+    @Override
     public List<UserEntity> getUsersById(List<String> userId){
         List<UserEntity> users = userRepository.findAllById(userId);
         return users;

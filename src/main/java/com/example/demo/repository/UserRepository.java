@@ -11,6 +11,8 @@ import java.util.List;
 public interface UserRepository extends JpaRepository<UserEntity,String> {
     UserEntity findByUserId(String userId);
 
+    UserEntity findByUserName(String userName);
+
     UserEntity findByUserNameContaining(String userName);
 
     List<UserEntity> findUserEntitiesByUserStatus(Const.UserStatus user_status);
