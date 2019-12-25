@@ -54,7 +54,7 @@ public class ThesisManagement {
         }
         System.out.println(params);
 
-        //  List<ThesisEntity> all = thesisService.findTBlist(params);
+ //        List<ThesisEntity> all = thesisService.findTBlist(params);
 
         //   session.setAttribute("vTbList", all);
 

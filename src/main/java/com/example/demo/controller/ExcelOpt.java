@@ -1,5 +1,9 @@
 package com.example.demo.controller;
 
+import ch.qos.logback.classic.pattern.ClassNameOnlyAbbreviator;
+import com.example.demo.Entity.InstituteEntity;
+import com.example.demo.Entity.UserEntity;
+import com.example.demo.utils.Const;
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -12,6 +16,11 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
+
+/**
+ * excel 操作
+ *
+ */
 public class ExcelOpt {
 
     /**
@@ -25,8 +34,9 @@ public class ExcelOpt {
      *         password institute  userName  不可为空
      */
 
-    public boolean batchImport(String fileName, MultipartFile file) throws Exception {
-        Map<String,Object> param = new HashMap<>();
+    public boolean batchImport(String fileName, MultipartFile file,UserEntity operator) throws Exception {
+
+        UserEntity userEntity = new UserEntity();
 
         boolean notNull = false;
 
@@ -63,7 +73,8 @@ public class ExcelOpt {
             if(userName == null || userName.isEmpty()){
                 break;
             }else{
-                param.put("userName",userName);
+                userEntity.setUserName(userName);
+
             }
 
             row.getCell(1).setCellType(Cell.CELL_TYPE_STRING);
@@ -71,7 +82,8 @@ public class ExcelOpt {
             if(password==null || password.isEmpty()){
                 break;
             }else{
-                param.put("password",password);
+                userEntity.setPassword(password);
+
             }
 
 
@@ -79,7 +91,8 @@ public class ExcelOpt {
             String phone = row.getCell(2).getStringCellValue();
             if(phone==null || phone.isEmpty()){
             }else{
-                param.put("phone",phone);
+                userEntity.setPhone(phone);
+
             }
 
 
@@ -87,7 +100,8 @@ public class ExcelOpt {
             String email = row.getCell(3).getStringCellValue();
             if(email==null || email.isEmpty()){
             }else{
-                param.put("email",email);
+                userEntity.setEmail(email);
+
             }
 
             row.getCell(4).setCellType(Cell.CELL_TYPE_STRING);
@@ -96,30 +110,23 @@ public class ExcelOpt {
                 break;
                 //  throw new Exception("导入失败(第"+(r+1)+"行,name未填写)");
             }else{
-                param.put("instituteId",instituteId);
+                InstituteEntity instituteEntity = new InstituteEntity(instituteId);
+                userEntity.setInstitute(instituteEntity);
+
             }
 
             row.getCell(5).setCellType(Cell.CELL_TYPE_STRING);
             String titles = row.getCell(5).getStringCellValue();
             titles = titles.replaceAll("\\s*", ""); //去除空格等
 
-            Integer title = null;
 
             if(titles!=null && !titles.isEmpty()){
-                title = Integer.valueOf(titles);
-                param.put("title",title);
+                Const.UserTitle title =   Const.UserTitle.valueOf(titles);
+                userEntity.setTitle(title);
 
             }
 
-
-
-            /**
-             * 根据Map<String,Object> param 导入数据库
-             * 其中  title  phone email   如果为空 则不存在
-             *      password institute  userName  不可为空比存在
-             *
-             */
-            System.out.println(param);
+            //调用service
         }
 
         return notNull;

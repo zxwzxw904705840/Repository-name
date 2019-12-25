@@ -1,4 +1,6 @@
 $(function () {
+
+
     // nav收缩展开
     $('.navMenu li a').on('click', function () {
         var parent = $(this).parent().parent();//获取当前页签的父级的父级
@@ -26,6 +28,16 @@ $(function () {
 * 初始化BootstrapTable,动态从服务器加载数据
 * */
 $(document).ready(function () {
+
+    $('input[type=radio][name=status]').change(function() {
+        if (this.value == '0') {
+            document.getElementById("typeDiv").classList.remove("hide");
+        }
+        else if (this.value == '1') {
+            document.getElementById("typeDiv").classList.add("hide");
+
+        }
+    });
 
 
     //  var teachcourseid=document.getElementById("teachcourseidInput").value;
@@ -85,7 +97,11 @@ $(document).ready(function () {
                 field: "title"
             }, {
                 title: "所属学院",
-                field: "insituteName"
+                field: "institutefunction",
+                formatter: function (value, row, index) {
+                    var operateHtml  = '<span> '+row.institute.instituteName+'</span>';
+                    return operateHtml;
+                }
             }, {
                 title: "联系方式",
                 field: "phone"
@@ -100,7 +116,7 @@ $(document).ready(function () {
                     if (row.user_status == 0) {
                         operateHtml = '<span> 正常</span>';
                     } else {
-                        operateHtml = '<span class=" btn_orange" onclick="agreeModal(\'' + row.userId + '\')"> 升级审核</span>';
+                        operateHtml = '<span class=" btn_blue" onclick="agreeModal(\'' + row.userId + '\')"> 升级审核</span>';
                     }
 
                     return operateHtml;
@@ -110,10 +126,11 @@ $(document).ready(function () {
                 field: "editfunction",
                 formatter: function (value, row, index) {
 
-                    var operateHtml = '<button  class="btn btn_blue"   onclick="editModal(\'' + row.userId + ',' +
-                        row.userName + ',' + row.password + ',' + row.insituteName + ',' + row.phone + ',' + row.title + ',' + row.email
-                        + '\')"> 编辑</button>';
+                    var operateHtml = '<span  class=" btn_blue"  ' +
+                        ' onclick="editModal(\''+  JSON.stringify(row).replace(/"/g, '&quot;')
+                        + '\')"> 编辑</span>';
                     return operateHtml;
+
                 }
             }]
 
@@ -143,7 +160,9 @@ function getParams(params) {
         pageList: [5, 10, 15, 20, 25],
         userStatus: $('#user_statusSelect option:selected').val(),//选中的值
         userName: document.getElementById("user_nameInput").value,
-        instituteId: document.getElementById("institudeId").value
+        instituteId: $('#user_instituteSelect option:selected').val(),//选中的值
+
+
     }
 }
 
@@ -163,26 +182,23 @@ function searchInstitute(e) {
  * 表单内 编辑信息
  * */
 function editModal(result) {
-    console.log(result)
-    var userId = result.split(",")[0];
-    var userName = result.split(",")[1];
-    var password = result.split(",")[2];
-    var insituteName = result.split(",")[3];
-    var phone = result.split(",")[4];
-    var title = result.split(",")[5];
-    var email = result.split(",")[6];
+    var data = JSON.parse(result);
+    var institute = data.institute;
+
+    console.log(data)
+
 
     $("#editUserModal").on("show.bs.modal", function () {
 
         var modal = $(this);  //get modal itself
 
-        modal.find('.modal-body #me_userIdInput').val(userId);
-        modal.find('.modal-body #me_emailInput').val(email);
-        modal.find('.modal-body #me_phoneInput').val(phone);
-        modal.find('.modal-body #me_passwordInput').val(password);
-        modal.find('.modal-body #me_userNameInput').val(userName);
-        modal.find('.modal-body #me_instituteNameInput').val(insituteName);
-        modal.find('.modal-body #me_titleInput').val(title);
+        modal.find('.modal-body #me_userIdInput').val(data.userId);
+        modal.find('.modal-body #me_emailInput').val(data.email);
+        modal.find('.modal-body #me_phoneInput').val(data.phone);
+        modal.find('.modal-body #me_passwordInput').val(data.password);
+        modal.find('.modal-body #me_userNameInput').val(data.userName);
+        modal.find('.modal-body #me_instituteNameInput').val(data.institute.instituteName);
+        modal.find('.modal-body #me_titleInput').val(data.title);
 
 
     }).modal("show");
@@ -195,7 +211,18 @@ function editModal(result) {
  * 页面：新增按钮
  * */
 $("#addBtn").on("click", function () {
-    $('#addUserModal').modal('show');
+    $("#addUserModal").on("show.bs.modal", function () {
+
+        var modal = $(this);  //get modal itself
+
+        modal.find('.modal-body #ma_userNameInput').val("");
+        modal.find('.modal-body #ma_emailInput').val("");
+        modal.find('.modal-body #ma_phoneInput').val("");
+        modal.find('.modal-body #ma_passwordInput').val("");
+
+
+    }).modal("show");
+
 })
 
 
@@ -209,12 +236,20 @@ function agreeModal(userId) {
     }, function () {
         $.ajax({
             url: "/AgreeUserUpdate",
-            dataType: "json",
             data: {
                 userId: userId
             },
             success: function (data) {
-                layer.msg('升级成功' + user_id, {icon: 1});
+                var isSuccess = data.split(" ")[0];
+                console.log(isSuccess)
+                if(isSuccess=="true"){
+                    layer.msg('升级成功', {icon: 1});
+                    $('#table_list').bootstrapTable(('refresh'));// 很重要的一步，刷新url
+
+                }else{
+                    layer.msg('升级失败', {icon: 2});
+                }
+
             }
 
         })
@@ -248,8 +283,8 @@ function search() {
  * 页面 批量删除
  */
 $("#deleteBtn").on("click", function () {
-    layer.confirm('是否确认删除？', {
-        btn: ['确认', '删除'] //按钮
+    layer.confirm('是否确认删除？', {title:"删除提醒"} ,{
+        btn: ['确认', '再考虑一下'] //按钮
     }, function () {
         var rows = $("#table_list").bootstrapTable('getSelections');// 获得要删除的数据
         if (rows.length == 0) {// rows 主要是为了判断是否选中，下面的else内容才是主要
@@ -257,7 +292,7 @@ $("#deleteBtn").on("click", function () {
         } else {
             var ids = new Array();// 声明一个数组
             $(rows).each(function () {// 通过获得别选中的来进行遍历
-                ids.push(this.user_id);// cid为获得到的整条数据中的一列
+                ids.push(this.userId);// cid为获得到的整条数据中的一列
             });
             deleteMs(ids)
         }
@@ -275,21 +310,18 @@ function deleteMs(ids) {
         data: "ids=" + ids,
         type: "post",
         success: function (data) {
-            layer.msg('删除成功', {icon: 1});
-            /*var obj = eval("("+data+")");
-            var obj1 = JSON.parse(data);
-            console.log(obj.message);
-            console.log(obj1.message);*/
 
-            /*     if (data == "success") {
-                     layer.msg('删除成功', {icon: 1});
-                 } else {
-                     layer.msg('删除失败', {icon: 2});
-                 }*/
-            //   var teachcourseid=document.getElementById("teachcourseidInput").value;
-            //   var turl = "../../findTBlist?teachcourseid=" + teachcourseid;
+            var isSuccess = data.split(" ")[0];
+            console.log(isSuccess)
+            if(isSuccess=="true"){
+                layer.msg('删除成功', {icon: 1});
+                $('#table_list').bootstrapTable(('refresh'));// 很重要的一步，刷新url
 
-            // $('#table_list').bootstrapTable('refresh',turl);	// 很重要的一步，刷新url！
+            }else{
+                layer.msg('删除失败', {icon: 2});
+            }
+
+
         },
         error: function (data) {
             layer.msg('操作失败', {icon: 2});
@@ -309,8 +341,18 @@ $("#ma_addBtn").on("click", function () {
     userInfo.password = document.getElementById("ma_passwordInput").value;
     userInfo.phone = document.getElementById("ma_phoneInput").value;
     userInfo.email = document.getElementById("ma_emailInput").value;
-    userInfo.title = $('#ma_titleSelect option:selected').val();
+
     userInfo.instituteId = $('#ma_instituteNameSelect option:selected').val();
+   //var selectedRadio= $('#radioGroup input:radio:checked').val();
+    var selectedRadio =$("input[type='radio']:checked").val();
+
+    console.log(selectedRadio)
+    if(selectedRadio=="0"){
+        console.log(true)
+        userInfo.title = $('#ma_titleSelect option:selected').val();
+    }else{
+        console.log(false)
+    }
     var userInfos = JSON.stringify(userInfo)
     $.ajax({
         url: "/AddUser",
@@ -319,15 +361,18 @@ $("#ma_addBtn").on("click", function () {
         type: "post",
 
         success: function (data) {
-            layer.msg('成功', {icon: 0});
-            /* var obj = eval("("+data+")");
-             var obj1 = JSON.parse(data);
-             console.log(obj.message);
-             console.log(obj1.message);*/
-            //   layer.msg('操作成功', {icon: 0});
 
-            $('#addUserModal').modal('hide');//隐藏modal
-            $('.modal-backdrop').remove();//去掉遮罩层
+            var isSuccess = data.split(" ")[0];
+            console.log(isSuccess)
+            if(isSuccess=="true"){
+                layer.msg('成功', {icon: 1});
+                $('#addUserModal').modal('hide');//隐藏modal
+                $('.modal-backdrop').remove();//去掉遮罩层
+            }else{
+                layer.msg('失败', {icon: 2});
+            }
+
+
         },
         error: function (data) {
             layer.msg('操作失败', {icon: 2});
@@ -357,9 +402,17 @@ $("#ImportUserExcelBtn").on("click", function () {
             contentType: false,
             processData: false,
             success: function (data) {
-                layer.alert('删除成功', {icon: 1});
-                $('#importUserModal').modal('hide');//隐藏modal
-                $('.modal-backdrop').remove();//去掉遮罩层
+
+                console.log(data)
+                if(data=="true"){
+                    layer.msg('导入成功', {icon: 1});
+                    $('#importUserModal').modal('hide');//隐藏modal
+                    $('.modal-backdrop').remove();//去掉遮罩层
+
+                }else{
+                    layer.msg('导入失败', {icon: 2});
+                }
+
 
             },
             error: function (data) {
@@ -401,13 +454,21 @@ $("#me_userName_a").on("click", function () {
         console.log(userName, userId)
         $.ajax({
             url: "/SetUserName",
-            dataType: "json",
+
             data: {
                 userId: userId,
                 userName:userName
             },
             success: function (data) {
-                layer.msg('修改成功' , {icon: 1});
+                var isSuccess = data.split(" ")[0];
+                console.log(isSuccess)
+                if(isSuccess=="true"){
+                    layer.msg('修改成功', {icon: 1});
+                    $('#table_list').bootstrapTable(('refresh'));// 很重要的一步，刷新url
+
+                }else{
+                    layer.msg('修改失败', {icon: 2});
+                }
             }
 
         })
@@ -439,7 +500,15 @@ $("#me_password_a").on("click", function () {
                 password:password
             },
             success: function (data) {
-                layer.msg('修改成功' , {icon: 1});
+                var isSuccess = data.split(" ")[0];
+                console.log(isSuccess)
+                if(isSuccess=="true"){
+                    layer.msg('修改成功', {icon: 1});
+                    $('#table_list').bootstrapTable(('refresh'));// 很重要的一步，刷新url
+
+                }else{
+                    layer.msg('修改失败', {icon: 2});
+                }
             }
 
         })
@@ -471,7 +540,15 @@ $("#me_phone_a").on("click", function () {
                 phone:phone
             },
             success: function (data) {
-                layer.msg('修改成功' , {icon: 1});
+                var isSuccess = data.split(" ")[0];
+                console.log(isSuccess)
+                if(isSuccess=="true"){
+                    layer.msg('修改成功', {icon: 1});
+                    $('#table_list').bootstrapTable(('refresh'));// 很重要的一步，刷新url
+
+                }else{
+                    layer.msg('修改失败', {icon: 2});
+                }
             }
 
         })
@@ -503,7 +580,15 @@ $("#me_email_a").on("click", function () {
                 email:email
             },
             success: function (data) {
-                layer.msg('修改成功' , {icon: 1});
+                var isSuccess = data.split(" ")[0];
+                console.log(isSuccess)
+                if(isSuccess=="true"){
+                    layer.msg('修改成功', {icon: 1});
+                    $('#table_list').bootstrapTable(('refresh'));// 很重要的一步，刷新url
+
+                }else{
+                    layer.msg('修改失败', {icon: 2});
+                }
             }
 
         })
@@ -530,6 +615,7 @@ $("#me_title_a").on("click", function () {
         document.getElementById("me_titleInput").value = titleName;
         var userId = document.getElementById("me_userIdInput").value;
         console.log(title,titleName, userId)
+
         $.ajax({
             url: "/SetTitle",
             dataType: "json",
@@ -538,7 +624,15 @@ $("#me_title_a").on("click", function () {
                 title:title
             },
             success: function (data) {
-                layer.msg('修改成功' , {icon: 1});
+               var isSuccess = data.split(" ")[0];
+                console.log(isSuccess)
+                if(isSuccess=="true"){
+                    layer.msg('修改成功', {icon: 1});
+                    $('#table_list').bootstrapTable(('refresh'));// 很重要的一步，刷新url
+
+                }else{
+                    layer.msg('修改失败', {icon: 2});
+                }
             }
 
         })
@@ -574,11 +668,21 @@ $("#me_instituteName_a").on("click", function () {
                 instituteId:instituteId
             },
             success: function (data) {
-                layer.msg('修改成功' , {icon: 1});
+               var isSuccess = data.split(" ")[0];
+                console.log(isSuccess)
+                if(isSuccess=="true"){
+                    layer.msg('修改成功', {icon: 1});
+                    $('#table_list').bootstrapTable(('refresh'));// 很重要的一步，刷新url
+
+                }else{
+                    layer.msg('修改失败', {icon: 2});
+                }
             }
 
         })
 
     }
+
+
 
 })

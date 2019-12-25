@@ -10,12 +10,39 @@ input {
 label {
     display: none;
 }
+input{
+    height: 30px;
+}
 
 .table > tbody > tr > td {
 
     text-align: center;
 }
+.mydatetimepicker{
 
+}
+.flexright{
+    margin-left: auto;
+}
+.iDelete{
+    margin: 0 10px;
+    position: relative;
+    top: -5px;
+}
+.iDelete:hover{
+    color: #0a6aa1;
+}
+.noradius{
+    border-radius: 0 !important;
+}
+.span-div{
+    display: flex;
+    justify-content:center;
+    align-items:center;
+}
+.marginTop20{
+    margin-top: 20px;
+}
 .bootstrap-table .table thead > tr > th {
     text-align: center;
 }
@@ -42,17 +69,33 @@ button {
 }
 
 .searchInput {
+     width: 200px;
+     float: right;
+     border: 1px solid grey;
+ }
+
+.searchInputLight {
     width: 200px;
     float: right;
-    border: 1px solid grey;
+    border: 1px solid #dee5e7;
 }
+
 
 .margin20 {
     margin-right: 20px !important;
 }
 
+.margin40 {
+    margin-right: 40px !important;
+}
+
+
 .margin10 {
     margin-right: 10px !important;
+}
+
+.margin10Top {
+    margin-top: 10px !important;
 }
 
 .margin5 {
@@ -63,11 +106,31 @@ button {
     color: black !important;
     border-color: grey;
 }
-
+.searchMoreBtn{
+    color: black !important;
+    margin-left: auto;
+    border: 1px solid grey;
+}
+.marginBottom10{
+    margin-bottom: 10px;
+}
 .floatR {
     float: right;
 }
+select{
+    height: 30px;
+}
 
+#common{
+    padding-top: 20px;
+}
+
+#user{
+    padding-top: 10px;
+}
+#file{
+    padding-top: 20px;
+}
 
 .container-row {
     margin: 0 auto;
@@ -124,6 +187,19 @@ button {
     color: grey;
 
 }
+.paddingRight10{
+    padding-right: 10px;
+
+}
+
+
+.commonSelect {
+
+    height: 32px;
+    border-color: grey;
+    color: grey;
+
+}
 
 .btn_blue {
     color: cornflowerblue;
@@ -133,8 +209,22 @@ button {
     color: orange;
 }
 
-.labelnone {
-    display: none;
+
+.labelnotnone {
+    display: block;
+}
+
+.paddingRight20 {
+    padding-right: 20px;;
+}
+
+.paddingRight50 {
+    padding-right: 50px;;
+}
+
+.projectTable {
+    border-collapse: separate;
+    border-spacing: 0px 20px;
 }
 
 
@@ -326,6 +416,7 @@ a {
 .ahide {
     display: none;
 }
+
 
 
 .adiv:hover .ahide {

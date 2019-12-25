@@ -14,4 +14,11 @@ public class Test {
 
         return "/register";
     }
+
+    @RequestMapping("/login")
+
+    public  String login(){
+
+        return "login";
+    }
 }

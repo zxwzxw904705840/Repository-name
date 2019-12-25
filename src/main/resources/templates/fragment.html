@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+
+<div th:fragment="addMemberFragment">
+
+    <div class="panel panel-default  marginTop20">
+        <div class="panel-body">
+            <div>
+                <span>代号:</span>
+                <span th:text="${userInfo.getUserId()}">1001</span>
+                <span>姓名:</span>
+                <span th:text="${userInfo.getUserName()}">>郭丽丽</span>
+                <span>职称:</span>
+                <span th:text="${userInfo.getTitle()}">>/</span>
+                <span>单位:</span>
+                <span th:text="${userInfo.getInstitute().getInstituteName()}">>图书馆</span>
+                <button class="btn btn_purple searchMargin retop noradius floatR "
+                        th:onclick="addMember([[${userInfo}]]);">添加
+                </button>
+                <div>
+                </div>
+            </div>
+
+        </div>
+
+
+    </div>
+</div>
+
+<div th:fragment="MemberFragment">
+
+    <tr onclick="deleteRow(this)" th:each="list:${lists}">
+        <td th:text="${list.getUserId()}">
+                    1001
+                </td>
+                <td  th:text=" ${list.getUserName()}">
+            郭丽丽
+        </td>
+        <td th:text="${list.getInstitute().getInstituteName()}">
+                    图书馆
+                </td>
+                <td  th:text=" ${list.getTitle()}">
+            /
+        </td>
+        <td th:text="${list.getPhone()}">
+                    159732232323
+                </td>
+                <td  th:text=" ${list.getEmail()}">
+            231187777@qq.com
+        </td>
+    </tr>
+
+
+</div>
+
+
+</body>
+</html>
