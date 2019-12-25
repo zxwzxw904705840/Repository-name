@@ -8,5 +8,7 @@ import java.util.List;
 
 @Repository
 public interface ThesisRepository extends JpaRepository<ThesisEntity,String> {
-    List<ThesisEntity> findAllByAuthor1ContainingOrAndAuthor2ContainingOrAndAuthor3Containing(String userId);
+    List<ThesisEntity> findAllByAuthor1Containing(String authorId);
+    List<ThesisEntity> findAllByAuthor2Containing(String authorId);
+    List<ThesisEntity> findAllByAuthor3Containing(String authorId);
 }

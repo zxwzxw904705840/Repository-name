@@ -9,6 +9,7 @@ import com.example.demo.utils.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -350,23 +351,23 @@ public class UserServiceImpl implements UserService {
     //endregion
 
     //region 查询
-    public List<UserEntity> findByUsernameLike(String username){
-        List<UserEntity> list = userRepository.findByUsernameLike(username);
+    public List<UserEntity> findByUserNameLike(String username){
+        List<UserEntity> list = userRepository.findByUserNameLike(username);
         return list;
     }
 
-    public List<UserEntity> findByUsernameStartingWith(String username){
-        List<UserEntity> list = userRepository.findByUsernameStartingWith(username);
+    public List<UserEntity> findByUserNameStartingWith(String username){
+        List<UserEntity> list = userRepository.findByUserNameStartingWith(username);
         return list;
     }
 
-    public List<UserEntity> findByUsernameEndingWith(String username){
-        List<UserEntity> list = userRepository.findByUsernameEndingWith(username);
+    public List<UserEntity> findByUserNameEndingWith(String username){
+        List<UserEntity> list = userRepository.findByUserNameEndingWith(username);
         return list;
     }
 
-    public List<UserEntity> findByUsernameContainingOrInstituteContainingOrUserStatusContaining(String username,String instituteid, Const.UserStatus status){
-        List<UserEntity> search = userRepository.findByUsernameContainingOrInstituteContainingOrUserStatusContaining(username, instituteid, status);
+    public List<UserEntity> findByUserNameInstituteStatus(String username,String instituteid, Const.UserStatus status){
+        List<UserEntity> search = userRepository.findByUserNameContainingOrInstituteContainingOrUserStatusContaining(username, instituteid, status);
         return search;
     }
     //endregion
@@ -419,8 +420,14 @@ public class UserServiceImpl implements UserService {
     }
     @Override
     public List<ThesisEntity> findAllThesisByAuthorId(String authorId){
-        List<ThesisEntity> thesisList = thesisRepository.findAllByAuthor1ContainingOrAndAuthor2ContainingOrAndAuthor3Containing(authorId);
-        return thesisList;
+        List<ThesisEntity> thesisListAuthor1 = thesisRepository.findAllByAuthor1Containing(authorId);
+        List<ThesisEntity> thesisListAuthor2 = thesisRepository.findAllByAuthor2Containing(authorId);
+        List<ThesisEntity> thesisListAuthor3 = thesisRepository.findAllByAuthor3Containing(authorId);
+        List<ThesisEntity> finalList = new ArrayList<>();
+        finalList.addAll(thesisListAuthor1);
+        finalList.addAll(thesisListAuthor2);
+        finalList.addAll(thesisListAuthor3);
+        return finalList;
     }
     @Override
     public List<ThesisEntity> findAllThesisByAuthorName(String authorName){
