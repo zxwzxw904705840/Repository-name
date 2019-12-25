@@ -1,9 +1,7 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.Entity.InstituteEntity;
-import com.example.demo.Entity.UserEntity;
-import com.example.demo.repository.InstituteRepository;
-import com.example.demo.repository.UserRepository;
+import com.example.demo.Entity.*;
+import com.example.demo.repository.*;
 import com.example.demo.service.UserService;
 import com.example.demo.utils.Const;
 import com.example.demo.utils.DataCheck;
@@ -20,6 +18,10 @@ public class UserServiceImpl implements UserService {
     UserRepository userRepository;
     @Autowired
     InstituteRepository instituteRepository;
+    @Autowired
+    ThesisRepository thesisRepository;
+    @Autowired
+    BookRepository bookRepository;
 
     //region 获得用户部分
     @Override
@@ -61,17 +63,13 @@ public class UserServiceImpl implements UserService {
     //region 添加新用户
     @Override
     public Result addUser(UserEntity user){
-        UserEntity newUser = new UserEntity();
         Result result = checkUser(user);
-
-        if(result.getMessage().contentEquals(DataCheck.UserDataCheck.USER_NOT_EXISTS.toString())){
-            user.setUserStatus(Const.UserStatus.REVIEWING);
-            userRepository.save(user);
-            System.out.println(result.getMessage());
-            return new Result(true, "新用户添加了！");
+        if(!result.isSuccess()){
+            return result;
         }
-        System.out.println(result.getMessage());
-        return new Result(false, "添加新用户出问题，　用户存在！");
+        user.setUserStatus(Const.UserStatus.REVIEWING);
+        userRepository.save(user);
+        return new Result(true, "新用户添加了！");
     }
 
     @Override
@@ -254,6 +252,25 @@ public class UserServiceImpl implements UserService {
         return new Result(true, DataCheck.UserDataSet.USER_STATUS_CHANGED.toString());
 
     }
+
+    public Result AgreeUserUpdate(String userid, String adminid){
+        UserEntity user = userRepository.findByUserId(userid);
+        UserEntity admin = userRepository.findByUserId(adminid);
+        Result resultuser = checkUser(user);
+        Result resultadmin = checkUserPermission(admin);
+        if(!resultuser.isSuccess()){
+            return resultadmin;
+        }
+        if(!resultadmin.isSuccess()){
+            return resultadmin;
+        }
+        if(resultadmin.getMessage() != DataCheck.UserDataCheck.IS_ADMIN.toString()){
+            return new Result(false, DataCheck.UserDataCheck.PERMISSION_DENIED.toString());
+        }
+        user.setUserStatus(Const.UserStatus.NORMAL);
+        userRepository.save(user);
+        return new Result(true, DataCheck.UserDataCheck.USER_STATUS_UPDATED.toString());
+    }
     //endregion
 
     //region 检查函数部分
@@ -296,11 +313,6 @@ public class UserServiceImpl implements UserService {
         }catch (Exception e){
             return new Result(false, DataCheck.UserDataCheck.ILLEGAL_TELEPHONE.toString());
         }
-
-        UserEntity userEntity = userRepository.findByUserId(user.getUserId());
-        if(userEntity==null || userEntity.getUserStatus()!= Const.UserStatus.NORMAL){
-            return new Result(false, DataCheck.UserDataCheck.USER_NOT_EXISTS_OR_STATUS_NOT_NORMAL.toString());
-        }
         if(user.getTitle()==null){
             return new Result(false, DataCheck.UserDataCheck.EMPTY_TITLE.toString());
         }
@@ -334,5 +346,118 @@ public class UserServiceImpl implements UserService {
         }
         return new Result(true, DataCheck.InstituteCheck.INSTITUTE_CAN_USE.toString());
     }
+    //endregion
+
+    //region 查询
+    public List<UserEntity> findByUsernameLike(String username){
+        return null;
+    }
+
+    public List<UserEntity> findByUsernameStartingWith(String username){
+        return null;
+    }
+
+    public List<UserEntity> findByUsernameEndingWith(String username){
+        return null;
+    }
+
+    public List<UserEntity> findByUsernameContaining(String username){
+        List<UserEntity> search = userRepository.findByUsernameContaining(username);
+        return search;
+    }
+    //endregion
+
+    //region 研究员操作集
+
+    //region 我的论文操作
+    @Override
+    public Result addThesis(ThesisEntity thesisEntity, UserEntity researcher){
+        Result result = checkUserPermission(researcher);
+        if(!result.isSuccess()){
+            return result;
+        }
+        thesisRepository.save(thesisEntity);
+        return new Result(true, DataCheck.ThesisCheck.THESIS_ADDED.toString());
+    }
+    @Override
+    public Result updateThesis(ThesisEntity thesisEntity, UserEntity researcher){
+        Result result = checkUserPermission(researcher);
+        ThesisEntity t = thesisRepository.getOne(thesisEntity.getThesisId());
+        if(!result.isSuccess()){
+            return result;
+        }
+        if(t != null || t.getThesisId() == thesisEntity.getThesisId()){
+            t.setThesisId(thesisEntity.getThesisId());
+            t.setThesisTitle(thesisEntity.getThesisTitle());
+            t.setAuthor1(thesisEntity.getAuthor1());
+            t.setAuthor2(thesisEntity.getAuthor2());
+            t.setAuthor3(thesisEntity.getAuthor3());
+            t.setJournal(thesisEntity.getJournal());
+            t.setVolume(thesisEntity.getVolume());
+            t.setUrl(thesisEntity.getUrl());
+            t.setPages(thesisEntity.getPages());
+            t.setPrivacy(thesisEntity.getPrivacy());
+            t.setStatus(thesisEntity.getStatus());
+            thesisRepository.save(t);
+        }
+        return new Result(true, DataCheck.ThesisCheck.THESIS_CHANGED.toString());
+    }
+    @Override
+    public Result deleteThesis(ThesisEntity thesisEntity, UserEntity researcher){
+        Result result = checkUserPermission(researcher);
+        if(!result.isSuccess()){
+            ThesisEntity t = thesisRepository.getOne(thesisEntity.getThesisId());
+            t.setStatus(Const.ThesisStatus.DELETED);
+            thesisRepository.save(t);
+        }
+        return new Result(true, DataCheck.ThesisCheck.THESIS_DELETED.toString());
+    }
+    //endregion
+
+    //region 我的著作操作
+    @Override
+    public Result addBook(BookEntity bookEntity, UserEntity researcher){
+        Result result = checkUserPermission(researcher);
+        if(!result.isSuccess()){
+            return result;
+        }
+        bookRepository.save(bookEntity);
+        return new Result(true, DataCheck.BookCheck.BOOK_ADDED.toString());
+    }
+    @Override
+    public Result updateBook(BookEntity bookEntity, UserEntity researcher){
+        Result result = checkUserPermission(researcher);
+        if(!result.isSuccess()){
+            return result;
+        }
+        BookEntity b = bookRepository.getOne(bookEntity.getBookId());
+        if(b != null || b.getBookId() == bookEntity.getBookId()){
+            b.setBookId(bookEntity.getBookId());
+            b.setBookName(bookEntity.getBookName());
+            b.setAuthor1(bookEntity.getAuthor1());
+            b.setAuthor2(bookEntity.getAuthor2());
+            b.setAuthor3(bookEntity.getAuthor3());
+            b.setCreativeNature(bookEntity.getCreativeNature());
+            b.setBookInformation(bookEntity.getBookInformation());
+            b.setBookPublishDate(bookEntity.getBookPublishDate());
+            b.setBookPublishStatus(bookEntity.getBookPublishStatus());
+            bookRepository.save(b);
+        }
+        return new Result(true, DataCheck.BookCheck.BOOK_CHANGED.toString());
+    }
+    @Override
+    public Result deleteBook(BookEntity bookEntity, UserEntity researcher){
+        Result result = checkUserPermission(researcher);
+        if(!result.isSuccess()){
+            return result;
+        }
+        bookEntity.setBookStatus(Const.BookStatus.DELETED);
+        bookRepository.save(bookEntity);
+        return new Result(true, DataCheck.BookCheck.BOOK_DELETED.toString());
+    }
+    //public Result<ArrayList<BookEntity>> findAllBookByAuthorId(UserEntity userEntity);
+    //endregion
+
+
     //endregion
 }

@@ -14,4 +14,12 @@ public interface UserRepository extends JpaRepository<UserEntity,String> {
     List<UserEntity> findUserEntitiesByUserStatus(Const.UserStatus status);
 
     List<UserEntity> findUserEntitiesByCharacters(Const.UserCharacter role);
+
+    List<UserEntity> findByUsernameLike(String username);
+
+    List<UserEntity> findByUsernameStartingWith(String username);
+
+    List<UserEntity> findByUsernameEndingWith(String username);
+
+    List<UserEntity> findByUsernameContaining(String username);
 }
