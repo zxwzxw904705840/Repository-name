@@ -2,9 +2,13 @@ package com.example.demo.controller;
 
 import com.alibaba.fastjson.JSONObject;
 
+import com.example.demo.Entity.UserEntity;
+import com.example.demo.service.impl.UserServiceImpl;
 import com.example.demo.utils.Const;
+import com.example.demo.utils.Result;
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.hssf.util.HSSFColor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,8 +21,12 @@ import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+
 @Controller
 public class UserManagement {
+
+    @Autowired
+    UserServiceImpl userServiceImpl;
 
     @GetMapping("/userManagement")
     public  String index(){
@@ -61,7 +69,7 @@ public class UserManagement {
         params.put("limit", limit);
         params.put("offset", offset);
         System.out.println("params" + params);
-
+        //List<UserEntity> userlist = userServiceImpl.findByUsernameContaining(userName);
 /*
         //测试用数据
        List<userList> lists = new ArrayList<>();
@@ -82,6 +90,7 @@ public class UserManagement {
         Map<String, Object> result = new HashMap<>();
         result.put("rows", lists);
         result.put("total",100); //整个表的总数*/
+
 
         Map<String, Object> result = new HashMap<>();
          //测试用数据end
@@ -105,9 +114,12 @@ public class UserManagement {
     public String RemoveUser(String[] ids) {
         System.out.println("RemoveUser");
 
-        JSONObject result=new JSONObject();
-        result.put("message","success");
-        return result.toString();
+        Result resultService = userServiceImpl.DeleteUsersById(ids);
+
+        JSONObject results =new JSONObject();
+        results.put(resultService.getMessage(),resultService.isSuccess());
+
+        return results.toString();
     }
 
     /**
@@ -124,9 +136,12 @@ public class UserManagement {
     public String AddUser(@RequestBody JSONObject userInfos ) {
         System.out.println("AddUser");
       //  System.out.println(userInfos);
+        UserEntity user = JSONObject.toJavaObject(userInfos,UserEntity.class);
+
+        Result resultService = userServiceImpl.addUser(user);
 
         JSONObject result=new JSONObject();
-        result.put("message","success");
+        result.put(resultService.getMessage(),resultService.isSuccess());
         return result.toString();
     }
 
@@ -139,14 +154,15 @@ public class UserManagement {
      * 输入：userId
      * 输出：成功/失败
      */
-
     @ResponseBody
     @RequestMapping("/AgreeUserUpdate")
-    public String AgreeUserUpdate(String userId ) {
+    public String AgreeUserUpdate(String userId, String adminid) {
         System.out.println("AgreeUserUpdate");
 
-        JSONObject result=new JSONObject();
-        result.put("message","success");
+        Result resultAgree = userServiceImpl.AgreeUserUpdate(userId, adminid);
+
+        JSONObject result = new JSONObject();
+        result.put(resultAgree.getMessage(),resultAgree.isSuccess());
         return result.toString();
     }
 
@@ -187,13 +203,13 @@ public class UserManagement {
     public String SetUserName(String userId,String userName) {
         System.out.println("SetUserName");
 
-        System.out.println(userId+":::"+userName);
-
+        Result resultSetName = userServiceImpl.SetUserName(userId, userName);
 
         JSONObject result=new JSONObject();
-        result.put("message","success");
+        result.put(resultSetName.getMessage(),resultSetName.isSuccess());
         return result.toString();
     }
+
     /**
      * 模态框 修改研究人员所属学院
      * @param userId
@@ -207,11 +223,10 @@ public class UserManagement {
     public String SetInstituteId(String userId,String instituteId) {
         System.out.println("titles");
 
-        System.out.println(userId+":::"+instituteId);
-
+        Result resultSetInst = userServiceImpl.SetInstituteId(userId,instituteId);
 
         JSONObject result=new JSONObject();
-        result.put("message","success");
+        result.put(resultSetInst.getMessage(),resultSetInst.isSuccess());
         return result.toString();
     }
 
@@ -227,12 +242,14 @@ public class UserManagement {
     @RequestMapping("/SetTitle")
     public String SetTitle(String userId,@RequestParam(value="title") Const.UserTitle title) {
         System.out.println("SetTitle");
-        System.out.println(userId+":::"+title);
+
+        Result resultTitle = userServiceImpl.SetTitle(userId, title);
 
         JSONObject result=new JSONObject();
-        result.put("message","success");
+        result.put(resultTitle.getMessage(),resultTitle.isSuccess());
         return result.toString();
     }
+
     /**
      * 模态框 修改研究人员的电子邮箱
      * @param userId
@@ -246,13 +263,13 @@ public class UserManagement {
     public String SetEmail(String userId,String email) {
         System.out.println("SetEmail");
 
-        System.out.println(userId+":::"+email);
-
+        Result resultEmail = userServiceImpl.SetEmail(userId, email);
 
         JSONObject result=new JSONObject();
-        result.put("message","success");
+        result.put(resultEmail.getMessage(),resultEmail.isSuccess());
         return result.toString();
     }
+
     /**
      * 模态框 修改研究人员的密码
      * @param userId
@@ -266,13 +283,13 @@ public class UserManagement {
     public String SetPassword(String userId,String password) {
         System.out.println("SetPassword");
 
-        System.out.println(userId+":::"+password);
-
+        Result resultPass = userServiceImpl.SetPassword(userId,password);
 
         JSONObject result=new JSONObject();
-        result.put("message","success");
+        result.put(resultPass.getMessage(),resultPass.isSuccess());
         return result.toString();
     }
+
     /**
      * 模态框 修改研究人员的联系方式
      * @param userId
@@ -286,11 +303,10 @@ public class UserManagement {
     public String SetPhone(String userId,String phone) {
         System.out.println("SetPhone");
 
-        System.out.println(userId+":::"+phone);
-
+        Result resultPhone = userServiceImpl.SetPhone(userId, phone);
 
         JSONObject result=new JSONObject();
-        result.put("message","success");
+        result.put(resultPhone.getMessage(),resultPhone.isSuccess());
         return result.toString();
     }
 

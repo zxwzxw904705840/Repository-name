@@ -17,4 +17,10 @@ public class DataCheck {
         INSTITUTE_EXISTS, INSTITUTE_NOT_EXISTS, INSTITUTE_ID_IS_EMPTY,INSTITUTE_NAME_IS_EMPTY,
         INSTITUTE_CAN_USE
     }
+    public enum ThesisCheck{
+        THESIS_ADDED,THESIS_CHANGED, THESIS_DELETED
+    }
+    public enum BookCheck{
+        BOOK_ADDED, BOOK_CHANGED, BOOK_DELETED
+    }
 }

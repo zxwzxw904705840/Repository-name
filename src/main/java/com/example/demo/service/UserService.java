@@ -1,7 +1,6 @@
 package com.example.demo.service;
 
-import com.example.demo.Entity.InstituteEntity;
-import com.example.demo.Entity.UserEntity;
+import com.example.demo.Entity.*;
 import com.example.demo.utils.Const;
 import com.example.demo.utils.Result;
 
@@ -33,4 +32,33 @@ public interface UserService {
     Result checkInstitute(InstituteEntity institute);
     Result checkUserPermission(UserEntity user);
     Result checkUser(UserEntity user);
+
+    List<UserEntity> findByUsernameLike(String username);
+
+    List<UserEntity> findByUsernameStartingWith(String username);
+
+    List<UserEntity> findByUsernameEndingWith(String username);
+
+    List<UserEntity> findByUsernameContaining(String username);
+
+    //region 研究员操作集
+
+    //region 我的论文操作
+    Result addThesis(ThesisEntity thesisEntity, UserEntity userEntity);
+    Result updateThesis(ThesisEntity thesisEntity, UserEntity userEntity);
+    Result deleteThesis(ThesisEntity thesisEntity, UserEntity userEntity);
+    //Result<ArrayList<ThesisEntity>> findAllThesisByAuthorId(UserEntity userEntity);
+    //endregion
+
+    //region 我的著作操作
+    Result addBook(BookEntity bookEntity, UserEntity userEntity);
+    Result updateBook(BookEntity bookEntity, UserEntity userEntity);
+    Result deleteBook(BookEntity bookEntity, UserEntity userEntity);
+    //Result<ArrayList<BookEntity>> findAllBookByAuthorId(UserEntity userEntity);
+    //endregion
+
+
+    //endregion
+
+
 }
