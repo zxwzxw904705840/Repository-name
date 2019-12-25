@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.example.demo.Entity.ThesisEntity;
 import com.example.demo.Entity.UserEntity;
 import com.example.demo.service.UserService;
+import com.example.demo.utils.Const;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -124,60 +125,63 @@ public class ThesisManagement {
     @RequestMapping("/AddThesisSubmit")
     public String submit(HttpServletRequest request) {
         ThesisEntity thesis =new ThesisEntity();
+        UserEntity user=new UserEntity();
         String userid=request.getSession().getAttribute("userId").toString();
+        System.out.println("userid add:"+userid);
+        user=(UserEntity)userService.getUserById(userid).getObject(userid);
+   
         String title=request.getParameter("input1");
         String thesisId=request.getParameter("input2");
-        String author1name="";
-        String author2name="";
-        String author3name="";
-        String journal="";
-        String volume="";
-        String pages="";
-        String url="";
-
+        String author1name;
+        String author2name;
+        String author3name;
+        String journal;
+        String volume;
+        String pages;
+        String url;
+        String privacy=request.getParameter("optionsRadiosinline");
         UserEntity user1=new UserEntity();
         UserEntity user2=new UserEntity();
         UserEntity user3=new UserEntity();
 
-        user1=userService.findByUserNameLike(author1name).get(0);
-        user2=userService.findByUserNameLike(author2name).get(0);
-        user3=userService.findByUserNameLike(author3name).get(0);
-
-        if(request.getParameter("input3")!=null){
+        if(request.getParameter("input3")!=null&&request.getParameter("input3")!=""){
             author1name=request.getParameter("input3");
+            user1=userService.GetUserByName(author1name);
+            thesis.setAuthor1(user1);
         }
-        if(request.getParameter("input4")!=null){
+        if(request.getParameter("input4")!=null&&request.getParameter("input4")!=""){
             author2name=request.getParameter("input4");
+            user2=userService.GetUserByName(author2name);
+            thesis.setAuthor2(user2);
         }
-        if(request.getParameter("input5")!=null){
+        if(request.getParameter("input5")!=null&&request.getParameter("input5")!=""){
             author3name=request.getParameter("input5");
+            user3=userService.GetUserByName(author3name);
+            thesis.setAuthor3(user3);
         }
-        if(request.getParameter("input6")!=null){
+        if(request.getParameter("input6")!=null&&request.getParameter("input6")!=""){
             journal=request.getParameter("input6");
+            thesis.setJournal(journal);
         }
-        if(request.getParameter("input7")!=null){
+        if(request.getParameter("input7")!=null&&request.getParameter("input7")!=""){
             volume=request.getParameter("input7");
+            thesis.setVolume(volume);
         }
-        if(request.getParameter("input8")!=null){
+        if(request.getParameter("input8")!=null&&request.getParameter("input8")!=""){
             pages=request.getParameter("input8");
+            thesis.setPages(Integer.parseInt(pages));
         }
-        if(request.getParameter("input10")!=null){
+        if(request.getParameter("input10")!=null&&request.getParameter("input10")!=""){
             url=request.getParameter("input10");
+            thesis.setUrl(url);
         }
-        String privacy=request.getParameter("optionsRadiosinline");
 
         thesis.setThesisId(thesisId);
         thesis.setThesisTitle(title);
-        thesis.setAuthor1(user1);
-        thesis.setAuthor2(user2);
-        thesis.setAuthor3(user3);
-        thesis.setJournal(journal);
-        thesis.setVolume(volume);
-        thesis.setUrl(url);
-        thesis.setPages(Integer.parseInt(pages));
-       // thesis.setPrivacy();
-
-        System.out.println("/AddThesisSubmit userid:"+userid+" privacy："+privacy+" title:"+title);
+        thesis.setPrivacy(Const.ThesisPrivacy.class.getEnumConstants()[Integer.parseInt(privacy)]);
+        thesis.setStatus(Const.ThesisStatus.class.getEnumConstants()[1]);
+        System.out.println("/AddThesisSubmit userid:"+userid+" title:"+title+"  constprivacy"+thesis.getPrivacy()+" status"+thesis.getStatus());
+        System.out.println("result:"+userService.addThesis(thesis,user));
         return "MyThesis";
     }
 
