@@ -9,6 +9,7 @@ import com.example.demo.utils.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -23,7 +24,8 @@ public class UserServiceImpl implements UserService {
     @Autowired
     BookRepository bookRepository;
 
-    //region 获得用户部分
+    //region User部分
+    //region 获得用户
     @Override
     public List<UserEntity> getUserList(){
         return userRepository.findAll();
@@ -349,22 +351,26 @@ public class UserServiceImpl implements UserService {
     //endregion
 
     //region 查询
-    public List<UserEntity> findByUsernameLike(String username){
-        return null;
+    public List<UserEntity> findByUserNameLike(String username){
+        List<UserEntity> list = userRepository.findByUserNameLike(username);
+        return list;
     }
 
-    public List<UserEntity> findByUsernameStartingWith(String username){
-        return null;
+    public List<UserEntity> findByUserNameStartingWith(String username){
+        List<UserEntity> list = userRepository.findByUserNameStartingWith(username);
+        return list;
     }
 
-    public List<UserEntity> findByUsernameEndingWith(String username){
-        return null;
+    public List<UserEntity> findByUserNameEndingWith(String username){
+        List<UserEntity> list = userRepository.findByUserNameEndingWith(username);
+        return list;
     }
 
-    public List<UserEntity> findByUsernameContaining(String username){
-        List<UserEntity> search = userRepository.findByUsernameContaining(username);
+    public List<UserEntity> findByUserNameInstituteStatus(String username,String instituteid, Const.UserStatus status){
+        List<UserEntity> search = userRepository.findByUserNameContainingOrInstituteContainingOrUserStatusContaining(username, instituteid, status);
         return search;
     }
+    //endregion
     //endregion
 
     //region 研究员操作集
@@ -411,6 +417,23 @@ public class UserServiceImpl implements UserService {
             thesisRepository.save(t);
         }
         return new Result(true, DataCheck.ThesisCheck.THESIS_DELETED.toString());
+    }
+    @Override
+    public List<ThesisEntity> findAllThesisByAuthorId(String authorId){
+        List<ThesisEntity> thesisListAuthor1 = thesisRepository.findAllByAuthor1Containing(authorId);
+        List<ThesisEntity> thesisListAuthor2 = thesisRepository.findAllByAuthor2Containing(authorId);
+        List<ThesisEntity> thesisListAuthor3 = thesisRepository.findAllByAuthor3Containing(authorId);
+        List<ThesisEntity> finalList = new ArrayList<>();
+        finalList.addAll(thesisListAuthor1);
+        finalList.addAll(thesisListAuthor2);
+        finalList.addAll(thesisListAuthor3);
+        return finalList;
+    }
+    @Override
+    public List<ThesisEntity> findAllThesisByAuthorName(String authorName){
+        UserEntity user = userRepository.findByUserNameContaining(authorName);
+        List<ThesisEntity> thesisByAuthorName = findAllThesisByAuthorId(user.getUserId());
+        return thesisByAuthorName;
     }
     //endregion
 

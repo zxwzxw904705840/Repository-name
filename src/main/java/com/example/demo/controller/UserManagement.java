@@ -57,7 +57,7 @@ public class UserManagement {
         int pageNumber = Integer.valueOf(request.getParameter("pageNumber"));
         int limit = Integer.valueOf(request.getParameter("pageSize")); //输入
         int offset = limit * (pageNumber - 1);//输入
-        String userStatus = request.getParameter("userStatus").toString();//输入
+        String userStatus = request.getParameter("userStatus");//输入
         String userName = request.getParameter("userName");//输入
         String instituteId = request.getParameter("instituteId");//输入
 
@@ -69,7 +69,7 @@ public class UserManagement {
         params.put("limit", limit);
         params.put("offset", offset);
         System.out.println("params" + params);
-        //List<UserEntity> userlist = userServiceImpl.findByUsernameContaining(userName);
+
 /*
         //测试用数据
        List<userList> lists = new ArrayList<>();
@@ -91,9 +91,12 @@ public class UserManagement {
         result.put("rows", lists);
         result.put("total",100); //整个表的总数*/
 
+        //测试用数据end
 
+//        //List<UserEntity> userlist = userServiceImpl.findByUsernameContainingOrInstituteContainingOrUserStatusContaining(userName,instituteId,userStatus);
         Map<String, Object> result = new HashMap<>();
-         //测试用数据end
+//        result.put("rows", userlist);
+//        result.put("total", userlist.size());
 
         return result;
 

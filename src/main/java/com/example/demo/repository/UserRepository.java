@@ -11,15 +11,18 @@ import java.util.List;
 public interface UserRepository extends JpaRepository<UserEntity,String> {
     UserEntity findByUserId(String userId);
 
-    List<UserEntity> findUserEntitiesByUserStatus(Const.UserStatus status);
+    UserEntity findByUserNameContaining(String userName);
 
-    List<UserEntity> findUserEntitiesByCharacters(Const.UserCharacter role);
+    List<UserEntity> findUserEntitiesByUserStatus(Const.UserStatus user_status);
 
-    List<UserEntity> findByUsernameLike(String username);
+    List<UserEntity> findUserEntitiesByCharacters(Const.UserCharacter characters);
 
-    List<UserEntity> findByUsernameStartingWith(String username);
+    List<UserEntity> findByUserNameLike(String username);
 
-    List<UserEntity> findByUsernameEndingWith(String username);
+    List<UserEntity> findByUserNameStartingWith(String username);
 
-    List<UserEntity> findByUsernameContaining(String username);
+    List<UserEntity> findByUserNameEndingWith(String username);
+
+    List<UserEntity> findByUserNameContainingOrInstituteContainingOrUserStatusContaining(String username,String instituteid, Const.UserStatus status);
+
 }
