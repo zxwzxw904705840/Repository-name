@@ -106,6 +106,10 @@ public class indexSearch {
         }else if(type.equals("1")){//按标题搜索查询
 
         }else if(type.equals("2")){//作者1
+            System.out.println("按作者："+input);
+            thesisList=userService.findAllThesisByAuthorName(input);
+            System.out.println("按作者："+thesisList.get(0).getThesisTitle());
+            model.addAttribute("thesisList",thesisList);
 
         }else if(type.equals("3")){//作者2
 

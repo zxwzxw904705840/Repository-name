@@ -31,9 +31,10 @@ public class ThesisManagement {
     @RequestMapping("/MyThesis")
     public  String MyThesis(HttpServletRequest request, Model model){
         String userid=request.getSession().getAttribute("userId").toString();
-
+        System.out.println("userid add:"+userid);
         List<ThesisEntity> thesisList=new ArrayList<>();
-
+//        thesisList=userService.findAllThesisByAuthorId(userid);
+//        System.out.println("thesis:"+thesisList.get(0).getThesisTitle());
         UserEntity user=new UserEntity();
         user.setUserName("叶元卯");
 
@@ -127,9 +128,8 @@ public class ThesisManagement {
         ThesisEntity thesis =new ThesisEntity();
         UserEntity user=new UserEntity();
         String userid=request.getSession().getAttribute("userId").toString();
-        System.out.println("userid add:"+userid);
         user=(UserEntity)userService.getUserById(userid).getObject(userid);
-   
+
         String title=request.getParameter("input1");
         String thesisId=request.getParameter("input2");
         String author1name;
