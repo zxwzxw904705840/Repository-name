@@ -4,6 +4,7 @@ import com.example.demo.Entity.InstituteEntity;
 import com.example.demo.Entity.ProjectEntity;
 import com.example.demo.Entity.UserEntity;
 import com.example.demo.utils.Result;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 

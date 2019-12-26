@@ -1,5 +1,6 @@
 package com.example.demo.repository;
 
+import com.example.demo.Entity.InstituteEntity;
 import com.example.demo.Entity.UserEntity;
 import com.example.demo.utils.Const;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,7 +14,7 @@ public interface UserRepository extends JpaRepository<UserEntity,String> {
 
     UserEntity findByUserName(String userName);
 
-    UserEntity findByUserNameContaining(String userName);
+    List<UserEntity> findByUserNameContaining(String userName);
 
     List<UserEntity> findUserEntitiesByUserStatus(Const.UserStatus user_status);
 
@@ -25,6 +26,16 @@ public interface UserRepository extends JpaRepository<UserEntity,String> {
 
     List<UserEntity> findByUserNameEndingWith(String username);
 
-    List<UserEntity> findByUserNameContainingOrInstituteContainingOrUserStatusContaining(String username,String instituteid, Const.UserStatus status);
+    List<UserEntity> findAllByUserNameContainingAndUserStatusIs(String userName, Const.UserStatus ustatus);
+
+    List<UserEntity> findAllByUserNameContainingAndInstituteIsOrInstituteContaining(String userName, InstituteEntity instituteEntity);
+
+    List<UserEntity> findAllByUserNameContainingAndUserStatusIsAndInstituteIsOrInstituteContaining(String userName, Const.UserStatus ustatus, InstituteEntity instituteEntity);
+
+    List<UserEntity> findAllByUserStatusIs(Const.UserStatus status);
+
+    List<UserEntity> findAllByInstituteIsOrInstituteContaining(InstituteEntity instituteEntity);
+
+    List<UserEntity> findAllByUserStatusIsAndInstituteIsOrInstituteContaining(Const.UserStatus ustatus, InstituteEntity instituteEntity);
 
 }

@@ -33,11 +33,49 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Result getUserById(String userId){
-        UserEntity userEntity = userRepository.findByUserId(userId);
-        Result result = checkUser(userEntity);
-        result.addObject(userId,userEntity);
-        return result;
+    public List<UserEntity> getUserList(String userName, Const.UserStatus ustatus, InstituteEntity instituteEntity){
+        // USERNAME: !NULL, USERSTATUS: NULL, INSTITUTE: NULL
+        if(!userName.equals("") && ustatus.toString().equals("") && instituteEntity == null){
+            return userRepository.findByUserNameContaining(userName);
+        }
+
+        // USERNAME: !NULL, USERSTATUS: !NULL, INSTITUTE: NULL
+        if(!userName.equals("") && !ustatus.toString().equals("") && instituteEntity == null){
+            return userRepository.findAllByUserNameContainingAndUserStatusIs(userName, ustatus);
+        }
+
+        // USERNAME: !NULL, USERSTATUS: NULL, INSTITUTE: !NULL
+        if(!userName.equals("") && ustatus.toString().equals("") && !(instituteEntity == null)){
+            return userRepository.findAllByUserNameContainingAndInstituteIsOrInstituteContaining(userName,instituteEntity);
+        }
+
+        // USERNAME: !NULL, USERSTATUS: !NULL, INSTITUTE: !NULL
+        if(!userName.equals("") && !ustatus.toString().equals("") && !(instituteEntity == null)){
+            return userRepository.findAllByUserNameContainingAndUserStatusIsAndInstituteIsOrInstituteContaining(userName, ustatus, instituteEntity);
+        }
+
+        // USERNAME: NULL, USERSTATUS: !NULL, INSTITUTE: !NULL
+        if(userName.equals("") && !ustatus.toString().equals("") && !(instituteEntity == null)){
+            return userRepository.findAllByUserStatusIsAndInstituteIsOrInstituteContaining(ustatus,instituteEntity);
+        }
+
+        // USERNAME: NULL, USERSTATUS: !NULL, INSTITUTE: NULL
+        if(userName.equals("") && !ustatus.toString().equals("") && (instituteEntity == null)){
+            return userRepository.findAllByUserStatusIs(ustatus);
+        }
+
+        // USERNAME: NULL, USERSTATUS: NULL, INSTITUTE: !NULL
+        if(userName.equals("") && ustatus.toString().equals("") && !(instituteEntity == null)){
+            return userRepository.findAllByInstituteIsOrInstituteContaining(instituteEntity);
+        }
+
+        // USERNAME: NULL, USERSTATUS: NULL, INSTITUTE: NULL
+        return getUserList();
+    }
+
+    @Override
+    public UserEntity getUserById(String userId){
+        return userRepository.findByUserId(userId);
     }
 
     @Override
@@ -67,6 +105,7 @@ public class UserServiceImpl implements UserService {
 
     //region 添加新用户
     @Override
+    @Transactional
     public Result addUser(UserEntity user){
         Result result = checkUser(user);
         if(!result.isSuccess()){
@@ -78,6 +117,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public Result addUsers(List<UserEntity> users){
         Result result;
         for(int i = 0; i <= users.size(); i++){
@@ -94,6 +134,7 @@ public class UserServiceImpl implements UserService {
 
     //region 删除用户函数
     @Override
+    @Transactional
     public Result DeleteUserById(String userId){
         UserEntity userEntity = userRepository.findByUserId(userId);
         Result result = checkUser(userEntity);
@@ -105,6 +146,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public Result DeleteUsersById(String[] userId){
         for(int i = 0; i <= userId.length; i++){
             UserEntity userEntity = userRepository.findByUserId(userId[i]);
@@ -118,6 +160,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public Result DeleteCompletely(String userId, UserEntity admin){
         UserEntity userEntity = userRepository.findByUserId(userId);
         Result adminresult = checkUserPermission(admin);
@@ -133,6 +176,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public Result DeleteUsersCompletely(List<UserEntity> users, UserEntity personCanDelete){
         Result result = checkUserPermission(personCanDelete);
         if(result.getMessage().equals(DataCheck.UserDataCheck.IS_ADMIN.toString()))
@@ -150,6 +194,7 @@ public class UserServiceImpl implements UserService {
 
     //region 修改用户信息
     @Override
+    @Transactional
     public Result SetUserName(String userId, String userName){
         UserEntity userEntity = userRepository.findByUserId(userId);
         Result result = checkUser(userEntity);
@@ -159,6 +204,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public Result SetInstituteId(String userId,String instituteId){
         UserEntity userEntity = userRepository.findByUserId(userId);
         InstituteEntity instituteEntity = instituteRepository.findInstituteEntityByInstituteId(instituteId);
@@ -175,6 +221,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public Result SetTitle(String userId, Const.UserTitle title){
         UserEntity userEntity = userRepository.findByUserId(userId);
         Result result = checkUser(userEntity);
@@ -186,6 +233,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public Result SetEmail(String userId,String email){
         UserEntity userEntity = userRepository.findByUserId(userId);
         Result result = checkUser(userEntity);
@@ -197,6 +245,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public Result SetPassword(String userId,String password){
         UserEntity userEntity = userRepository.findByUserId(userId);
         Result result = checkUser(userEntity);
@@ -217,6 +266,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public Result SetPhone(String userId,String phone){
         UserEntity userEntity = userRepository.findByUserId(userId);
         Result result = checkUser(userEntity);
@@ -240,6 +290,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public Result SetStatus(String userId, UserEntity admin, Const.UserStatus status){
         UserEntity userEntity = userRepository.findByUserId(userId);
         Result adminresult = checkUserPermission(admin);
@@ -258,9 +309,11 @@ public class UserServiceImpl implements UserService {
 
     }
 
-    public Result AgreeUserUpdate(String userid, String adminid){
-        UserEntity user = userRepository.findByUserId(userid);
-        UserEntity admin = userRepository.findByUserId(adminid);
+    @Override
+    @Transactional
+    public Result AgreeUserUpdate(String userId, String adminId){
+        UserEntity user = userRepository.findByUserId(userId);
+        UserEntity admin = userRepository.findByUserId(adminId);
         Result resultuser = checkUser(user);
         Result resultadmin = checkUserPermission(admin);
         if(!resultuser.isSuccess()){
@@ -366,17 +419,16 @@ public class UserServiceImpl implements UserService {
         return userRepository.findByUserNameEndingWith(username);
     }
 
-    public List<UserEntity> findByUserNameInstituteStatus(String username,String instituteid, Const.UserStatus status){
-        return userRepository.findByUserNameContainingOrInstituteContainingOrUserStatusContaining(username, instituteid, status);
-    }
+
     //endregion
     //endregion
 
     //region 研究员操作集
 
     //region 我的论文操作
-    @Transactional
+
     @Override
+    @Transactional
     public Result addThesis(ThesisEntity thesisEntity, UserEntity researcher){
         Result result = checkUserPermission(researcher);
         if(!result.isSuccess()){
@@ -385,8 +437,9 @@ public class UserServiceImpl implements UserService {
         thesisRepository.save(thesisEntity);
         return new Result(true, DataCheck.ThesisCheck.THESIS_ADDED.toString());
     }
-    @Transactional
+
     @Override
+    @Transactional
     public Result updateThesis(ThesisEntity thesisEntity, UserEntity researcher){
         Result result = checkUserPermission(researcher);
         ThesisEntity t = thesisRepository.findByThesisId(thesisEntity.getThesisId());
@@ -420,8 +473,8 @@ public class UserServiceImpl implements UserService {
         }
         return new Result(true, DataCheck.ThesisCheck.THESIS_DELETED.toString());
     }
+
     @Override
-    @Transactional
     public List<ThesisEntity> findAllThesisByAuthorId(String authorId){
         UserEntity author = userRepository.findByUserId(authorId);
         List<ThesisEntity> thesisListAuthor1 = thesisRepository.findAllByAuthor1AndStatusIsNot(author, Const.ThesisStatus.DELETED);
@@ -469,6 +522,7 @@ public class UserServiceImpl implements UserService {
 
     //region 我的著作操作
     @Override
+    @Transactional
     public Result addBook(BookEntity bookEntity, UserEntity researcher){
         Result result = checkUserPermission(researcher);
         if(!result.isSuccess()){
@@ -478,6 +532,7 @@ public class UserServiceImpl implements UserService {
         return new Result(true, DataCheck.BookCheck.BOOK_ADDED.toString());
     }
     @Override
+    @Transactional
     public Result updateBook(BookEntity bookEntity, UserEntity researcher){
         Result result = checkUserPermission(researcher);
         if(!result.isSuccess()){
@@ -497,6 +552,7 @@ public class UserServiceImpl implements UserService {
         return new Result(true, DataCheck.BookCheck.BOOK_CHANGED.toString());
     }
     @Override
+    @Transactional
     public Result deleteBook(BookEntity bookEntity, UserEntity researcher){
         Result result = checkUserPermission(researcher);
         if(!result.isSuccess()){
@@ -520,7 +576,7 @@ public class UserServiceImpl implements UserService {
     }
     @Override
     public List<BookEntity> findAllBookByAuthorName(String authorName){
-        UserEntity user = userRepository.findByUserNameContaining(authorName);
+        UserEntity user = userRepository.findByUserName(authorName);
         return findAllBookByAuthorId(user.getUserId());
     }
     @Override
