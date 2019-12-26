@@ -5,6 +5,7 @@ import com.example.demo.utils.Const;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -14,4 +15,7 @@ public interface UserRepository extends JpaRepository<UserEntity,String> {
     List<UserEntity> findUserEntitiesByUserStatus(Const.UserStatus status);
 
     List<UserEntity> findUserEntitiesByCharacters(Const.UserCharacter role);
+
+    ArrayList<UserEntity> findAllByUserIdLike(String userId);
+    ArrayList<UserEntity> findAllByUserNameLike(String userName);
 }
