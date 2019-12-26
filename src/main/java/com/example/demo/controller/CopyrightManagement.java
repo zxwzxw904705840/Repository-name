@@ -5,18 +5,35 @@ import com.example.demo.Entity.BookEntity;
 import com.example.demo.Entity.ThesisEntity;
 import com.example.demo.Entity.UserEntity;
 import com.example.demo.service.UserService;
+import com.example.demo.utils.Const;
+import com.example.demo.utils.DataCheck;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.ServletRequestDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
+import java.util.Date;
 import java.util.List;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+
+
+
+
+
 
 @Controller
 public class CopyrightManagement {
@@ -24,32 +41,8 @@ public class CopyrightManagement {
     @Autowired
     UserService userService;
 
-    @RequestMapping("/CopyrightDetail")
-    public  String CopyrightDetail(){
 
-        return "CopyrightDetail";
-    }
-    /**
-     * 删除
-     * @return
-     */
-    @RequestMapping("/deleteAll")
-    @ResponseBody
-    public String deleteAll(String checkList){
 
-        System.out.println("==>"+checkList);
-
-        String[] strs = checkList.split(",");
-        List<Integer> ids = new ArrayList<>();
-
-        for(String str:strs){
-            ids.add(Integer.parseInt(str));
-        }
-
-    //    resourcesService.deleteAll(ids);
-
-        return "success";
-    }
     /**
      * 用户个人软件著作权展示列表界面
      * @return
@@ -57,12 +50,23 @@ public class CopyrightManagement {
     @RequestMapping("/MySoftwareCopyright")
     public  String MySoftwareCopyright(HttpServletRequest request, Model model){
         String userid=request.getSession().getAttribute("userId").toString();
-
         List<BookEntity> bookList=new ArrayList<>();
 
         UserEntity user=new UserEntity();
-        user.setUserName("叶元卯");
 
+        System.out.println("userid add:"+userid);
+        bookList=userService.findAllBookByAuthorId(userid);
+        //先把url中的“/”都替换成“%2F”
+        for(int i=0;i<bookList.size();i++){
+            String str=bookList.get(i).getBookId();
+            String str2=str.replace("/", "--2F-2F-");
+            bookList.get(i).setBookId(str2);;
+        }
+
+        model.addAttribute("bookList",bookList);
+        return "MySoftwareCopyright";
+
+        /**
         //临时假数据
         for(int i=0;i<15;i++){
             BookEntity booktmp=new BookEntity();
@@ -77,6 +81,7 @@ public class CopyrightManagement {
         }
         model.addAttribute("bookList",bookList);
         return "MySoftwareCopyright";
+         **/
     }
 
     /**
@@ -132,59 +137,80 @@ public class CopyrightManagement {
         return "AddCopyright";
     }
 
+
+
     /**提交新增软件著作权信息，著作权ID是必填项
      *
      * @param request
      * @return
      */
+
     @RequestMapping("/AddCopyrightSubmit")
     public String submits(HttpServletRequest request) {
         BookEntity book =new BookEntity();
+        UserEntity user=new UserEntity();
         String userid=request.getSession().getAttribute("userId").toString();
+        user=(UserEntity)userService.getUserById(userid).getObject(userid);
+
         String title=request.getParameter("input1");
         String bookId=request.getParameter("input2");
         String author1name="";
         String author2name="";
         String author3name="";
-        String bookStatustry="";
+        String bookInformationtry="";
         String bookPublishDatetry="";
+        String zero=String.valueOf(0);
 
 
         UserEntity user1=new UserEntity();
         UserEntity user2=new UserEntity();
         UserEntity user3=new UserEntity();
 
-        user1=userService.findByUserNameLike(author1name).get(0);
-        user2=userService.findByUserNameLike(author2name).get(0);
-        user3=userService.findByUserNameLike(author3name).get(0);
-
-        if(request.getParameter("input3")!=null){
-            author1name=request.getParameter("input3");
-        }
-        if(request.getParameter("input4")!=null){
-            author2name=request.getParameter("input4");
-        }
-        if(request.getParameter("input5")!=null){
-            author3name=request.getParameter("input5");
-        }
-        if(request.getParameter("input6")!=null){
-            bookPublishDatetry=request.getParameter("input6");
-        }
-        if(request.getParameter("input7")!=null){
-            bookStatustry=request.getParameter("input7");
-        }
-
-
         book.setBookId(bookId);
         book.setBookName(title);
-        book.setAuthor1(user1);
-        book.setAuthor2(user2);
-        book.setAuthor3(user3);
+
+        book.setBookPublishStatus(Const.BookPublishStatus.class.getEnumConstants()[1]);
+        book.setBookStatus(Const.BookStatus.class.getEnumConstants()[1]);
+        book.setCreativeNature(Const.BookCreativeNature.class.getEnumConstants()[1]);
+
+        if(request.getParameter("input3")!=null&&request.getParameter("input3")!=""){
+            author2name=request.getParameter("input3");
+            user1=userService.findByUserNameLike(author2name).get(0);
+            book.setAuthor1(user1);
+        }
+        if(request.getParameter("input4")!=null&&request.getParameter("input4")!=""){
+            author2name=request.getParameter("input4");
+            user2=userService.findByUserNameLike(author2name).get(0);
+            book.setAuthor2(user2);
+        }
+        if(request.getParameter("input5")!=null&&request.getParameter("input5")!=""){
+            author3name=request.getParameter("input5");
+            user3=userService.findByUserNameLike(author3name).get(0);
+            book.setAuthor3(user3);
+        }
+        if(request.getParameter("input6")!=null&&request.getParameter("input6")!=""){
+            bookPublishDatetry=request.getParameter("input6");
+            SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd");
+            try {
+                //使用SimpleDateFormat的parse()方法生成Date
+                Date date = sf.parse(bookPublishDatetry);
+                //打印Date
+                System.out.println(date);
+                book.setBookPublishDate(date);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+        }
+        if(request.getParameter("input7")!=null&&request.getParameter("input7")!=""){
+            bookInformationtry=request.getParameter("input7");
+            book.setBookInformation(bookInformationtry);
+        }
 
        // book.setPrivacy();
-
-        System.out.println("/AddCopyrightSubmit userid:"+userid+" privacy："+" title:"+title);
-        return "AddCopyrightSubmit";
+        System.out.println("/AddThesisSubmit userid:"+userid+" title:"+title+" status");
+        System.out.println("result:"+userService.addBook(book,user));
+        return "MySoftwareCopyright";
     }
 
     //修改某篇论文信息

@@ -81,7 +81,6 @@
                                 <button type="button" class="btn btn-warning"><span
                                         aria-hidden="true"></span> Add</button>
                             </a>
-
                             <button type="button" id="remove" class="btn btn-warning" onclick="deleteLogic();"><span
                                     aria-hidden="true"></span> Delete
                             </button>
@@ -90,24 +89,22 @@
 
                     <br/>
                     <!--table  class="table table-bordered" id="table_list"></table-->
-
-
-
-
                     <div class="panel panel-warning" th:each="list:${bookList}">
                         <a th:href="@{'/CopyrightDetail/'+${list.getBookId()}}">
                             <div class="panel-body">
 
-
                                 <div class="row">
-                                    <div class="col-md-3 panel-title">
+                                    <div class="col-md-2 panel-title">
                                         <p th:text="${list.getBookId()}"></p>
                                     </div>
                                     <div class="col-md-4  panel-title">
                                         <p th:text="${list.getBookName()}">名称</p>
                                     </div>
-                                    <div class="col-md-3 panel-title">
+                                    <div class="col-md-2 panel-title">
                                         <p th:text="${list.getAuthor1().getUserName()}">作者1名称</p>
+                                    </div>
+                                    <div class="col-md-2 panel-title">
+                                        <p th:text="${list.getAuthor2().getUserName()}">作者2名称</p>
                                     </div>
 
                                     <label class="checkbox-inline col-md-2">
@@ -176,6 +173,7 @@
             })
         }
     </script>
+
 
 
 </body>
