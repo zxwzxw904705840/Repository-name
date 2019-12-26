@@ -160,26 +160,15 @@ public class indexSearch {
     @RequestMapping("/ThesisDetail/{ThesisId}")
     public  String ThesisDetail(HttpServletRequest request, @PathVariable("ThesisId") String ThesisId, Model model){
         System.out.println("/ThesisDetail/{ThesisId}+"+ThesisId);
-
+        String thesisId=ThesisId.replace("--2F-2F-", "/");
         //临时假数据
         ThesisEntity thesistmp=new ThesisEntity();
-        UserEntity user=new UserEntity();
-        UserEntity user2=new UserEntity();
-        UserEntity user3=new UserEntity();
-        user.setUserName("叶元卯");
-        user2.setUserName("刘新");
-        user3.setUserName("袁学海");
-        thesistmp.setAuthor1(user);
-        thesistmp.setJournal("机械动力期刊");
-        thesistmp.setThesisId(ThesisId);
-        thesistmp.setThesisTitle("动态规划");
-        thesistmp.setAuthor2(user2);
-        thesistmp.setAuthor3(user3);
-        thesistmp.setPages(2);
-        thesistmp.setPrivacy(Const.ThesisPrivacy.PUBLIC);
-        thesistmp.setUrl("http://kns.cnki.net//KXReader/Detail?TIMESTAMP=637128076425118750&DBCODE=CJFQ&TABLEName=CJFDLAST2015&FileName=JJYD201504007&RESULT=1&SIGN=fZDoiQetL2qN%2b2B89OOattl2n8I%3d");
-        thesistmp.setVolume("02期");
-        System.out.println("thsistmp:"+thesistmp.getAuthor2().getUserName());
+        thesistmp=userService.findByThesisId(thesisId);
+        System.out.println("thsistmp:"+thesistmp.getThesisId());
+
+        if(thesistmp.getUrl()==null){
+            thesistmp.setUrl("");
+        }
         model.addAttribute("thesisinf",thesistmp);
 
         return "ThesisDetail";

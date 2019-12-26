@@ -87,7 +87,7 @@
                                     </div>
                                     <label  class="col-md-1 control-label">作者二</label>
                                     <div class="col-md-3">
-                                        <p th:text="${thesisinf.getAuthor2().getUserName()}"></p>
+                                        <p th:text="${thesisinf.getAuthor2().getUserName()}" th:if="${thesisinf.getAuthor2()!=null}"></p>
                                     </div>
                                 </div>
                             </div>
@@ -96,15 +96,15 @@
                                 <div class="row">
                                     <label  class="col-md-1 control-label">作者三</label>
                                     <div class="col-md-3">
-                                        <p th:text="${thesisinf.getAuthor3().getUserName()}"></p>
+                                        <p th:text="${thesisinf.getAuthor3().getUserName()}" th:if="${thesisinf.getAuthor3()!=null}"></p>
                                     </div>
                                     <label class="col-md-1 control-label">刊名</label>
                                     <div class="col-md-3">
-                                        <p th:text="${thesisinf.getJournal()}"></p>
+                                        <p th:text="${thesisinf.getJournal()}" th:if="${thesisinf.getJournal()!=null}"></p>
                                     </div>
                                     <label  class="col-md-1 control-label">期，卷</label>
                                     <div class="col-md-3">
-                                        <p th:text="${thesisinf.getVolume()}"></p>
+                                        <p th:text="${thesisinf.getVolume()}" th:if="${thesisinf.getVolume()!=null}"></p>
                                     </div>
                                 </div>
                             </div>
@@ -113,7 +113,7 @@
                             <div class="row">
                                     <label  class="col-md-1 control-label">页数</label>
                                     <div class="col-md-3">
-                                        <p th:text="${thesisinf.getPages()}"></p>
+                                        <p th:text="${thesisinf.getPages()}" th:if="${thesisinf.getPages()!=null}"></p>
                                     </div>
                                     <label  class="col-md-1 control-label">私密性</label>
                                     <div class="col-md-3">

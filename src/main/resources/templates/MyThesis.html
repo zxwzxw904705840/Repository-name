@@ -93,16 +93,16 @@
                     <a th:href="@{'/ThesisDetail/'+${list.getThesisId()}}">
                         <div class="panel-body">
                             <div class="row">
-                                <div class="col-md-2 panel-title">
+                                <div class="col-md-3 panel-title">
                                     <p th:text="${list.getThesisId()}"></p>
                                 </div>
                                 <div class="col-md-3  panel-title">
                                     <p th:text="${list.getThesisTitle()}">名称</p>
                                 </div>
-                                <div class="col-md-2 panel-title">
+                                <div class="col-md-1 panel-title">
                                     <p th:text="${list.getAuthor1().getUserName()}">作者1名称</p>
                                 </div>
-                                <div class="col-md-2 panel-title">
+                                <div class="col-md-3 panel-title">
                                     <p th:text="${list.getJournal()}"></p>
                                 </div>
                                 <label class="checkbox-inline col-md-1">

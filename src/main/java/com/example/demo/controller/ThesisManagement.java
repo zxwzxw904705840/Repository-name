@@ -33,80 +33,19 @@ public class ThesisManagement {
         String userid=request.getSession().getAttribute("userId").toString();
         System.out.println("userid add:"+userid);
         List<ThesisEntity> thesisList=new ArrayList<>();
-//        thesisList=userService.findAllThesisByAuthorId(userid);
-//        System.out.println("thesis:"+thesisList.get(0).getThesisTitle());
-        UserEntity user=new UserEntity();
-        user.setUserName("叶元卯");
-
-        //临时假数据
-        for(int i=0;i<15;i++){
-            ThesisEntity thesistmp=new ThesisEntity();
-            thesistmp.setAuthor1(user);
-            thesistmp.setJournal("机械动力期刊");
-            thesistmp.setThesisId("100"+i*2+"4-2-85"+i);
-            thesistmp.setThesisTitle("动态规划");
-            if(i/3==0)
-                thesistmp.setThesisTitle("基于视觉的天眼机器研究");
-            if(i/2==0)
-                thesistmp.setThesisTitle("类脑研究");
-            thesisList.add(thesistmp);
+        thesisList=userService.findAllThesisByAuthorId(userid);
+        //先把url中的“/”都替换成“%2F”
+        for(int i=0;i<thesisList.size();i++){
+            String str=thesisList.get(i).getThesisId();
+            String str2=str.replace("/", "--2F-2F-");
+            thesisList.get(i).setThesisId(str2);;
         }
+
         model.addAttribute("thesisList",thesisList);
         return "MyThesis";
     }
 
-    /**
-     * 获取用户所有对应的论文信息list，方便传数据到table里显示
-     * @param session
-     * @param request
-     * @param response
-     * @return
-     */
-    //暂时放弃这个函数了，不用管它
-    @ResponseBody
-    @RequestMapping("../../findTBlist")
-    public Map<String, Object> findTBlist(HttpSession session, HttpServletRequest request, HttpServletResponse response) {
-        System.out.println("findTBlist");
-        Map<String, Object> params = new HashMap<>();
-        Map<String, Object> result = new HashMap<>();
-        int pageNumber = Integer.valueOf(request.getParameter("pageNumber"));
-        int pageSize = Integer.valueOf(request.getParameter("pageSize"));
-        int offset = pageSize * (pageNumber - 1);
 
-        String thesisId = request.getParameter("thesisId");
-        String thesisTitle = request.getParameter("thesisTile");
-
-        if (thesisTitle != "" && thesisTitle != null) {
-            params.put("thesisTitle", thesisTitle);
-        }
-        if (thesisId != "" && thesisId!= null) {
-            params.put("thesisId", thesisId);
-        }
-        System.out.println(params);
-
-        //  List<ThesisEntity> all = thesisService.findTBlist(params);
-
-        //   session.setAttribute("vTbList", all);
-
-        params.put("limit", pageSize);
-        params.put("offset", offset);
-
-        System.out.println("params" + params);
-
-//           List<ThesisEntity> lists = thesisService.findTBlist(params);
-//
-//             System.out.println("lists.size" + lists.size());
-//
-//             session.setAttribute("textbooklist", all);
-//
-//        result.put("rows", lists);
-//        result.put("total", all.size());
-//
-//        System.out.println("all.size()" + all.size());
-        //   System.out.println("result" + result);
-
-        return result;
-    }
 
     //跳转到论文登记界面
     @RequestMapping("/AddThesis")
