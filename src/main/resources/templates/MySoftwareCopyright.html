@@ -61,9 +61,74 @@
 
         <!-- content begin -->
         <div id="content">
-mm
+            <div class="row">
+                <div class="col-md-10 col-md-offset-1">
+                    <div class="row">
+                        <div class="col-md-10">
+                            <form class="form-inline" id="search_from" name="search_from">
+                                <label class="control-label" for="inputCopyrightId">SoftCopyright ID：</label>
+                                <input class="form-control headmargin" type="text" id="inputCopyrightId" name="bookId"/>
+                                <label class="control-label" for="inputCopyrightname">  SoftCopyright Name：</label>
+                                <input class="form-control headmargin" type="text" id="inputCopyrightname" name="bookname"/>
 
-</div>
+                                <button type="button" onclick="findCopyright()" id="search" class="btn btn-warning"><span
+                                        aria-hidden="true"></span>Search
+                                </button>
+                            </form>
+                        </div>
+                        <div class="col-md-2">
+                            <a th:href="@{AddCopyright}" >
+                                <button type="button" class="btn btn-warning"><span
+                                        aria-hidden="true"></span> Add</button>
+                            </a>
+
+                            <button type="button" id="remove" class="btn btn-warning" onclick="deleteLogic();"><span
+                                    aria-hidden="true"></span> Delete
+                            </button>
+                        </div>
+                    </div>
+
+                    <br/>
+                    <!--table  class="table table-bordered" id="table_list"></table-->
+
+
+
+
+                    <div class="panel panel-warning" th:each="list:${bookList}">
+                        <a th:href="@{'/CopyrightDetail/'+${list.getBookId()}}">
+                            <div class="panel-body">
+
+
+                                <div class="row">
+                                    <div class="col-md-3 panel-title">
+                                        <p th:text="${list.getBookId()}"></p>
+                                    </div>
+                                    <div class="col-md-4  panel-title">
+                                        <p th:text="${list.getBookName()}">名称</p>
+                                    </div>
+                                    <div class="col-md-3 panel-title">
+                                        <p th:text="${list.getAuthor1().getUserName()}">作者1名称</p>
+                                    </div>
+
+                                    <label class="checkbox-inline col-md-2">
+                                        <input type="checkbox" name="optionsCheckboxinline"  th:value="${list.getBookId()}">
+                                    </label>
+                                </div>
+                            </div>
+                        </a>
+
+                    </div> <!-- panel panel-warning -->
+
+                </div>
+
+
+            </div>
+
+
+
+        </div>
+        <input id="labeluserid" type="hidden" th:value="${session.userId}" />
+    </div>
 
           
         </div>
@@ -74,6 +139,43 @@ mm
     ================================================== -->
     <script src="../js/jquery.min.js"></script>
     <script src="../js/bootstrap.min.js"></script>
+    <script type="text/javascript">
+        /**
+         * 批量删除
+         */
+        function deleteLogic() {
+
+            var checkNum = $("input[name='optionsCheckboxinline']:checked").length;
+
+            if(checkNum==0){
+                alert("至少选择一项");
+                return;
+            }
+
+            if(confirm("确定要删除吗？")){
+                var checkList = new Array();
+                $("input[name='checkId']:checked").each(function () {
+                    checkList.push($(this).val())
+                });
+            }
+
+            $.ajax({
+                url:"/deleteAll",
+                type:"post",
+                data:{
+                    checkList:checkList.toString()
+                },
+                datatype:"json",
+                success:function (data) {
+                    location.reload();
+                    alert("删除成功！")
+                },
+                error:function (msg) {
+                    alert("删除失败！")
+                }
+            })
+        }
+    </script>
 
 
 </body>
