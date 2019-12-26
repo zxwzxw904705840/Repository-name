@@ -10,8 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,12 +25,6 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private BookRepository bookRepository;
 
-    @PersistenceContext
-    private EntityManager em;
-
-    public void refresh(ThesisEntity th){
-        em.refresh(th);
-    }
     //region User部分
     //region 获得用户
     @Override
@@ -419,11 +411,10 @@ public class UserServiceImpl implements UserService {
     @Transactional("ThesisEntity")
     public Result deleteThesis(ThesisEntity thesisEntity, UserEntity researcher) {
         Result result = checkUserPermission(researcher);
-        if (!result.isSuccess()) {
+        if (result.isSuccess()) {
             ThesisEntity t = thesisRepository.findByThesisId(thesisEntity.getThesisId());
             t.setStatus(Const.ThesisStatus.DELETED);
             thesisRepository.saveAndFlush(t);
-            refresh(t);
         }
         return new Result(true, DataCheck.ThesisCheck.THESIS_DELETED.toString());
     }
