@@ -71,17 +71,17 @@ public class UserServiceImpl implements UserService {
 
         // USERNAME: !NULL, USERSTATUS: NULL, INSTITUTE: !NULL
         if(!userName.equals("") && ustatus.toString().equals("") && !(instituteEntity == null)){
-            return userRepository.findAllByUserNameContainingAndInstituteIsOrInstituteContaining(userName,instituteEntity);
+            return userRepository.findAllByUserNameContainingAndInstituteIs(userName,instituteEntity);
         }
 
         // USERNAME: !NULL, USERSTATUS: !NULL, INSTITUTE: !NULL
         if(!userName.equals("") && !ustatus.toString().equals("") && !(instituteEntity == null)){
-            return userRepository.findAllByUserNameContainingAndUserStatusIsAndInstituteIsOrInstituteContaining(userName, ustatus, instituteEntity);
+            return userRepository.findAllByUserNameContainingAndUserStatusIsAndInstituteIs(userName, ustatus, instituteEntity);
         }
 
         // USERNAME: NULL, USERSTATUS: !NULL, INSTITUTE: !NULL
         if(userName.equals("") && !ustatus.toString().equals("") && !(instituteEntity == null)){
-            return userRepository.findAllByUserStatusIsAndInstituteIsOrInstituteContaining(ustatus,instituteEntity);
+            return userRepository.findAllByUserStatusIsAndInstituteIs(ustatus,instituteEntity);
         }
 
         // USERNAME: NULL, USERSTATUS: !NULL, INSTITUTE: NULL
@@ -91,7 +91,7 @@ public class UserServiceImpl implements UserService {
 
         // USERNAME: NULL, USERSTATUS: NULL, INSTITUTE: !NULL
         if(userName.equals("") && ustatus.toString().equals("") && !(instituteEntity == null)){
-            return userRepository.findAllByInstituteIsOrInstituteContaining(instituteEntity);
+            return userRepository.findAllByInstituteIs(instituteEntity);
         }
 
         // USERNAME: NULL, USERSTATUS: NULL, INSTITUTE: NULL

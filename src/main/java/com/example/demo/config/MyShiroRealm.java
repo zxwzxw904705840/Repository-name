@@ -39,7 +39,7 @@ public class MyShiroRealm extends AuthorizingRealm {
         param.put("passwd",passwd);
         System.out.println(param);
         // 从数据库获取对应用户名密码的用户
-        UserEntity userList = userService.getUserById(userid);
+        UserEntity userList = userService.getUserById(userid);//.getObject(userid);
         if (userList != null) {
             // 用户为禁用状态
 
@@ -63,10 +63,12 @@ public class MyShiroRealm extends AuthorizingRealm {
         logger.info("---------------- 执行 Shiro 权限获取 ---------------------");
         Object principal = principals.getPrimaryPrincipal();
         SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();
+
         // List<String> permissions = new ArrayList<String>();
+
         if (principal instanceof UserEntity) {
             UserEntity userLogin = (UserEntity) principal;
-            UserEntity user = userService.getUserById(userLogin.getUserId());
+            UserEntity user = userService.getUserById(userLogin.getUserId());//.getObject(userLogin.getUserId());
             Set<String> role = new HashSet<>();
             Set<String> permissions = new HashSet<>();
             if (user.getCharacters().equals(0)) {
