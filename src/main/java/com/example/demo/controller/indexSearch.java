@@ -197,6 +197,8 @@ public class indexSearch {
         model.addAttribute("thesisinf",thesistmp);
 
         return "ThesisDetail";
+
+
     }
 
     @RequestMapping("/CopyrightDetail/{CopyrightId}")
