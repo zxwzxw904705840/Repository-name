@@ -8,9 +8,11 @@ import com.example.demo.utils.Const;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -118,9 +120,31 @@ public class ThesisManagement {
         thesis.setThesisTitle(title);
         thesis.setPrivacy(Const.ThesisPrivacy.class.getEnumConstants()[Integer.parseInt(privacy)]);
         thesis.setStatus(Const.ThesisStatus.class.getEnumConstants()[1]);
-     //   System.out.println("/AddThesisSubmit userid:"+userid+" title:"+title+"  constprivacy"+thesis.getPrivacy()+" status"+thesis.getStatus());
-      //  System.out.println("result:"+userService.addThesis(thesis,user));
-        return "MyThesis";
+        System.out.println("/AddThesisSubmit userid:"+userid+" title:"+title+"  constprivacy"+thesis.getPrivacy()+" status"+thesis.getStatus());
+        System.out.println("result:"+userService.addThesis(thesis,user));
+        return "redirect:MyThesis";
+    }
+
+    /**
+     * 前往修改论文界面
+     * @param request
+     * @param ThesisId
+     * @param model
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/EditThesis/{ThesisId}")
+    public String GoToEditThesis(HttpServletRequest request, @PathVariable("ThesisId") String ThesisId, Model model) {
+
+        String thesisId=ThesisId.replace("--2F-2F-", "/");
+        System.out.println("/GoToEditThesis{ThesisId}"+thesisId);
+        ThesisEntity thesistmp=new ThesisEntity();
+        thesistmp=userService.findByThesisId(thesisId);
+        if(thesistmp.getUrl()==null){
+            thesistmp.setUrl("");
+        }
+        model.addAttribute("thesisinf",thesistmp);
+        return "EditThesis";
     }
 
     //修改某篇论文信息
@@ -129,7 +153,7 @@ public class ThesisManagement {
     public String editThesis(HttpServletRequest request) {
         JSONObject result=new JSONObject();
         result.put("message","success");
-        return result.toString();
+        return "redirect:ThesisDetail";
     }
 
     //批量删除论文

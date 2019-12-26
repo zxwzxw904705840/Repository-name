@@ -162,6 +162,8 @@ public class indexSearch {
      */
     @RequestMapping("/ThesisDetail/{ThesisId}")
     public  String ThesisDetail(HttpServletRequest request, @PathVariable("ThesisId") String ThesisId, Model model){
+        System.out.println("/ThesisDetail/{ThesisId}:"+ThesisId);
+        model.addAttribute("ThesistmpId",ThesisId);
         String thesisId=ThesisId.replace("--2F-2F-", "/");
         //临时假数据
         ThesisEntity thesistmp=new ThesisEntity();
@@ -169,10 +171,11 @@ public class indexSearch {
         if(thesistmp.getUrl()==null){
             thesistmp.setUrl("");
         }
+
         model.addAttribute("thesisinf",thesistmp);
 
         return "ThesisDetail";
-    }
+}
 
     @RequestMapping("/CopyrightDetail/{CopyrightId}")
     public  String CopyrightDetail(HttpServletRequest request, @PathVariable("CopyrightId") String CopyrightId, Model model){
