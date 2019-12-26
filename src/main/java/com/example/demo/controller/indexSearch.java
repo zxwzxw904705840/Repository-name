@@ -91,9 +91,10 @@ public class indexSearch {
 
         }else if(type.equals("2")){//作者1
             thesisList=userService.findAllThesisByAuthor1(input);
-            if(thesisList!=null&&thesisList.size()>0){
-                System.out.println("按作者1："+thesisList.get(0).getThesisTitle());
-            }
+            System.out.println("size"+thesisList.size());
+//            if(thesisList!=null&&thesisList.size()>0){
+//                System.out.println("按作者1："+thesisList.get(0).getThesisTitle());
+//            }
 
             model.addAttribute("thesisList",thesisList);
         }else if(type.equals("3")){//作者2
@@ -170,27 +171,10 @@ public class indexSearch {
     @RequestMapping("/CopyrightDetail/{CopyrightId}")
     public  String CopyrightDetail(HttpServletRequest request, @PathVariable("CopyrightId") String CopyrightId, Model model){
         System.out.println("/CopyrightDetail/{CopyrightId}+"+CopyrightId);
-        //临时假数据
         BookEntity tmp=new BookEntity();
-        UserEntity user=new UserEntity();
-        UserEntity user2=new UserEntity();
-        UserEntity user3=new UserEntity();
-        String string = "2016-10-24";
-        Date date=new Date();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        sdf.format(date);
-        user.setUserName("叶元卯");
-        user2.setUserName("刘新");
-        user3.setUserName("袁学海");
-        tmp.setBookId(CopyrightId);
-        tmp.setAuthor1(user);
-        tmp.setBookName("博思高视频车位引导系统软件V2.1.7.0");
-        tmp.setBookInformation("用行车记录仪以及车尾视像头引导停车^_^用行车记录仪以及车尾视像头引导停车^_^用行车记录仪以及车尾视像头引导停车^_^用行车记录仪以及车尾视像头引导停车^_^用行车记录仪以及车尾视像头引导停车^_^用行车记录仪以及车尾视像头引导停车^_^用行车记录仪以及车尾视像头引导停车^_^用行车记录仪以及车尾视像头引导停车^_^");
-        tmp.setBookPublishDate(date);
-        tmp.setAuthor2(user2);
-        tmp.setAuthor3(user3);
-        tmp.setBookPublishStatus(Const.BookPublishStatus.PUBLISHED);
-        tmp.setCreativeNature(Const.BookCreativeNature.ORIGINAL);
+        tmp=userService.findByBookId(CopyrightId);
+
+
         model.addAttribute("copyrightinf",tmp);
         return "CopyrightDetail";
     }
