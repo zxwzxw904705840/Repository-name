@@ -45,7 +45,6 @@ public class indexSearch {
         String passwd =  request.getParameter("passwd");
         UsernamePasswordToken token = new UsernamePasswordToken(userid, passwd);
         Subject subject = SecurityUtils.getSubject();
-        System.out.println("userid passwd:"+userid+"   "+passwd);
         try {
             subject.login(token);  //完成登录
             UserEntity user=(UserEntity) subject.getPrincipal();
@@ -64,7 +63,7 @@ public class indexSearch {
     @RequestMapping("/index")
     public  String index1(Model model, HttpServletRequest request){
         String userid=request.getSession().getAttribute("userId").toString();
-        System.out.println("userid.toString="+userid);
+        System.out.println("/index");
         return "index";
     }
 
@@ -98,12 +97,7 @@ public class indexSearch {
 
             model.addAttribute("thesisList",thesisList);
         }else if(type.equals("3")){//作者2
-            System.out.println("input："+input);
             thesisList=userService.findAllThesisByAuthor2(input);
-            if(thesisList!=null&&thesisList.size()>0){
-                System.out.println("按作者2："+thesisList.get(0).getThesisTitle());
-            }
-
             model.addAttribute("thesisList",thesisList);
         }else if(type.equals("4")){//作者3
             thesisList=userService.findAllThesisByAuthor3(input);
@@ -159,13 +153,10 @@ public class indexSearch {
      */
     @RequestMapping("/ThesisDetail/{ThesisId}")
     public  String ThesisDetail(HttpServletRequest request, @PathVariable("ThesisId") String ThesisId, Model model){
-        System.out.println("/ThesisDetail/{ThesisId}+"+ThesisId);
         String thesisId=ThesisId.replace("--2F-2F-", "/");
         //临时假数据
         ThesisEntity thesistmp=new ThesisEntity();
         thesistmp=userService.findByThesisId(thesisId);
-        System.out.println("thsistmp:"+thesistmp.getThesisId());
-
         if(thesistmp.getUrl()==null){
             thesistmp.setUrl("");
         }
