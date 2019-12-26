@@ -132,7 +132,6 @@ public class ThesisManagement {
      * @param model
      * @return
      */
-    @ResponseBody
     @RequestMapping("/EditThesis/{ThesisId}")
     public String GoToEditThesis(HttpServletRequest request, @PathVariable("ThesisId") String ThesisId, Model model) {
 
@@ -143,17 +142,83 @@ public class ThesisManagement {
         if(thesistmp.getUrl()==null){
             thesistmp.setUrl("");
         }
+        model.addAttribute("thesistmpId",ThesisId);  //方便放url中的id（无“/”）
         model.addAttribute("thesisinf",thesistmp);
         return "EditThesis";
     }
 
-    //修改某篇论文信息
-    @ResponseBody
-    @RequestMapping("/editThesis")
-    public String editThesis(HttpServletRequest request) {
-        JSONObject result=new JSONObject();
-        result.put("message","success");
-        return "redirect:ThesisDetail";
+    /**
+     *提交论文修改信息
+     * @param request
+     * @param model
+     * @return
+     */
+    @RequestMapping("/EditThesisSubmit")
+    public String editThesis(HttpServletRequest request,Model model) {
+        ThesisEntity thesis =new ThesisEntity();
+        UserEntity user=new UserEntity();
+        String userid=request.getSession().getAttribute("userId").toString();
+        user=(UserEntity)userService.getUserById(userid).getObject(userid);
+
+        String idtmp=request.getParameter("inputtmp");
+        System.out.println("idtmp:"+idtmp);
+        String title=request.getParameter("input1");
+        System.out.println("title:"+title);
+        String thesisId=request.getParameter("input2");
+
+        String author1name;
+        String author2name;
+        String author3name;
+        String journal;
+        String volume;
+        String pages;
+        String url;
+        String privacy=request.getParameter("optionsRadiosinline");
+        UserEntity user1=new UserEntity();
+        UserEntity user2=new UserEntity();
+        UserEntity user3=new UserEntity();
+
+        if(request.getParameter("input3")!=null&&request.getParameter("input3")!=""){
+            author1name=request.getParameter("input3");
+            user1=userService.getUserByName(author1name);
+            thesis.setAuthor1(user1);
+        }
+        if(request.getParameter("input4")!=null&&request.getParameter("input4")!=""){
+            author2name=request.getParameter("input4");
+            user2=userService.getUserByName(author2name);
+            thesis.setAuthor2(user2);
+        }
+        if(request.getParameter("input5")!=null&&request.getParameter("input5")!=""){
+            author3name=request.getParameter("input5");
+            user3=userService.getUserByName(author3name);
+            thesis.setAuthor3(user3);
+        }
+        if(request.getParameter("input6")!=null&&request.getParameter("input6")!=""){
+            journal=request.getParameter("input6");
+            thesis.setJournal(journal);
+        }
+        if(request.getParameter("input7")!=null&&request.getParameter("input7")!=""){
+            volume=request.getParameter("input7");
+            thesis.setVolume(volume);
+        }
+        if(request.getParameter("input8")!=null&&request.getParameter("input8")!=""){
+            pages=request.getParameter("input8");
+            thesis.setPages(Integer.parseInt(pages));
+        }
+        if(request.getParameter("input10")!=null&&request.getParameter("input10")!=""){
+            url=request.getParameter("input10");
+            thesis.setUrl(url);
+        }
+
+        thesis.setThesisId(thesisId);
+        thesis.setThesisTitle(title);
+        thesis.setPrivacy(Const.ThesisPrivacy.class.getEnumConstants()[Integer.parseInt(privacy)]);
+        thesis.setStatus(Const.ThesisStatus.class.getEnumConstants()[1]);
+        System.out.println("/AddThesisSubmit userid:"+userid+" title:"+title+"  constprivacy"+thesis.getPrivacy()+" status"+thesis.getStatus());
+        System.out.println("result:"+userService.addThesis(thesis,user));
+
+        model.addAttribute("ThesisId",idtmp);
+        return "redirect:ThesisDetail/"+idtmp;
     }
 
     //批量删除论文
