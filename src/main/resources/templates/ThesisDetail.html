@@ -75,10 +75,10 @@
                                 </div>
                             </div>
                         <div style="margin-left:68%;"  th:if="${thesisinf.getAuthor1().userId}==${session.user.getUserId()}">
-<!--                            <a th:href="@{'/EditThesis/'+ThesistmpId}">-->
-                                <div class="btn-warning btn" th:onclick="edit1()">编辑</div>
-<!--                            <button class="btn-warning btn">编辑</button>-->
-<!--                            </a>-->
+                            <!--                                <div class="btn-warning btn" th:onclick="edit1()">编辑</div>-->
+                            <a th:href="@{'/EditThesis/'+${ThesistmpId}}">
+                            <button class="btn-warning btn">编辑</button>
+                            </a>
                         </div>
                         <br/>
                             <div class="form-group">
@@ -161,7 +161,7 @@
 
     function edit1() {
         var ThesistmpId=document.getElementById("labelThesistmpId").value;
-        var url='/EditThesis/'+ThesistmpId;
+        var url='/EditThesis/${'+ThesistmpId+'}';
         console.log("url"+url);
         url=encodeURI(url);
         console.log("url1"+url);
