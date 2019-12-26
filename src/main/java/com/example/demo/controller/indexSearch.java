@@ -166,7 +166,7 @@ public class indexSearch {
     public  String ThesisDetail(HttpServletRequest request, @PathVariable("ThesisId") String ThesisId, Model model){
         String userid=request.getSession().getAttribute("userId").toString();
         UserEntity user=new UserEntity();
-        user=(UserEntity)userService.getUserById(userid).getObject(userid);
+        user=userService.getUserById(userid);
 
         
         System.out.println("/ThesisDetail/{ThesisId}:-------------"+ThesisId);
