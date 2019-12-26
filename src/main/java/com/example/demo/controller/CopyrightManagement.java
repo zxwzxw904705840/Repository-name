@@ -66,77 +66,16 @@ public class CopyrightManagement {
         model.addAttribute("bookList",bookList);
         return "MySoftwareCopyright";
 
-        /**
-        //临时假数据
-        for(int i=0;i<15;i++){
-            BookEntity booktmp=new BookEntity();
-            booktmp.setAuthor1(user);
 
-            booktmp.setBookId("100"+i*2+"4-2-85"+i);
-            if(i/2!=0)
-                booktmp.setBookName("神经网络遗传算法著作专利");
-            if(i/2==0)
-                booktmp.setBookName("生物神经概率选择著作专利");
-            bookList.add(booktmp);
-        }
-        model.addAttribute("bookList",bookList);
-        return "MySoftwareCopyright";
-         **/
     }
 
-    /**
-     * 获取用户所有对应的论文信息list，方便传数据到table里显示
-     * @param session
-     * @param request
-     * @param response
-     * @return
-     */
-    //暂时放弃这个函数了，不用管它
-  /**  @ResponseBody
-    @RequestMapping("../../findTBlist")
-    public Map<String, Object> findTBlist(HttpSession session, HttpServletRequest request, HttpServletResponse response) {
-        System.out.println("findTBlist");
-        Map<String, Object> params = new HashMap<>();
-        Map<String, Object> result = new HashMap<>();  //这两句是做什么的？
 
-        String bookId = request.getParameter("bookId");
-        String bookName = request.getParameter("bookName");
-
-        if (bookName != "" && bookName != null) {
-            params.put("bookName", bookName);
-        }
-        if (bookId != "" && bookId!= null) {
-            params.put("bookId", bookId);
-        }
-        System.out.println(params);
-
-        //  List<ThesisEntity> all = thesisService.findTBlist(params);
-        //   session.setAttribute("vTbList", all);
-
-        System.out.println("params" + params);
-
-//           List<ThesisEntity> lists = thesisService.findTBlist(params);
-//
-//             System.out.println("lists.size" + lists.size());
-//
-//             session.setAttribute("textbooklist", all);
-//
-//        result.put("rows", lists);
-//        result.put("total", all.size());
-//
-//        System.out.println("all.size()" + all.size());
-        //   System.out.println("result" + result);
-
-        return result;
-    }
-**/
     //跳转到添加软件著作权界面
     @RequestMapping("/AddCopyright")
     public String AddCopyright(HttpServletRequest request) {
         String userid=request.getSession().getAttribute("userId").toString();
         return "AddCopyright";
     }
-
 
 
     /**提交新增软件著作权信息，著作权ID是必填项
@@ -225,10 +164,19 @@ public class CopyrightManagement {
     //批量删除论文
     @ResponseBody
     @RequestMapping("/deleteCopyright")
-    public String deleteCopyright(HttpServletRequest request,@RequestParam("params")List<String> copyrightidlist) {
-        System.out.println("/MyCopyrightidlist:"+copyrightidlist);
+    public String deleteCopyright(HttpServletRequest request,@RequestParam("params")List<String> bookidlist) {
+        String userid=request.getSession().getAttribute("userId").toString();
+        UserEntity user=new UserEntity();
+        user=(UserEntity)userService.getUserById(userid).getObject(userid);
+        System.out.println("/deleteCopyright:"+bookidlist);
+        for(int i=0;i<bookidlist.size();i++){
+            BookEntity book=new BookEntity();
+            book=userService.findByBookId(bookidlist.get(i));
+            System.out.println("delete "+i+"book"+book.getBookId());
+            userService.deleteBook(book,user);
+            System.out.println("delete2"+i+"book"+book.getBookId());
+        }
 
-        
         JSONObject result=new JSONObject();
         result.put("message","success");
         return result.toString();

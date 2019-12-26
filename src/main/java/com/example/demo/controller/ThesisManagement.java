@@ -55,10 +55,7 @@ public class ThesisManagement {
     @RequestMapping("/AddThesis")
     public String AddThesis(HttpServletRequest request) {
         String userid=request.getSession().getAttribute("userId").toString();
-<<<<<<< HEAD
 
-=======
->>>>>>> c8ba3a9f5d6536f3c7ecb0546aa0760d205b2a70
         return "AddThesis";
     }
 
