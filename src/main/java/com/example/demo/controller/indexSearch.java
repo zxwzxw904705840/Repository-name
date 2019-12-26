@@ -83,36 +83,34 @@ public class indexSearch {
         System.out.println("GoToThesisList,type="+type);
         List<ThesisEntity> thesisList=new ArrayList<>();
 
-        UserEntity user=new UserEntity();
-        user.setUserName("叶元卯");
-
-        //临时假数据
-        for(int i=0;i<15;i++){
-            ThesisEntity thesistmp=new ThesisEntity();
-            thesistmp.setAuthor1(user);
-            thesistmp.setJournal("机械动力期刊");
-            thesistmp.setThesisId("100"+i*2+"4-2-85"+i);
-            thesistmp.setThesisTitle("动态规划");
-            if(i/3==0)
-                thesistmp.setThesisTitle("基于视觉的天眼机器研究");
-            if(i/2==0)
-                thesistmp.setThesisTitle("类脑研究");
-            thesisList.add(thesistmp);
-        }
         if(type.equals("0")){//按论文ID搜索查询
-            System.out.println("type0,thesisList"+thesisList.get(0).getThesisId());
+            thesisList.add(userService.findByThesisId(input));
+            model.addAttribute("thesisList",thesisList);
+        }else if(type.equals("1")){//按标题搜索查询
+            thesisList=userService.findAllThesisByThesisTitleLike(input);
             model.addAttribute("thesisList",thesisList);
 
-        }else if(type.equals("1")){//按标题搜索查询
-
         }else if(type.equals("2")){//作者1
+            thesisList=userService.findAllThesisByAuthor1(input);
+            if(thesisList!=null&&thesisList.size()>0){
+                System.out.println("按作者1："+thesisList.get(0).getThesisTitle());
+            }
 
+            model.addAttribute("thesisList",thesisList);
         }else if(type.equals("3")){//作者2
+            System.out.println("input："+input);
+            thesisList=userService.findAllThesisByAuthor2(input);
+            if(thesisList!=null&&thesisList.size()>0){
+                System.out.println("按作者2："+thesisList.get(0).getThesisTitle());
+            }
 
+            model.addAttribute("thesisList",thesisList);
         }else if(type.equals("4")){//作者3
-
+            thesisList=userService.findAllThesisByAuthor3(input);
+            model.addAttribute("thesisList",thesisList);
         }else if(type.equals("5")){//刊名
-
+            thesisList=userService.findAllThesisByJournal(input);
+            model.addAttribute("thesisList",thesisList);
         }
         return "ThesisListResult";
 
@@ -132,34 +130,22 @@ public class indexSearch {
         System.out.println("GoToCopyrightList,type="+type);
         List<BookEntity> copyrightList=new ArrayList<>();
 
-        UserEntity user=new UserEntity();
-        user.setUserName("叶元卯");
-
-        //临时假数据
-        for(int i=0;i<15;i++){
-            BookEntity tmp=new BookEntity();
-            tmp.setAuthor1(user);
-            tmp.setBookId("1023"+i*3+"-78894"+i*124);
-            tmp.setBookName("兴趣图谱微信小程序");
-            if(i/3==0)
-                tmp.setBookName("汽车动力驱动模型");
-            if(i/2==0)
-                tmp.setBookName("土壤成分分析仪系统");
-            copyrightList.add(tmp);
-        }
         if(type.equals("0")){//按软件著作ID搜索查询
+            copyrightList.add(userService.findByBookId(input));
             model.addAttribute("copyrightList",copyrightList);
-
         }else if(type.equals("1")){//按标题搜索查询
-
+            copyrightList=userService.findByBookNameLike(input);
+            model.addAttribute("copyrightList",copyrightList);
         }else if(type.equals("2")){//作者1
-
+            copyrightList=userService.findAllBookByAuthor1(input);
+            model.addAttribute("copyrightList",copyrightList);
         }else if(type.equals("3")){//作者2
-
+            copyrightList=userService.findAllBookByAuthor2(input);
+            model.addAttribute("copyrightList",copyrightList);
         }else if(type.equals("4")){//作者3
-
+            copyrightList=userService.findAllBookByAuthor3(input);
+            model.addAttribute("copyrightList",copyrightList);
         }
-
         return "CopyrightListResult";
     }
 
@@ -174,26 +160,15 @@ public class indexSearch {
     @RequestMapping("/ThesisDetail/{ThesisId}")
     public  String ThesisDetail(HttpServletRequest request, @PathVariable("ThesisId") String ThesisId, Model model){
         System.out.println("/ThesisDetail/{ThesisId}+"+ThesisId);
-
+        String thesisId=ThesisId.replace("--2F-2F-", "/");
         //临时假数据
         ThesisEntity thesistmp=new ThesisEntity();
-        UserEntity user=new UserEntity();
-        UserEntity user2=new UserEntity();
-        UserEntity user3=new UserEntity();
-        user.setUserName("叶元卯");
-        user2.setUserName("刘新");
-        user3.setUserName("袁学海");
-        thesistmp.setAuthor1(user);
-        thesistmp.setJournal("机械动力期刊");
-        thesistmp.setThesisId(ThesisId);
-        thesistmp.setThesisTitle("动态规划");
-        thesistmp.setAuthor2(user2);
-        thesistmp.setAuthor3(user3);
-        thesistmp.setPages(2);
-        thesistmp.setPrivacy(Const.ThesisPrivacy.PUBLIC);
-        thesistmp.setUrl("http://kns.cnki.net//KXReader/Detail?TIMESTAMP=637128076425118750&DBCODE=CJFQ&TABLEName=CJFDLAST2015&FileName=JJYD201504007&RESULT=1&SIGN=fZDoiQetL2qN%2b2B89OOattl2n8I%3d");
-        thesistmp.setVolume("02期");
-        System.out.println("thsistmp:"+thesistmp.getAuthor2().getUserName());
+        thesistmp=userService.findByThesisId(thesisId);
+        System.out.println("thsistmp:"+thesistmp.getThesisId());
+
+        if(thesistmp.getUrl()==null){
+            thesistmp.setUrl("");
+        }
         model.addAttribute("thesisinf",thesistmp);
 
         return "ThesisDetail";

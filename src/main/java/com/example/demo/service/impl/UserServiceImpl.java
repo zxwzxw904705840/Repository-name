@@ -16,13 +16,13 @@ import java.util.List;
 @Service
 public class UserServiceImpl implements UserService {
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
     @Autowired
-    InstituteRepository instituteRepository;
+    private InstituteRepository instituteRepository;
     @Autowired
-    ThesisRepository thesisRepository;
+    private ThesisRepository thesisRepository;
     @Autowired
-    BookRepository bookRepository;
+    private BookRepository bookRepository;
 
     //region User部分
     //region 获得用户
@@ -40,31 +40,27 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserEntity GetUserByName(String userName){
-        UserEntity userEntity = userRepository.findByUserName(userName);
-        return userEntity;
+    public UserEntity getUserByName(String userName){
+        return userRepository.findByUserName(userName);
     }
 
     @Override
     public List<UserEntity> getUsersById(List<String> userId){
-        List<UserEntity> users = userRepository.findAllById(userId);
-        return users;
+        return userRepository.findAllById(userId);
     }
 
     @Override
     public List<UserEntity> getUsersByStatus(Const.UserStatus status, String adminId){
         UserEntity adminEntity = userRepository.findByUserId(adminId);
         Result result = checkUserPermission(adminEntity);
-        if(result.getMessage() != DataCheck.UserDataCheck.IS_ADMIN.toString()){
+        if(!result.getMessage().equals(DataCheck.UserDataCheck.IS_ADMIN.toString())){
             return null;
         }
-        List<UserEntity> usersByStatus = userRepository.findUserEntitiesByUserStatus(status);
-        return usersByStatus;
+        return  userRepository.findUserEntitiesByUserStatus(status);
     }
 
     public List<UserEntity> getUsersByRole(Const.UserCharacter role){
-        List<UserEntity> usersByRole = userRepository.findUserEntitiesByCharacters(role);
-        return usersByRole;
+        return userRepository.findUserEntitiesByCharacters(role);
     }
     //endregion
 
@@ -128,7 +124,7 @@ public class UserServiceImpl implements UserService {
         if(!result.isSuccess()){
             return result;
         }
-        if(adminresult.getMessage() != DataCheck.UserDataCheck.IS_ADMIN.toString()){
+        if(!adminresult.getMessage().equals(DataCheck.UserDataCheck.IS_ADMIN.toString())){
             return adminresult;
         }
         userRepository.delete(userEntity);
@@ -138,7 +134,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public Result DeleteUsersCompletely(List<UserEntity> users, UserEntity personCanDelete){
         Result result = checkUserPermission(personCanDelete);
-        if(result.getMessage() == DataCheck.UserDataCheck.IS_ADMIN.toString())
+        if(result.getMessage().equals(DataCheck.UserDataCheck.IS_ADMIN.toString()))
             userRepository.deleteAll(users);
 //        for(int i = 0; i <= users.size(); i++){
 //            result = checkUser(users.get(i));
@@ -250,7 +246,7 @@ public class UserServiceImpl implements UserService {
         if(!result.isSuccess()){
             return result;
         }
-        if(adminresult.getMessage() != DataCheck.UserDataCheck.IS_ADMIN.toString()){
+        if(adminresult.getMessage().equals(DataCheck.UserDataCheck.IS_ADMIN.toString())){
             return adminresult;
         }
         if(status != Const.UserStatus.DELETED && status != Const.UserStatus.NORMAL && status != Const.UserStatus.REVIEWING){
@@ -272,7 +268,7 @@ public class UserServiceImpl implements UserService {
         if(!resultadmin.isSuccess()){
             return resultadmin;
         }
-        if(resultadmin.getMessage() != DataCheck.UserDataCheck.IS_ADMIN.toString()){
+        if(resultadmin.getMessage().equals(DataCheck.UserDataCheck.IS_ADMIN.toString())){
             return new Result(false, DataCheck.UserDataCheck.PERMISSION_DENIED.toString());
         }
         user.setUserStatus(Const.UserStatus.NORMAL);
@@ -358,23 +354,19 @@ public class UserServiceImpl implements UserService {
 
     //region 查询
     public List<UserEntity> findByUserNameLike(String username){
-        List<UserEntity> list = userRepository.findByUserNameLike(username);
-        return list;
+        return userRepository.findByUserNameLike(username);
     }
 
     public List<UserEntity> findByUserNameStartingWith(String username){
-        List<UserEntity> list = userRepository.findByUserNameStartingWith(username);
-        return list;
+        return userRepository.findByUserNameStartingWith(username);
     }
 
     public List<UserEntity> findByUserNameEndingWith(String username){
-        List<UserEntity> list = userRepository.findByUserNameEndingWith(username);
-        return list;
+        return userRepository.findByUserNameEndingWith(username);
     }
 
     public List<UserEntity> findByUserNameInstituteStatus(String username,String instituteid, Const.UserStatus status){
-        List<UserEntity> search = userRepository.findByUserNameContainingOrInstituteContainingOrUserStatusContaining(username, instituteid, status);
-        return search;
+        return userRepository.findByUserNameContainingOrInstituteContainingOrUserStatusContaining(username, instituteid, status);
     }
     //endregion
     //endregion
@@ -394,24 +386,23 @@ public class UserServiceImpl implements UserService {
     @Override
     public Result updateThesis(ThesisEntity thesisEntity, UserEntity researcher){
         Result result = checkUserPermission(researcher);
-        ThesisEntity t = thesisRepository.getOne(thesisEntity.getThesisId());
+        ThesisEntity t = thesisRepository.findByThesisId(thesisEntity.getThesisId());
         if(!result.isSuccess()){
             return result;
         }
-        if(t != null || t.getThesisId() == thesisEntity.getThesisId()){
-            t.setThesisId(thesisEntity.getThesisId());
-            t.setThesisTitle(thesisEntity.getThesisTitle());
-            t.setAuthor1(thesisEntity.getAuthor1());
-            t.setAuthor2(thesisEntity.getAuthor2());
-            t.setAuthor3(thesisEntity.getAuthor3());
-            t.setJournal(thesisEntity.getJournal());
-            t.setVolume(thesisEntity.getVolume());
-            t.setUrl(thesisEntity.getUrl());
-            t.setPages(thesisEntity.getPages());
-            t.setPrivacy(thesisEntity.getPrivacy());
-            t.setStatus(thesisEntity.getStatus());
+        t.setThesisId(thesisEntity.getThesisId());
+        t.setThesisTitle(thesisEntity.getThesisTitle());
+        t.setAuthor1(thesisEntity.getAuthor1());
+        t.setAuthor2(thesisEntity.getAuthor2());
+        t.setAuthor3(thesisEntity.getAuthor3());
+        t.setJournal(thesisEntity.getJournal());
+        t.setVolume(thesisEntity.getVolume());
+        t.setUrl(thesisEntity.getUrl());
+        t.setPages(thesisEntity.getPages());
+        t.setPrivacy(thesisEntity.getPrivacy());
+        t.setStatus(thesisEntity.getStatus());
             thesisRepository.save(t);
-        }
+
         return new Result(true, DataCheck.ThesisCheck.THESIS_CHANGED.toString());
     }
     @Override
@@ -426,9 +417,10 @@ public class UserServiceImpl implements UserService {
     }
     @Override
     public List<ThesisEntity> findAllThesisByAuthorId(String authorId){
-        List<ThesisEntity> thesisListAuthor1 = thesisRepository.findAllByAuthor1Containing(authorId);
-        List<ThesisEntity> thesisListAuthor2 = thesisRepository.findAllByAuthor2Containing(authorId);
-        List<ThesisEntity> thesisListAuthor3 = thesisRepository.findAllByAuthor3Containing(authorId);
+        UserEntity author = userRepository.findByUserId(authorId);
+        List<ThesisEntity> thesisListAuthor1 = thesisRepository.findAllByAuthor1(author);
+        List<ThesisEntity> thesisListAuthor2 = thesisRepository.findAllByAuthor2(author);
+        List<ThesisEntity> thesisListAuthor3 = thesisRepository.findAllByAuthor3(author);
         List<ThesisEntity> finalList = new ArrayList<>();
         finalList.addAll(thesisListAuthor1);
         finalList.addAll(thesisListAuthor2);
@@ -436,10 +428,36 @@ public class UserServiceImpl implements UserService {
         return finalList;
     }
     @Override
+    public List<ThesisEntity> findAllThesisByAuthor1(String authorName){
+        UserEntity author = userRepository.findByUserName(authorName);
+        return thesisRepository.findAllByAuthor1(author);
+    }
+    @Override
+    public List<ThesisEntity> findAllThesisByAuthor2(String authorName){
+        UserEntity author = userRepository.findByUserName(authorName);
+        return thesisRepository.findAllByAuthor2(author);
+    }
+    @Override
+    public List<ThesisEntity> findAllThesisByAuthor3(String authorName){
+        UserEntity author = userRepository.findByUserName(authorName);
+        return thesisRepository.findAllByAuthor3(author);
+    }
+    @Override
     public List<ThesisEntity> findAllThesisByAuthorName(String authorName){
-        UserEntity user = userRepository.findByUserNameContaining(authorName);
-        List<ThesisEntity> thesisByAuthorName = findAllThesisByAuthorId(user.getUserId());
-        return thesisByAuthorName;
+        UserEntity user = userRepository.findByUserName(authorName);
+        return findAllThesisByAuthorId(user.getUserId());
+    }
+    @Override
+    public ThesisEntity findByThesisId(String thesisId){
+        return thesisRepository.findByThesisId(thesisId);
+    }
+    @Override
+    public List<ThesisEntity> findAllThesisByJournal(String journal){
+        return thesisRepository.findAllByJournal(journal);
+    }
+    @Override
+    public List<ThesisEntity> findAllThesisByThesisTitleLike(String thesisTitle){
+        return thesisRepository.findAllByThesisTitleContaining(thesisTitle);
     }
     //endregion
 
@@ -459,19 +477,17 @@ public class UserServiceImpl implements UserService {
         if(!result.isSuccess()){
             return result;
         }
-        BookEntity b = bookRepository.getOne(bookEntity.getBookId());
-        if(b != null || b.getBookId() == bookEntity.getBookId()){
-            b.setBookId(bookEntity.getBookId());
-            b.setBookName(bookEntity.getBookName());
-            b.setAuthor1(bookEntity.getAuthor1());
-            b.setAuthor2(bookEntity.getAuthor2());
-            b.setAuthor3(bookEntity.getAuthor3());
-            b.setCreativeNature(bookEntity.getCreativeNature());
-            b.setBookInformation(bookEntity.getBookInformation());
-            b.setBookPublishDate(bookEntity.getBookPublishDate());
-            b.setBookPublishStatus(bookEntity.getBookPublishStatus());
-            bookRepository.save(b);
-        }
+        BookEntity b = bookRepository.findByBookId(bookEntity.getBookId());
+        b.setBookId(bookEntity.getBookId());
+        b.setBookName(bookEntity.getBookName());
+        b.setAuthor1(bookEntity.getAuthor1());
+        b.setAuthor2(bookEntity.getAuthor2());
+        b.setAuthor3(bookEntity.getAuthor3());
+        b.setCreativeNature(bookEntity.getCreativeNature());
+        b.setBookInformation(bookEntity.getBookInformation());
+        b.setBookPublishDate(bookEntity.getBookPublishDate());
+        b.setBookPublishStatus(bookEntity.getBookPublishStatus());
+        bookRepository.save(b);
         return new Result(true, DataCheck.BookCheck.BOOK_CHANGED.toString());
     }
     @Override
@@ -486,9 +502,10 @@ public class UserServiceImpl implements UserService {
     }
     @Override
     public List<BookEntity> findAllBookByAuthorId(String authorId){
-        List<BookEntity> bookListAuthor1 = bookRepository.findAllByAuthor1Containing(authorId);
-        List<BookEntity> bookListAuthor2 = bookRepository.findAllByAuthor2Containing(authorId);
-        List<BookEntity> bookListAuthor3 = bookRepository.findAllByAuthor3Containing(authorId);
+        UserEntity author = userRepository.findByUserId(authorId);
+        List<BookEntity> bookListAuthor1 = bookRepository.findAllByAuthor1(author);
+        List<BookEntity> bookListAuthor2 = bookRepository.findAllByAuthor2(author);
+        List<BookEntity> bookListAuthor3 = bookRepository.findAllByAuthor3(author);
         List<BookEntity> finalList = new ArrayList<>();
         finalList.addAll(bookListAuthor1);
         finalList.addAll(bookListAuthor2);
@@ -498,10 +515,31 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<BookEntity> findAllBookByAuthorName(String authorName){
         UserEntity user = userRepository.findByUserNameContaining(authorName);
-        List<BookEntity> booksByAuthorName = findAllBookByAuthorId(user.getUserId());
-        return booksByAuthorName;
+        return findAllBookByAuthorId(user.getUserId());
     }
-
+    @Override
+    public List<BookEntity> findAllBookByAuthor1(String authorName){
+        UserEntity author = userRepository.findByUserName(authorName);
+        return bookRepository.findAllByAuthor1(author);
+    }
+    @Override
+    public List<BookEntity> findAllBookByAuthor2(String authorName){
+        UserEntity author = userRepository.findByUserName(authorName);
+        return bookRepository.findAllByAuthor2(author);
+    }
+    @Override
+    public List<BookEntity> findAllBookByAuthor3(String authorName){
+        UserEntity author = userRepository.findByUserName(authorName);
+        return bookRepository.findAllByAuthor1(author);
+    }
+    @Override
+    public BookEntity findByBookId(String bookId){
+        return bookRepository.findByBookId(bookId);
+    }
+    @Override
+    public List<BookEntity> findByBookNameLike(String bookName){
+        return bookRepository.findByBookNameContaining(bookName);
+    }
     //endregion
 
 

@@ -63,7 +63,9 @@
             </div>
             <div class="row">
                 <div class="col-md-8 col-md-offset-2" >
-                    <div class="panel panel-warning" th:each="list:${thesisList}">
+                    <br>
+                    <h3 th:if="${thesisList.size()==0}" class="text-center" style="margin-top: 100px;"> 未查询到结果！</h3>
+                    <div class="panel panel-warning" th:each="list:${thesisList}" th:if="${thesisList.size()!=0}">
                         <a th:href="@{'/ThesisDetail/'+${list.getThesisId()}}">
 
                             <div class="panel-heading panel-warning">

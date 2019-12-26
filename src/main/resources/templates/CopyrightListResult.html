@@ -63,7 +63,9 @@
             </div>
             <div class="row">
                 <div class="col-md-6 col-md-offset-3" >
-                    <div class="panel panel-warning" th:each="list:${copyrightList}">
+                    <br>
+                    <h3 th:if="${copyrightList.size()==0}" class="text-center" style="margin-top: 100px;"> 未查询到结果！</h3>
+                    <div class="panel panel-warning" th:each="list:${copyrightList}" th:if="${copyrightList.size()!=0}" >
                         <a th:href="@{'/CopyrightDetail/'+${list.getBookId()}}">
 
                             <div class="panel-heading panel-warning">

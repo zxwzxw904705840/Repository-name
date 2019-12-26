@@ -12,7 +12,7 @@ public interface UserService {
     List<UserEntity> getUsersById(List<String> userId);
     List<UserEntity> getUsersByStatus(Const.UserStatus status, String adminId);
     List<UserEntity> getUsersByRole(Const.UserCharacter role);
-    UserEntity GetUserByName(String userName);
+    UserEntity getUserByName(String userName);
 
     Result addUser(UserEntity user);
     Result addUsers(List<UserEntity> users);
@@ -49,7 +49,13 @@ public interface UserService {
     Result updateThesis(ThesisEntity thesisEntity, UserEntity userEntity);
     Result deleteThesis(ThesisEntity thesisEntity, UserEntity userEntity);
     List<ThesisEntity> findAllThesisByAuthorId(String authorId);
+    List<ThesisEntity> findAllThesisByAuthor1(String authorName);
+    List<ThesisEntity> findAllThesisByAuthor2(String authorName);
+    List<ThesisEntity> findAllThesisByAuthor3(String authorName);
     List<ThesisEntity> findAllThesisByAuthorName(String authorName);
+    ThesisEntity findByThesisId(String thesisId);
+    List<ThesisEntity> findAllThesisByJournal(String journal);
+    List<ThesisEntity> findAllThesisByThesisTitleLike(String thesisTitle);
     //endregion
 
     //region 我的著作操作
@@ -58,6 +64,11 @@ public interface UserService {
     Result deleteBook(BookEntity bookEntity, UserEntity userEntity);
     List<BookEntity> findAllBookByAuthorId(String authorId);
     List<BookEntity> findAllBookByAuthorName(String authorName);
+    List<BookEntity> findAllBookByAuthor1(String authorName);
+    List<BookEntity> findAllBookByAuthor2(String authorName);
+    List<BookEntity> findAllBookByAuthor3(String authorName);
+    BookEntity findByBookId(String bookId);
+    List<BookEntity> findByBookNameLike(String bookName);
     //endregion
 
     //endregion
