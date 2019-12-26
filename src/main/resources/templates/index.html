@@ -37,12 +37,12 @@
                         <!-- mainmenu begin -->
                         <nav  class="navbar" role="navigation" style="margin-bottom: 0">
                             <ul id="mainmenu" class="navbar-left" >
-                                <li><a class="J_menuItem black" th:href="@{/index}">Home</a></li>
-                                <li><a class="J_menuItem" th:href="@{/MyThesis}">My Thesis</a></li>
-                                <li><a class="J_menuItem" th:href="@{/MySoftwareCopyright}">My Software Copyright</a></li>
-                                <li><a class="J_menuItem" th:href="@{/subjectManagement}">My Project</a></li>
-                                <li><a class="J_menuItem" th:href="@{/userManagement}">Management</a></li>
-                                <li><a class="J_menuItem" th:href="@{/}">Report Statistics</a></li>
+                                <li><a class="J_menuItem black" th:href="@{/index}" shiro:hasAnyRoles ="student,teacher,Administration">Home</a></li>
+                                <li><a class="J_menuItem" th:href="@{/MyThesis}" shiro:hasAnyRoles="teacher,Administration">My Thesis</a></li>
+                                <li><a class="J_menuItem" th:href="@{/MySoftwareCopyright}" shiro:hasAnyRoles="teacher,Administration">My Software Copyright</a></li>
+                                <li><a class="J_menuItem" th:href="@{/subjectManagement}" shiro:hasAnyRoles="teacher,Administration">My Project</a></li>
+                                <li><a class="J_menuItem" th:href="@{/userManagement}" shiro:hasRole="Administration">Management</a></li>
+                                <li><a class="J_menuItem" th:href="@{/}" shiro:hasRole="Administration">Report Statistics</a></li>
                                 <li><a class="J_menuItem" th:text="${session.user.getUserName()}">谢文仲</a></li>
                                 <li><a class="J_menuItem" th:href="@{logout}">退出</a></li>
                             </ul>
@@ -63,7 +63,7 @@
             <br/>
        <div class="row">
           <div class="col-md-6  col-md-offset-3">
-       <form method="post" th:action="@{GoToThesisList}">
+       <form method="post" th:action="@{GoToThesisList}" name="form1">
            <div class="input-group">
                <div class="input-group-btn">
                    <select class="selectpicker show-tick fontsize20 select2" name="selecttype1"  data-live-search="true">
@@ -78,7 +78,7 @@
 
                <input type="text" class="form-control searchtext"  name="input1">
                <span class="input-group-btn">
-                        <button class="btn btn-warning  fontsize20 menu3 " type="submit">查询</button>
+                        <div class="btn btn-warning  fontsize20 menu3 "  onclick="checksubmit1();">查询</div>
                     </span>
            </div>
        </form>
@@ -91,7 +91,7 @@
          <br>
       <div class="row">
           <div class="col-md-6  col-md-offset-3">
-              <form method="post"  th:action="@{GoToCopyrightList}">
+              <form method="post"  th:action="@{GoToCopyrightList}" name="form2">
                   <div class="input-group">
                   <div class="input-group-btn">
                       <select class="selectpicker show-tick fontsize20 select2"   name="selecttype2" data-live-search="true">
@@ -104,7 +104,7 @@
                   </div> <!-- input-group-btn -->
                   <input type="text" class="form-control searchtext" name="input2"/>
                   <span class="input-group-btn">
-                        <button class="btn btn-warning  fontsize20 menu3" type="submit">查询</button>
+                        <div class="btn btn-warning  fontsize20 menu3" onclick="checksubmit2();">查询</div>
                     </span>
                   </div> <!-- input-group -->
               </form>
@@ -123,6 +123,26 @@
     ================================================== -->
     <script src="../js/jquery.min.js"></script>
     <script src="../js/bootstrap.min.js"></script>
+<script>
+    function checksubmit1() {
+        var input1= $("[name='input1']").val();
+        if($.trim(input1)==""){
+            alert("查询论文不能为空！");
+        }else{
+            form1.submit();
+        }
+
+    }
+    function checksubmit2() {
+        var input1= $("[name='input1']").val();
+        if($.trim(input1)==""||$.trim(input2)==""||$.trim(input3)==""){
+            alert("查询软件著作不能为空！");
+        }else{
+            form2.submit();
+        }
+
+    }
+</script>
   
   
 

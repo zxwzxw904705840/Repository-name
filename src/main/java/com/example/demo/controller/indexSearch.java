@@ -164,12 +164,8 @@ public class indexSearch {
         String userid=request.getSession().getAttribute("userId").toString();
         UserEntity user=new UserEntity();
         user=(UserEntity)userService.getUserById(userid).getObject(userid);
-
         
         System.out.println("/ThesisDetail/{ThesisId}:-------------"+ThesisId);
-        System.out.println("/ThesisDetail/{ThesisId}:"+ThesisId);
-        System.out.println("/ThesisDetail/{ThesisId}:"+ThesisId);
-        System.out.println("/ThesisDetail/{ThesisId}:"+ThesisId);
         System.out.println("/ThesisDetail/{ThesisId}:----------------"+ThesisId);
         model.addAttribute("ThesistmpId",ThesisId);
         String thesisId=ThesisId.replace("--2F-2F-", "/");
@@ -179,31 +175,6 @@ public class indexSearch {
         if(thesistmp.getUrl()==null){
             thesistmp.setUrl("");
         }
-//for test
-//        UserEntity user1=new UserEntity();
-//        UserEntity user2=new UserEntity();
-//        UserEntity user3=new UserEntity();
-//        user1.setUserName("researcher1");
-//        user3.setUserName("researcher1");
-//        user2.setUserName("researcher1");
-//        thesistmp.setThesisId("test1");
-//        thesistmp.setUrl("xx");
-//        thesistmp.setStatus(Const.ThesisStatus.REVIEWING);
-//        thesistmp.setPages(6);
-//        thesistmp.setVolume("33333");
-//        thesistmp.setJournal("nonono");
-//        thesistmp.setThesisTitle("alalalalla");
-//        thesistmp.setAuthor1(user1);
-//        thesistmp.setAuthor2(user2);
-//        thesistmp.setAuthor3(user3);
-//        ThesisEntity thesisres=new ThesisEntity();
-//        Result res=userService.updateThesis(thesistmp,user);
-//        System.out.println("result+"+res.getMessage());
-//        thesisres=(ThesisEntity)userService.updateThesis(thesistmp,user).getObject(thesistmp.getThesisId());
-//        System.out.println("-----------end-----------------"+thesisres.getThesisId());
-//        System.out.println("-----------end-----------------"+thesisres.getThesisTitle());
-//
-
 
         model.addAttribute("thesisinf",thesistmp);
         return "ThesisDetail";

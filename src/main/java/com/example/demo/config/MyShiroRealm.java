@@ -69,21 +69,24 @@ public class MyShiroRealm extends AuthorizingRealm {
             UserEntity user = (UserEntity)userService.getUserById(userLogin.getUserId()).getObject(userLogin.getUserId());
             Set<String> role = new HashSet<>();
             Set<String> permissions = new HashSet<>();
-            if (user.getCharacters().equals(0)) {
+            System.out.println("role="+user.getCharacters());
+            System.out.println("role number="+user.getCharacters().ordinal());
+            if (user.getCharacters().ordinal()==0) {
                 //Administration
                 role.add("Administration");
                 //  permissions.add("user:create");//用户的创建
                 //  permissions.add("items:add");//商品添加权限
 
-            } else if (user.getCharacters().equals(1)) {
+            } else if (user.getCharacters().ordinal()==1) {
                 //teacher
                 role.add("teacher");
-            } else if (user.getCharacters().equals(2)) {
+            } else if (user.getCharacters().ordinal()==2) {
                 //student
                 role.add("student");
             }
             authorizationInfo.addRoles(role);
-
+            System.out.println("role----------start-------------------");
+            System.out.println(authorizationInfo.getRoles().toString());
             logger.info(authorizationInfo.getRoles().toString());
             //  Set<String> permissions = userService.findPermissionsByUserId(userLogin.getId());
             //   authorizationInfo.addStringPermissions(permissions);

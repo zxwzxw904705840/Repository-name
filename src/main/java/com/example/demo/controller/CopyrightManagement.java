@@ -149,7 +149,7 @@ public class CopyrightManagement {
        // book.setPrivacy();
         System.out.println("/AddThesisSubmit userid:"+userid+" title:"+title+" status");
         System.out.println("result:"+userService.addBook(book,user));
-        return "MySoftwareCopyright";
+        return "redirect:MySoftwareCopyright";
     }
 
     //修改某篇论文信息
