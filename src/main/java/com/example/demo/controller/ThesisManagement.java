@@ -31,17 +31,19 @@ public class ThesisManagement {
     @RequestMapping("/MyThesis")
     public  String MyThesis(HttpServletRequest request, Model model){
         String userid=request.getSession().getAttribute("userId").toString();
-        System.out.println("userid add:"+userid);
+        List<String> urlreal=new ArrayList<>();
         List<ThesisEntity> thesisList=new ArrayList<>();
         thesisList=userService.findAllThesisByAuthorId(userid);
         //先把url中的“/”都替换成“%2F”
         for(int i=0;i<thesisList.size();i++){
             String str=thesisList.get(i).getThesisId();
+            urlreal.add(i,str);
             String str2=str.replace("/", "--2F-2F-");
             thesisList.get(i).setThesisId(str2);;
         }
 
         model.addAttribute("thesisList",thesisList);
+        model.addAttribute("urlreal",urlreal);
         return "MyThesis";
     }
 
@@ -51,9 +53,6 @@ public class ThesisManagement {
     @RequestMapping("/AddThesis")
     public String AddThesis(HttpServletRequest request) {
         String userid=request.getSession().getAttribute("userId").toString();
-
-
-
         return "AddThesis";
     }
 
@@ -119,8 +118,8 @@ public class ThesisManagement {
         thesis.setThesisTitle(title);
         thesis.setPrivacy(Const.ThesisPrivacy.class.getEnumConstants()[Integer.parseInt(privacy)]);
         thesis.setStatus(Const.ThesisStatus.class.getEnumConstants()[1]);
-        System.out.println("/AddThesisSubmit userid:"+userid+" title:"+title+"  constprivacy"+thesis.getPrivacy()+" status"+thesis.getStatus());
-        System.out.println("result:"+userService.addThesis(thesis,user));
+     //   System.out.println("/AddThesisSubmit userid:"+userid+" title:"+title+"  constprivacy"+thesis.getPrivacy()+" status"+thesis.getStatus());
+      //  System.out.println("result:"+userService.addThesis(thesis,user));
         return "MyThesis";
     }
 
@@ -137,9 +136,18 @@ public class ThesisManagement {
     @ResponseBody
     @RequestMapping("/deleteThesis")
     public String deleteThesis(HttpServletRequest request,@RequestParam("params")List<String> thsisidlist) {
-        System.out.println("/MyThesisthsisidlist:"+thsisidlist);
+        String userid=request.getSession().getAttribute("userId").toString();
+        UserEntity user=new UserEntity();
+        user=(UserEntity)userService.getUserById(userid).getObject(userid);
+        System.out.println("/deleteThesis:"+thsisidlist);
+        for(int i=0;i<thsisidlist.size();i++){
+            ThesisEntity thesis=new ThesisEntity();
+            thesis=userService.findByThesisId(thsisidlist.get(i));
+            System.out.println("delete "+i+"thesis"+thesis.getThesisId());
+            userService.deleteThesis(thesis,user);
+            System.out.println("delete2"+i+"thesis"+thesis.getThesisId());
+        }
 
-        
         JSONObject result=new JSONObject();
         result.put("message","success");
         return result.toString();
