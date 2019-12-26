@@ -118,9 +118,17 @@ public class ThesisManagement {
         thesis.setThesisTitle(title);
         thesis.setPrivacy(Const.ThesisPrivacy.class.getEnumConstants()[Integer.parseInt(privacy)]);
         thesis.setStatus(Const.ThesisStatus.class.getEnumConstants()[1]);
-     //   System.out.println("/AddThesisSubmit userid:"+userid+" title:"+title+"  constprivacy"+thesis.getPrivacy()+" status"+thesis.getStatus());
-      //  System.out.println("result:"+userService.addThesis(thesis,user));
-        return "MyThesis";
+        System.out.println("/AddThesisSubmit userid:"+userid+" title:"+title+"  constprivacy"+thesis.getPrivacy()+" status"+thesis.getStatus());
+        System.out.println("result:"+userService.addThesis(thesis,user));
+        return "redirect:MyThesis";
+    }
+
+    //前往修改论文界面
+    @ResponseBody
+    @RequestMapping("/GoToEditThesis")
+    public String GoToEditThesis(HttpServletRequest request) {
+
+        return "EditThesis";
     }
 
     //修改某篇论文信息
@@ -129,7 +137,7 @@ public class ThesisManagement {
     public String editThesis(HttpServletRequest request) {
         JSONObject result=new JSONObject();
         result.put("message","success");
-        return result.toString();
+        return "redirect:ThesisDetail";
     }
 
     //批量删除论文
