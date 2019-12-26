@@ -509,9 +509,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<BookEntity> findAllBookByAuthorId(String authorId){
         UserEntity author = userRepository.findByUserId(authorId);
-        List<BookEntity> bookListAuthor1 = bookRepository.findAllByAuthor1(author);
-        List<BookEntity> bookListAuthor2 = bookRepository.findAllByAuthor2(author);
-        List<BookEntity> bookListAuthor3 = bookRepository.findAllByAuthor3(author);
+        List<BookEntity> bookListAuthor1 = bookRepository.findAllByAuthor1AndBookStatusIsNot(author, Const.BookStatus.DELETED);
+        List<BookEntity> bookListAuthor2 = bookRepository.findAllByAuthor2AndBookStatusIsNot(author, Const.BookStatus.DELETED);
+        List<BookEntity> bookListAuthor3 = bookRepository.findAllByAuthor3AndBookStatusIsNot(author, Const.BookStatus.DELETED);
         List<BookEntity> finalList = new ArrayList<>();
         finalList.addAll(bookListAuthor1);
         finalList.addAll(bookListAuthor2);
@@ -526,17 +526,17 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<BookEntity> findAllBookByAuthor1(String authorName){
         UserEntity author = userRepository.findByUserName(authorName);
-        return bookRepository.findAllByAuthor1(author);
+        return bookRepository.findAllByAuthor1AndBookStatusIsNot(author, Const.BookStatus.DELETED);
     }
     @Override
     public List<BookEntity> findAllBookByAuthor2(String authorName){
         UserEntity author = userRepository.findByUserName(authorName);
-        return bookRepository.findAllByAuthor2(author);
+        return bookRepository.findAllByAuthor2AndBookStatusIsNot(author, Const.BookStatus.DELETED);
     }
     @Override
     public List<BookEntity> findAllBookByAuthor3(String authorName){
         UserEntity author = userRepository.findByUserName(authorName);
-        return bookRepository.findAllByAuthor1(author);
+        return bookRepository.findAllByAuthor1AndBookStatusIsNot(author, Const.BookStatus.DELETED);
     }
     @Override
     public BookEntity findByBookId(String bookId){
