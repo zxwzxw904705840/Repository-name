@@ -5,6 +5,7 @@ import com.example.demo.Entity.ThesisEntity;
 import com.example.demo.Entity.UserEntity;
 import com.example.demo.service.UserService;
 import com.example.demo.utils.Const;
+import com.example.demo.utils.Result;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
@@ -45,7 +46,6 @@ public class indexSearch {
         String passwd =  request.getParameter("passwd");
         UsernamePasswordToken token = new UsernamePasswordToken(userid, passwd);
         Subject subject = SecurityUtils.getSubject();
-        System.out.println("userid passwd:"+userid+"   "+passwd);
         try {
             subject.login(token);  //完成登录
             UserEntity user=(UserEntity) subject.getPrincipal();
@@ -64,7 +64,7 @@ public class indexSearch {
     @RequestMapping("/index")
     public  String index1(Model model, HttpServletRequest request){
         String userid=request.getSession().getAttribute("userId").toString();
-        System.out.println("userid.toString="+userid);
+        System.out.println("/index");
         return "index";
     }
 
@@ -92,18 +92,14 @@ public class indexSearch {
 
         }else if(type.equals("2")){//作者1
             thesisList=userService.findAllThesisByAuthor1(input);
-            if(thesisList!=null&&thesisList.size()>0){
-                System.out.println("按作者1："+thesisList.get(0).getThesisTitle());
-            }
+            System.out.println("size"+thesisList.size());
+//            if(thesisList!=null&&thesisList.size()>0){
+//                System.out.println("按作者1："+thesisList.get(0).getThesisTitle());
+//            }
 
             model.addAttribute("thesisList",thesisList);
         }else if(type.equals("3")){//作者2
-            System.out.println("input："+input);
             thesisList=userService.findAllThesisByAuthor2(input);
-            if(thesisList!=null&&thesisList.size()>0){
-                System.out.println("按作者2："+thesisList.get(0).getThesisTitle());
-            }
-
             model.addAttribute("thesisList",thesisList);
         }else if(type.equals("4")){//作者3
             thesisList=userService.findAllThesisByAuthor3(input);
@@ -112,6 +108,14 @@ public class indexSearch {
             thesisList=userService.findAllThesisByJournal(input);
             model.addAttribute("thesisList",thesisList);
         }
+        List<String> urltmp=new ArrayList<>();
+        //先把url中的“/”都替换成“%2F”
+        for(int i=0;i<thesisList.size();i++){
+            String str=thesisList.get(i).getThesisId();
+            String str2=str.replace("/", "--2F-2F-");
+            urltmp.add(i,str2);
+        }
+        model.addAttribute("urltmp",urltmp);
         return "ThesisListResult";
 
     }
@@ -146,6 +150,7 @@ public class indexSearch {
             copyrightList=userService.findAllBookByAuthor3(input);
             model.addAttribute("copyrightList",copyrightList);
         }
+
         return "CopyrightListResult";
     }
 
@@ -159,47 +164,65 @@ public class indexSearch {
      */
     @RequestMapping("/ThesisDetail/{ThesisId}")
     public  String ThesisDetail(HttpServletRequest request, @PathVariable("ThesisId") String ThesisId, Model model){
-        System.out.println("/ThesisDetail/{ThesisId}+"+ThesisId);
+        String userid=request.getSession().getAttribute("userId").toString();
+        UserEntity user=new UserEntity();
+        user=(UserEntity)userService.getUserById(userid).getObject(userid);
+
+        
+        System.out.println("/ThesisDetail/{ThesisId}:-------------"+ThesisId);
+        System.out.println("/ThesisDetail/{ThesisId}:"+ThesisId);
+        System.out.println("/ThesisDetail/{ThesisId}:"+ThesisId);
+        System.out.println("/ThesisDetail/{ThesisId}:"+ThesisId);
+        System.out.println("/ThesisDetail/{ThesisId}:----------------"+ThesisId);
+        model.addAttribute("ThesistmpId",ThesisId);
         String thesisId=ThesisId.replace("--2F-2F-", "/");
         //临时假数据
         ThesisEntity thesistmp=new ThesisEntity();
         thesistmp=userService.findByThesisId(thesisId);
-        System.out.println("thsistmp:"+thesistmp.getThesisId());
-
         if(thesistmp.getUrl()==null){
             thesistmp.setUrl("");
         }
-        model.addAttribute("thesisinf",thesistmp);
+//for test
+//        UserEntity user1=new UserEntity();
+//        UserEntity user2=new UserEntity();
+//        UserEntity user3=new UserEntity();
+//        user1.setUserName("researcher1");
+//        user3.setUserName("researcher1");
+//        user2.setUserName("researcher1");
+//        thesistmp.setThesisId("test1");
+//        thesistmp.setUrl("xx");
+//        thesistmp.setStatus(Const.ThesisStatus.REVIEWING);
+//        thesistmp.setPages(6);
+//        thesistmp.setVolume("33333");
+//        thesistmp.setJournal("nonono");
+//        thesistmp.setThesisTitle("alalalalla");
+//        thesistmp.setAuthor1(user1);
+//        thesistmp.setAuthor2(user2);
+//        thesistmp.setAuthor3(user3);
+//        ThesisEntity thesisres=new ThesisEntity();
+//        Result res=userService.updateThesis(thesistmp,user);
+//        System.out.println("result+"+res.getMessage());
+//        thesisres=(ThesisEntity)userService.updateThesis(thesistmp,user).getObject(thesistmp.getThesisId());
+//        System.out.println("-----------end-----------------"+thesisres.getThesisId());
+//        System.out.println("-----------end-----------------"+thesisres.getThesisTitle());
+//
 
+
+        model.addAttribute("thesisinf",thesistmp);
         return "ThesisDetail";
+
 
 
     }
 
+
     @RequestMapping("/CopyrightDetail/{CopyrightId}")
     public  String CopyrightDetail(HttpServletRequest request, @PathVariable("CopyrightId") String CopyrightId, Model model){
         System.out.println("/CopyrightDetail/{CopyrightId}+"+CopyrightId);
-        //临时假数据
         BookEntity tmp=new BookEntity();
-        UserEntity user=new UserEntity();
-        UserEntity user2=new UserEntity();
-        UserEntity user3=new UserEntity();
-        String string = "2016-10-24";
-        Date date=new Date();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        sdf.format(date);
-        user.setUserName("叶元卯");
-        user2.setUserName("刘新");
-        user3.setUserName("袁学海");
-        tmp.setBookId(CopyrightId);
-        tmp.setAuthor1(user);
-        tmp.setBookName("博思高视频车位引导系统软件V2.1.7.0");
-        tmp.setBookInformation("用行车记录仪以及车尾视像头引导停车^_^用行车记录仪以及车尾视像头引导停车^_^用行车记录仪以及车尾视像头引导停车^_^用行车记录仪以及车尾视像头引导停车^_^用行车记录仪以及车尾视像头引导停车^_^用行车记录仪以及车尾视像头引导停车^_^用行车记录仪以及车尾视像头引导停车^_^用行车记录仪以及车尾视像头引导停车^_^");
-        tmp.setBookPublishDate(date);
-        tmp.setAuthor2(user2);
-        tmp.setAuthor3(user3);
-        tmp.setBookPublishStatus(Const.BookPublishStatus.PUBLISHED);
-        tmp.setCreativeNature(Const.BookCreativeNature.ORIGINAL);
+        tmp=userService.findByBookId(CopyrightId);
+
+
         model.addAttribute("copyrightinf",tmp);
         return "CopyrightDetail";
     }
