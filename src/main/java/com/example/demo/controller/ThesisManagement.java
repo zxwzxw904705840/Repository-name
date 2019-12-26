@@ -164,7 +164,8 @@ public class ThesisManagement {
         ThesisEntity thesis =new ThesisEntity();
         UserEntity user=new UserEntity();
         String userid=request.getSession().getAttribute("userId").toString();
-        user=(UserEntity)userService.getUserById(userid).getObject(userid);
+        //user=(UserEntity)userService.getUserById(userid).getObject(userid);
+        user=userService.getUserById(userid);
 
         String idtmp=request.getParameter("inputtmp");
         System.out.println("idtmp:"+idtmp);
