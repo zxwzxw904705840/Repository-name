@@ -55,6 +55,7 @@ public class ThesisManagement {
     @RequestMapping("/AddThesis")
     public String AddThesis(HttpServletRequest request) {
         String userid=request.getSession().getAttribute("userId").toString();
+
         return "AddThesis";
     }
 
