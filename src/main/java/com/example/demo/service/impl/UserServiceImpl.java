@@ -375,6 +375,7 @@ public class UserServiceImpl implements UserService {
     //region 研究员操作集
 
     //region 我的论文操作
+    @Transactional
     @Override
     public Result addThesis(ThesisEntity thesisEntity, UserEntity researcher){
         Result result = checkUserPermission(researcher);
@@ -384,6 +385,7 @@ public class UserServiceImpl implements UserService {
         thesisRepository.save(thesisEntity);
         return new Result(true, DataCheck.ThesisCheck.THESIS_ADDED.toString());
     }
+    @Transactional
     @Override
     public Result updateThesis(ThesisEntity thesisEntity, UserEntity researcher){
         Result result = checkUserPermission(researcher);
@@ -408,17 +410,18 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Transactional("ThesisEntity")
+    @Transactional
     public Result deleteThesis(ThesisEntity thesisEntity, UserEntity researcher) {
         Result result = checkUserPermission(researcher);
         if (result.isSuccess()) {
             ThesisEntity t = thesisRepository.findByThesisId(thesisEntity.getThesisId());
             t.setStatus(Const.ThesisStatus.DELETED);
-            thesisRepository.saveAndFlush(t);
+            thesisRepository.save(t);
         }
         return new Result(true, DataCheck.ThesisCheck.THESIS_DELETED.toString());
     }
     @Override
+    @Transactional
     public List<ThesisEntity> findAllThesisByAuthorId(String authorId){
         UserEntity author = userRepository.findByUserId(authorId);
         List<ThesisEntity> thesisListAuthor1 = thesisRepository.findAllByAuthor1AndStatusIsNot(author, Const.ThesisStatus.DELETED);
