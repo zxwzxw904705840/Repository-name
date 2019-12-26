@@ -71,7 +71,7 @@ public class ThesisManagement {
         ThesisEntity thesis =new ThesisEntity();
         UserEntity user=new UserEntity();
         String userid=request.getSession().getAttribute("userId").toString();
-        user=(UserEntity)userService.getUserById(userid).getObject(userid);
+        user=userService.getUserById(userid);
 
         String title=request.getParameter("input1");
         String thesisId=request.getParameter("input2");
@@ -233,7 +233,7 @@ public class ThesisManagement {
     public String deleteThesis(HttpServletRequest request,@RequestParam("params")List<String> thsisidlist) {
         String userid=request.getSession().getAttribute("userId").toString();
         UserEntity user=new UserEntity();
-        user=(UserEntity)userService.getUserById(userid).getObject(userid);
+        user=userService.getUserById(userid);
         System.out.println("/deleteThesis:"+thsisidlist);
         for(int i=0;i<thsisidlist.size();i++){
             ThesisEntity thesis=new ThesisEntity();

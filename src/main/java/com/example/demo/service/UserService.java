@@ -8,10 +8,11 @@ import java.util.List;
 
 public interface UserService {
     List<UserEntity> getUserList();
-    Result getUserById(String userId);
+    List<UserEntity> getUserList(String userName, Const.UserStatus ustatus, InstituteEntity instituteEntity);
+    UserEntity getUserById(String userId);
     List<UserEntity> getUsersById(List<String> userId);
     List<UserEntity> getUsersByStatus(Const.UserStatus status, String adminId);
-    List<UserEntity> getUsersByRole(Const.UserCharacter role);
+    List<UserEntity> getUsersByRole(Const.UserCharacter role, String adminId);
     UserEntity getUserByName(String userName);
 
     Result addUser(UserEntity user);
@@ -29,6 +30,7 @@ public interface UserService {
     Result SetPassword(String userId,String password);
     Result SetPhone(String userId,String phone);
     Result SetStatus(String userId, UserEntity admin, Const.UserStatus status);
+    Result AgreeUserUpdate(String userId, String adminId);
 
     Result checkInstitute(InstituteEntity institute);
     Result checkUserPermission(UserEntity user);
@@ -39,8 +41,6 @@ public interface UserService {
     List<UserEntity> findByUserNameStartingWith(String userName);
 
     List<UserEntity> findByUserNameEndingWith(String userName);
-
-    List<UserEntity> findByUserNameInstituteStatus(String userName,String institute_id,Const.UserStatus user_status);
 
     //region 研究员操作集
 
