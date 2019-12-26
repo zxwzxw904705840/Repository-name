@@ -106,6 +106,14 @@ public class indexSearch {
             thesisList=userService.findAllThesisByJournal(input);
             model.addAttribute("thesisList",thesisList);
         }
+        List<String> urltmp=new ArrayList<>();
+        //先把url中的“/”都替换成“%2F”
+        for(int i=0;i<thesisList.size();i++){
+            String str=thesisList.get(i).getThesisId();
+            String str2=str.replace("/", "--2F-2F-");
+            urltmp.add(i,str2);
+        }
+        model.addAttribute("urltmp",urltmp);
         return "ThesisListResult";
 
     }
@@ -140,6 +148,7 @@ public class indexSearch {
             copyrightList=userService.findAllBookByAuthor3(input);
             model.addAttribute("copyrightList",copyrightList);
         }
+
         return "CopyrightListResult";
     }
 
