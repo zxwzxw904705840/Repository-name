@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.example.demo.Entity.FileEntity;
 import com.example.demo.Entity.InstituteEntity;
 import com.example.demo.Entity.ProjectEntity;
 import com.example.demo.Entity.UserEntity;
@@ -29,4 +30,7 @@ public interface ProjectManagementService {
     Result updateProjectSetProjectResearchType(ProjectEntity project,UserEntity operator);
     Result findAllUserByUserIdLike(UserEntity userEntity,UserEntity operator);
     Result findAllUserByUserNameLike(UserEntity userEntity,UserEntity operator);
+    Result updateProjectMembers(ProjectEntity project,UserEntity operator);
+    Result addFile(FileEntity file,UserEntity operator);
+    Result deleteFile(FileEntity file,UserEntity operator);
 }

@@ -1,8 +1,10 @@
 package com.example.demo.service.impl;
 
+import com.example.demo.Entity.FileEntity;
 import com.example.demo.Entity.InstituteEntity;
 import com.example.demo.Entity.ProjectEntity;
 import com.example.demo.Entity.UserEntity;
+import com.example.demo.repository.FileRepository;
 import com.example.demo.repository.InstituteRepository;
 import com.example.demo.repository.ProjectRepository;
 import com.example.demo.repository.UserRepository;
@@ -23,6 +25,8 @@ public class ProjectManagementServiceImpl implements ProjectManagementService {
     private ProjectRepository projectRepository;
     @Autowired
     private InstituteRepository instituteRepository;
+    @Autowired
+    private FileRepository fileRepository;
     @Override
     public Result findAllProject(Integer limit, Integer offset, UserEntity operator) {
         Result result = checkUser(operator);
@@ -477,6 +481,65 @@ public class ProjectManagementServiceImpl implements ProjectManagementService {
         return result;
     }
 
+    @Override
+    public Result updateProjectMembers(ProjectEntity project, UserEntity operator) {
+        Result result = checkUser(operator);
+        if(!result.isSuccess()){
+            return result;
+        }
+        result = checkProjectExistence(project);
+        if(!result.isSuccess()){
+            return result;
+        }
+        for(UserEntity userEntity : project.getMembers()){
+            if(userEntity==null||userEntity.getUserId()==null||userEntity.getUserId().equals("")){
+                return new Result(false,"user not exists");
+            }
+            UserEntity user = userRepository.findByUserId(userEntity.getUserId());
+            if(user==null||user.getUserStatus()==Const.UserStatus.DELETED){
+                return new Result(false,"user not exists");
+            }
+        }
+        ProjectEntity projectEntity = projectRepository.findByProjectId(project.getProjectId());
+        projectEntity.setMembers(project.getMembers());
+        projectRepository.save(projectEntity);
+        return new Result( true);
+    }
+
+    @Override
+    public Result addFile(FileEntity file, UserEntity operator) {
+        Result result = checkUser(operator);
+        if(!result.isSuccess()){
+            return result;
+        }
+        result = checkFile(file);
+        if(!result.isSuccess()){
+            return result;
+        }
+        file.setFileStatus(Const.FileStatus.NORMAL);
+        fileRepository.save(file);
+        return new Result(true);
+    }
+
+    @Override
+    public Result deleteFile(FileEntity file, UserEntity operator) {
+        Result result = checkUser(operator);
+        if(!result.isSuccess()){
+            return result;
+        }
+        result = checkFile(file);
+        if(!result.isSuccess()){
+            return result;
+        }
+        FileEntity fileEntity = fileRepository.findByFileId(file.getFileId());
+        if(fileEntity==null){
+            return new Result(true);
+        }
+        fileEntity.setFileStatus(Const.FileStatus.DELETED);
+        fileRepository.save(fileEntity);
+        return new Result(true);
+    }
+
     private Result checkUser(UserEntity operator){
         if(operator==null||operator.getUserId()==null){
             return new Result(false,"user not exist");
@@ -488,7 +551,7 @@ public class ProjectManagementServiceImpl implements ProjectManagementService {
         if(userEntity.getUserStatus()== Const.UserStatus.DELETED){
             return new Result(false,"user not exist");
         }
-        if(userEntity.getCharacters()!=Const.UserCharacter.ADMINISTRATION){
+        if(userEntity.getCharacters()==Const.UserCharacter.NORMAL_USER){
             return new Result(false,"permission denied");
         }
         return new Result(true,"");
@@ -605,6 +668,19 @@ public class ProjectManagementServiceImpl implements ProjectManagementService {
     private Result checkProjectResearchType(Const.ProjectResearchType projectResearchType){
         if(projectResearchType==null){
             return new Result(false,"project source type is empty");
+        }
+        return new Result(true);
+    }
+
+    private Result checkFile(FileEntity file){
+        if(file==null){
+            return new Result(false,"file entity is null");
+        }
+        if(file.getProject()==null||file.getProject().getProjectId()==null||file.getProject().getProjectId().equals("")){
+            return new Result(false,"wrong project");
+        }
+        if(projectRepository.findByProjectId(file.getProject().getProjectId())==null){
+            return new Result(false,"project not exists");
         }
         return new Result(true);
     }
