@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,6 +27,12 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private BookRepository bookRepository;
 
+    @PersistenceContext
+    private EntityManager em;
+
+    public void refresh(ThesisEntity th){
+        em.refresh(th);
+    }
     //region User部分
     //region 获得用户
     @Override
@@ -408,13 +416,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Transactional("chainedTransactionManager")
+    @Transactional("ThesisEntity")
     public Result deleteThesis(ThesisEntity thesisEntity, UserEntity researcher) {
         Result result = checkUserPermission(researcher);
         if (!result.isSuccess()) {
             ThesisEntity t = thesisRepository.findByThesisId(thesisEntity.getThesisId());
             t.setStatus(Const.ThesisStatus.DELETED);
             thesisRepository.saveAndFlush(t);
+            refresh(t);
         }
         return new Result(true, DataCheck.ThesisCheck.THESIS_DELETED.toString());
     }
@@ -422,8 +431,8 @@ public class UserServiceImpl implements UserService {
     public List<ThesisEntity> findAllThesisByAuthorId(String authorId){
         UserEntity author = userRepository.findByUserId(authorId);
         List<ThesisEntity> thesisListAuthor1 = thesisRepository.findAllByAuthor1AndStatusIsNot(author, Const.ThesisStatus.DELETED);
-        List<ThesisEntity> thesisListAuthor2 = thesisRepository.findAllByAuthor2(author);
-        List<ThesisEntity> thesisListAuthor3 = thesisRepository.findAllByAuthor3(author);
+        List<ThesisEntity> thesisListAuthor2 = thesisRepository.findAllByAuthor2AndStatusIsNot(author, Const.ThesisStatus.DELETED);
+        List<ThesisEntity> thesisListAuthor3 = thesisRepository.findAllByAuthor3AndStatusIsNot(author, Const.ThesisStatus.DELETED);
         List<ThesisEntity> finalList = new ArrayList<>();
         finalList.addAll(thesisListAuthor1);
         finalList.addAll(thesisListAuthor2);
@@ -438,12 +447,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<ThesisEntity> findAllThesisByAuthor2(String authorName){
         UserEntity author = userRepository.findByUserName(authorName);
-        return thesisRepository.findAllByAuthor2(author);
+        return thesisRepository.findAllByAuthor2AndStatusIsNot(author, Const.ThesisStatus.DELETED);
     }
     @Override
     public List<ThesisEntity> findAllThesisByAuthor3(String authorName){
         UserEntity author = userRepository.findByUserName(authorName);
-        return thesisRepository.findAllByAuthor3(author);
+        return thesisRepository.findAllByAuthor3AndStatusIsNot(author, Const.ThesisStatus.DELETED);
     }
     @Override
     public List<ThesisEntity> findAllThesisByAuthorName(String authorName){

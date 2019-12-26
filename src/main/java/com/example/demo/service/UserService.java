@@ -13,6 +13,7 @@ public interface UserService {
     List<UserEntity> getUsersByStatus(Const.UserStatus status, String adminId);
     List<UserEntity> getUsersByRole(Const.UserCharacter role);
     UserEntity getUserByName(String userName);
+    void refresh(ThesisEntity th);
 
     Result addUser(UserEntity user);
     Result addUsers(List<UserEntity> users);
