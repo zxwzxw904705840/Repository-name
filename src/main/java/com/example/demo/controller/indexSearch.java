@@ -107,6 +107,14 @@ public class indexSearch {
             thesisList=userService.findAllThesisByJournal(input);
             model.addAttribute("thesisList",thesisList);
         }
+        List<String> urltmp=new ArrayList<>();
+        //先把url中的“/”都替换成“%2F”
+        for(int i=0;i<thesisList.size();i++){
+            String str=thesisList.get(i).getThesisId();
+            String str2=str.replace("/", "--2F-2F-");
+            urltmp.add(i,str2);
+        }
+        model.addAttribute("urltmp",urltmp);
         return "ThesisListResult";
 
     }
@@ -141,6 +149,7 @@ public class indexSearch {
             copyrightList=userService.findAllBookByAuthor3(input);
             model.addAttribute("copyrightList",copyrightList);
         }
+
         return "CopyrightListResult";
     }
 
@@ -154,6 +163,8 @@ public class indexSearch {
      */
     @RequestMapping("/ThesisDetail/{ThesisId}")
     public  String ThesisDetail(HttpServletRequest request, @PathVariable("ThesisId") String ThesisId, Model model){
+        System.out.println("/ThesisDetail/{ThesisId}:"+ThesisId);
+        model.addAttribute("ThesistmpId",ThesisId);
         String thesisId=ThesisId.replace("--2F-2F-", "/");
         //临时假数据
         ThesisEntity thesistmp=new ThesisEntity();
@@ -161,12 +172,15 @@ public class indexSearch {
         if(thesistmp.getUrl()==null){
             thesistmp.setUrl("");
         }
+
         model.addAttribute("thesisinf",thesistmp);
 
         return "ThesisDetail";
 
 
+
     }
+
 
     @RequestMapping("/CopyrightDetail/{CopyrightId}")
     public  String CopyrightDetail(HttpServletRequest request, @PathVariable("CopyrightId") String CopyrightId, Model model){
