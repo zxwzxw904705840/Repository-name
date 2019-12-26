@@ -81,7 +81,9 @@ public class indexSearch {
         List<ThesisEntity> thesisList=new ArrayList<>();
 
         if(type.equals("0")){//按论文ID搜索查询
-            thesisList.add(userService.findByThesisId(input));
+            if(userService.findByThesisId(input)!=null){
+                thesisList.add(userService.findByThesisId(input));
+            }
             model.addAttribute("thesisList",thesisList);
         }else if(type.equals("1")){//按标题搜索查询
             thesisList=userService.findAllThesisByThesisTitleLike(input);
@@ -132,7 +134,9 @@ public class indexSearch {
         List<BookEntity> copyrightList=new ArrayList<>();
 
         if(type.equals("0")){//按软件著作ID搜索查询
-            copyrightList.add(userService.findByBookId(input));
+            if(userService.findByBookId(input)!=null){
+                copyrightList.add(userService.findByBookId(input));
+            }
             model.addAttribute("copyrightList",copyrightList);
         }else if(type.equals("1")){//按标题搜索查询
             copyrightList=userService.findByBookNameLike(input);
