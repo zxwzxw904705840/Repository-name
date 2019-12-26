@@ -9,6 +9,6 @@ import java.util.ArrayList;
 @Repository
 public interface ProjectRepository extends JpaRepository<ProjectEntity,String> {
     ArrayList<ProjectEntity> findAll();
-    ArrayList<ProjectEntity> findAllByProAndProjectNameLike(String projectName);
+    ArrayList<ProjectEntity> findAllByProjectNameLike(String projectName);
     ProjectEntity findByProjectId(String projectId);
 }

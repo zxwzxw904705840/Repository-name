@@ -10,17 +10,19 @@ import com.example.demo.service.ProjectManagementService;
 import com.example.demo.utils.Const;
 import com.example.demo.utils.Result;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Date;
 
+@Service
 public class ProjectManagementServiceImpl implements ProjectManagementService {
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
     @Autowired
-    ProjectRepository projectRepository;
+    private ProjectRepository projectRepository;
     @Autowired
-    InstituteRepository instituteRepository;
+    private InstituteRepository instituteRepository;
     @Override
     public Result findAllProject(Integer limit, Integer offset, UserEntity operator) {
         Result result = checkUser(operator);
@@ -55,7 +57,7 @@ public class ProjectManagementServiceImpl implements ProjectManagementService {
             return new Result(false,"projectName is empty");
         }
         String projectName = "%" + project.getProjectName() + "%";
-        ArrayList<ProjectEntity> projectEntities = projectRepository.findAllByProAndProjectNameLike(projectName);
+        ArrayList<ProjectEntity> projectEntities = projectRepository.findAllByProjectNameLike(projectName);
 
         int index = offset * limit;
         ArrayList<ProjectEntity> projectEntityArrayList = new ArrayList<ProjectEntity>();
@@ -119,9 +121,68 @@ public class ProjectManagementServiceImpl implements ProjectManagementService {
             return result;
         }
         /*
-        TODO:检查项目信息
+        检查项目信息
          */
-        return null;
+        if(project==null){
+            return new Result(false,"project not exist");
+        }
+        if(project.getProjectId()==null||project.getProjectId().equals("")){
+            return new Result(false,"project not exist");
+        }
+        result = checkProjectManager(project.getProjectManager());
+        if(!result.isSuccess()){
+            return result;
+        }
+        result = checkProjectName(project.getProjectName());
+        if(!result.isSuccess()){
+            return result;
+        }
+        result = checkProjectEstablishDate(project.getProjectEstablishDate());
+        if(!result.isSuccess()){
+            return result;
+        }
+        result = checkProjectFinishDate(project.getProjectFinishDate());
+        if(!result.isSuccess()){
+            return result;
+        }
+        result = checkProjectFund(project.getProjectFund());
+        if(!result.isSuccess()){
+            return result;
+        }
+        result = checkProjectLaunchDate(project.getProjectLaunchDate());
+        if(!result.isSuccess()){
+            return result;
+        }
+        result = checkProjectLevel(project.getProjectLevel());
+        if(!result.isSuccess()){
+            return result;
+        }
+        result = checkProjectPlannedDate(project.getProjectPlannedDate());
+        if(!result.isSuccess()){
+            return result;
+        }
+        result = checkProjectProcess(project.getProjectProcess());
+        if(!result.isSuccess()){
+            return result;
+        }
+        result = checkProjectResearchType(project.getProjectResearchType());
+        if(!result.isSuccess()){
+            return result;
+        }
+        result = checkProjectSource(project.getProjectSource());
+        if(!result.isSuccess()){
+            return result;
+        }
+        result = checkProjectSourceType(project.getProjectSourceType());
+        if(!result.isSuccess()){
+            return result;
+        }
+        result = checkProjectType(project.getProjectType());
+        if(!result.isSuccess()){
+            return result;
+        }
+        projectRepository.save(project);
+        return new Result(true);
     }
 
     @Override
