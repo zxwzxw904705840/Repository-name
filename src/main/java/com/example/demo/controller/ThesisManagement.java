@@ -8,9 +8,11 @@ import com.example.demo.utils.Const;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -123,11 +125,25 @@ public class ThesisManagement {
         return "redirect:MyThesis";
     }
 
-    //前往修改论文界面
+    /**
+     * 前往修改论文界面
+     * @param request
+     * @param ThesisId
+     * @param model
+     * @return
+     */
     @ResponseBody
-    @RequestMapping("/GoToEditThesis")
-    public String GoToEditThesis(HttpServletRequest request) {
+    @RequestMapping("/EditThesis/{ThesisId}")
+    public String GoToEditThesis(HttpServletRequest request, @PathVariable("ThesisId") String ThesisId, Model model) {
 
+        String thesisId=ThesisId.replace("--2F-2F-", "/");
+        System.out.println("/GoToEditThesis{ThesisId}"+thesisId);
+        ThesisEntity thesistmp=new ThesisEntity();
+        thesistmp=userService.findByThesisId(thesisId);
+        if(thesistmp.getUrl()==null){
+            thesistmp.setUrl("");
+        }
+        model.addAttribute("thesisinf",thesistmp);
         return "EditThesis";
     }
 
