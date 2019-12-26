@@ -12,8 +12,8 @@ import java.util.List;
 public interface ThesisRepository extends JpaRepository<ThesisEntity,String> {
     ThesisEntity findByThesisId(String thesisId);
     List<ThesisEntity> findAllByAuthor1AndStatusIsNot(UserEntity author, Const.ThesisStatus thesisStatus);
-    List<ThesisEntity> findAllByAuthor2(UserEntity author);
-    List<ThesisEntity> findAllByAuthor3(UserEntity author);
+    List<ThesisEntity> findAllByAuthor2AndStatusIsNot(UserEntity author, Const.ThesisStatus thesisStatus);
+    List<ThesisEntity> findAllByAuthor3AndStatusIsNot(UserEntity author, Const.ThesisStatus thesisStatus);
     List<ThesisEntity> findAllByJournal(String journal);
     List<ThesisEntity> findAllByThesisTitleContaining(String thesisTitle);
 }
