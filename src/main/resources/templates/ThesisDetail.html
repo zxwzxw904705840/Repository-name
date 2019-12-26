@@ -74,8 +74,11 @@
                                     </div>
                                 </div>
                             </div>
-                        <div style="margin-left:68%;"  th:if="${thesisinf.getAuthor1()}==${session.user}">
-                            <a th:href="@{'/EditThesis/'+${ThesistmpId}}"><button class="btn-warning btn">编辑</button></a>
+                        <div style="margin-left:68%;"  th:if="${thesisinf.getAuthor1().userId}==${session.user.getUserId()}">
+<!--                            <a th:href="@{'/EditThesis/'+ThesistmpId}">-->
+                                <div class="btn-warning btn" th:onclick="edit1()">编辑</div>
+<!--                            <button class="btn-warning btn">编辑</button>-->
+<!--                            </a>-->
                         </div>
                         <br/>
                             <div class="form-group">
@@ -143,6 +146,8 @@
 
     </div>
     <input id="labeluserid" type="hidden" th:value="${session.userId}" />
+    <input id="labelThesistmpId" type="hidden" th:value="${ThesistmpId}" />
+
 </div>
 
 
@@ -152,6 +157,31 @@
 <script src="../js/bootstrap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
 <script src="../js/bootstrap-table.min.js"></script>
+<script>
+
+    function edit1() {
+        var ThesistmpId=document.getElementById("labelThesistmpId").value;
+        var url='/EditThesis/'+ThesistmpId;
+        console.log("url"+url);
+        url=encodeURI(url);
+        console.log("url1"+url);
+        url=encodeURI(url); //最重要的部分,两次调用encodeURI ,就是编码两次
+        console.log("url1"+url);
+        $.ajax({
+            type: "post",
+            url: "@{url}",
+            data: JSON.stringify(params),
+            dataType: 'json',
+            contentType: 'application/json;charset=UTF-8',
+            success: function (r) {
+                alert(r)
+            }
+        })
+
+
+
+    }
+</script>
 
 
 </body>

@@ -17,6 +17,8 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.*;
 
 @Controller
@@ -134,7 +136,10 @@ public class ThesisManagement {
      * @return
      */
     @RequestMapping("/EditThesis/{ThesisId}")
-    public String GoToEditThesis(HttpServletRequest request, @PathVariable("ThesisId") String ThesisId, Model model) {
+    public String GoToEditThesis(HttpServletRequest request, @PathVariable("ThesisId") String ThesisId, Model model) throws UnsupportedEncodingException {
+//        String ThesisId1 = URLDecoder.decode(ThesisId, "UTF-8");
+//        System.out.println("/EditThesis/{ThesisId}"+ThesisId);
+//        System.out.println("/EditThesis/{ThesisId1}"+ThesisId1);
 
         String thesisId=ThesisId.replace("--2F-2F-", "/");
         System.out.println("/GoToEditThesis{ThesisId}"+thesisId);
