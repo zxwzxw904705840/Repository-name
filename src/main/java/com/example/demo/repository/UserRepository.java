@@ -28,14 +28,14 @@ public interface UserRepository extends JpaRepository<UserEntity,String> {
 
     List<UserEntity> findAllByUserNameContainingAndUserStatusIs(String userName, Const.UserStatus ustatus);
 
-    List<UserEntity> findAllByUserNameContainingAndInstituteIsOrInstituteContaining(String userName, InstituteEntity instituteEntity);
+    List<UserEntity> findAllByUserNameContainingAndInstituteIs(String userName, InstituteEntity instituteEntity);
 
-    List<UserEntity> findAllByUserNameContainingAndUserStatusIsAndInstituteIsOrInstituteContaining(String userName, Const.UserStatus ustatus, InstituteEntity instituteEntity);
+    List<UserEntity> findAllByUserNameContainingAndUserStatusIsAndInstituteIs(String userName, Const.UserStatus ustatus, InstituteEntity instituteEntity);
 
     List<UserEntity> findAllByUserStatusIs(Const.UserStatus status);
 
-    List<UserEntity> findAllByInstituteIsOrInstituteContaining(InstituteEntity instituteEntity);
+    List<UserEntity> findAllByInstituteIs(InstituteEntity instituteEntity);
 
-    List<UserEntity> findAllByUserStatusIsAndInstituteIsOrInstituteContaining(Const.UserStatus ustatus, InstituteEntity instituteEntity);
+    List<UserEntity> findAllByUserStatusIsAndInstituteIs(Const.UserStatus ustatus, InstituteEntity instituteEntity);
 
 }
