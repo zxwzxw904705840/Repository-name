@@ -95,7 +95,7 @@ public class ProjectManagementController {
 
 
 
-       /* List<ProjectEntity> lists = new ArrayList<>();
+        List<ProjectEntity> lists = new ArrayList<>();
         for (int i = offset; i < offset + 10; i++) {
             ProjectEntity temp = new ProjectEntity();
             temp.setProjectId("id" + i);
@@ -117,12 +117,12 @@ public class ProjectManagementController {
             temp.setProjectManager(user);
             lists.add(temp);
         }
-*/
+
         Map<String, Object> param = new HashMap<>();
-         param.put("rows", result.getObject("rows"));
-        param.put("total", result.getObject("total")); //整个表的总数*/
-        /*param.put("rows", lists);
-        param.put("total",100); //整个表的总数*/
+   //      param.put("rows", result.getObject("rows"));
+     //   param.put("total", result.getObject("total")); //整个表的总数*/
+        param.put("rows", lists);
+        param.put("total",100); //整个表的总数
         return param;
 
     }
@@ -627,17 +627,17 @@ public class ProjectManagementController {
         UserEntity operator = (UserEntity) session.getAttribute("user");
         UserEntity userEntity = new UserEntity(userId);
 
-      /*  userEntity.setUserId(userId);
+        userEntity.setUserId(userId);
         userEntity.setUserName("2323");
         userEntity.setPhone("22222PHONE");
         userEntity.setEmail("22222MAIL");
         userEntity.setInstitute(new InstituteEntity("12", "图书馆"));
-*/
-        Result result= projectManagementService.findAllUserByUserIdLike(userEntity,operator);
 
-        //  Result result = new Result(true, "AddProject");
+      //  Result result= projectManagementService.findAllUserByUserIdLike(userEntity,operator);
 
-        model.addAttribute("userInfo", result.getObject("userEntityArrayList"));
+          Result result = new Result(true, "AddProject");
+
+    //    model.addAttribute("userInfo", result.getObject("userEntityArrayList"));
 
 
         return "fragment::addMemberFragment";
