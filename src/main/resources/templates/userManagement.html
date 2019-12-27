@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh_CN" xmlns:th="http://www.w3.org/1999/xhtml">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.w3.org/1999/xhtml" lang="en">
 <head>
     <meta charset="UTF-8">
     <title>科研人员管理</title>
@@ -33,13 +33,13 @@
         <!-- mainmenu begin -->
         <nav  class="navbar" role="navigation" style="margin-bottom: 0">
             <ul id="mainmenu" class="navbar-left">
-                <li><a class="J_menuItem black" th:href="@{/index}">Home</a></li>
-                <li><a class="J_menuItem" th:href="@{/MyThesis}">My Thesis</a></li>
-                <li><a class="J_menuItem" th:href="@{/MySoftwareCopyright}">My Software Copyright</a></li>
-                <li><a class="J_menuItem" th:href="@{/projectManagement}">My Project</a></li>
-                <li><a class="J_menuItem" th:href="@{/userManagement}">Management</a></li>
-                <li><a class="J_menuItem" th:href="@{/test}">Report Statistics</a></li>
-                <!-- <li><a class="J_menuItem" th:text="${session.user.getUserName()}">谢文仲</a></li>-->
+                <li><a class="J_menuItem black" th:href="@{/index}" shiro:hasAnyRoles ="student,teacher,Administration">Home</a></li>
+                <li><a class="J_menuItem" th:href="@{/MyThesis}" shiro:hasAnyRoles="teacher,Administration">My Thesis</a></li>
+                <li><a class="J_menuItem" th:href="@{/MySoftwareCopyright}" shiro:hasAnyRoles="teacher,Administration">My Software Copyright</a></li>
+                <li><a class="J_menuItem" th:href="@{/projectManagement}" shiro:hasAnyRoles="teacher,Administration">My Project</a></li>
+                <li><a class="J_menuItem" th:href="@{/userManagement}" shiro:hasRole="Administration">Management</a></li>
+                <li><a class="J_menuItem" th:href="@{/test}" shiro:hasRole="Administration">Report Statistics</a></li>
+                <li><a class="J_menuItem" th:text="${session.user.getUserName()}">谢文仲</a></li>
                 <li><a class="J_menuItem" th:href="@{logout}">退出</a></li>
 
             </ul>
