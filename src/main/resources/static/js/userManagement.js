@@ -67,6 +67,7 @@ $(document).ready(function () {
         //设置为limit可以获取limit, offset, search, sort, order
         //  queryParamsType: "undefined",
         // queryParams: queryParams,
+
         queryParamsType: "",
         queryParams: getParams,
         //json数据解析

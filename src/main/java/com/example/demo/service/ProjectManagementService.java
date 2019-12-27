@@ -8,10 +8,11 @@ import com.example.demo.utils.Result;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public interface ProjectManagementService {
 
-    Result findAllProject(Integer limit, Integer offset, UserEntity operator);
+ List<ProjectEntity> findAllProject(UserEntity operator);
     Result findAllProjectByProjectNameLike(Integer limit, Integer offset, ProjectEntity project, UserEntity operator);
     Result findAllInstitute();
    // Result findAllInstitute(Integer limit, Integer offset, UserEntity operator);

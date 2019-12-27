@@ -1,6 +1,7 @@
 package com.example.demo.controller.admin;
 
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.example.demo.Entity.FileEntity;
 import com.example.demo.Entity.InstituteEntity;
@@ -49,12 +50,16 @@ public class ProjectManagementController {
      */
     @ResponseBody
     @RequestMapping("/FindProjectList")
-    public Map<String, Object> findTBlist(HttpServletRequest request, HttpSession session) throws ParseException {
+    public  String findTBlist(HttpServletRequest request,HttpSession session) throws ParseException {
         System.out.println("FindProjectList");
 
         UserEntity operator = (UserEntity) session.getAttribute("user");
 
-       // UserEntity operator = new UserEntity("222");
+        List<ProjectEntity> result =null;
+        result=projectManagementService.findAllProject( operator);
+        String str = JSON.toJSONString(result);
+
+       /*// UserEntity operator = new UserEntity("222");
 
         int pageNumber = Integer.valueOf(request.getParameter("pageNumber"));
         int limit = Integer.valueOf(request.getParameter("pageSize")); //输入
@@ -67,11 +72,11 @@ public class ProjectManagementController {
         String rojectResearchType = request.getParameter("rojectResearchType");//输入
         String projectEstablishDates = request.getParameter("projectEstablishDate");//输入
         ProjectEntity project = new ProjectEntity(projectName);
-        Result result =null;
+        List<ProjectEntity> result =null;
         if(projectName.equals("")){
             result=projectManagementService.findAllProject( limit,  offset,  operator);
         }else {
-            result=projectManagementService.findAllProjectByProjectNameLike( limit,  offset, project, operator);
+           // result=projectManagementService.findAllProjectByProjectNameLike( limit,  offset, project, operator);
         }
         if (instituteId.equals("ALL")) {
 
@@ -84,18 +89,18 @@ public class ProjectManagementController {
         }
         if (rojectResearchType.equals("ALL")) {
 
-        }
+        }*/
         Date projectEstablishDate = new Date();
-        if (!projectEstablishDates.equals("")) {
+        /*if (!projectEstablishDates.equals("")) {
             SimpleDateFormat df = new SimpleDateFormat("yyyy-MM");
             projectEstablishDate = df.parse(projectEstablishDates);
 
 
-        }
+        }*/
 
 
 
-       /* List<ProjectEntity> lists = new ArrayList<>();
+      /*  List<ProjectEntity> lists = new ArrayList<>();
         for (int i = offset; i < offset + 10; i++) {
             ProjectEntity temp = new ProjectEntity();
             temp.setProjectId("id" + i);
@@ -116,14 +121,13 @@ public class ProjectManagementController {
             user.setUserName("userName" + i);
             temp.setProjectManager(user);
             lists.add(temp);
-        }
-*/
+        }*/
         Map<String, Object> param = new HashMap<>();
-         param.put("rows", result.getObject("rows"));
-        param.put("total", result.getObject("total")); //整个表的总数*/
-        /*param.put("rows", lists);
-        param.put("total",100); //整个表的总数*/
-        return param;
+      //  param.put("rows", result.getObject("rows"));
+       // param.put("total", result.getObject("total")); //整个表的总数*/
+      //  param.put("rows", lists);
+       // param.put("total",100); //整个表的总数*/
+        return str;
 
     }
 
@@ -568,17 +572,21 @@ public class ProjectManagementController {
             List<String> fileName = new ArrayList<String>();
             try {
 
+                String fileNameTemp="";
                 for (int i = 0; i < file.length; i++) {
+
                     if (!file[i].isEmpty()) {
                         fileName.add(file[i].getOriginalFilename());
-                       // String localPath = "/Users/zl/share/";
+                       String localPath = "/Users/zl/share/file/";
                        //  String localPath = "/templates/";
-                        String localPath = request.getSession().getServletContext().getRealPath("/")+"upload/";
+                      //  String localPath = request.getSession().getServletContext().getRealPath("/")+"upload/";
                     //在项目新建一个 你重新生成名称的文件
                         System.out.println(localPath);
-                        String fileNameTemp = file[i].getOriginalFilename();
+                         fileNameTemp = file[i].getOriginalFilename();
+
 
                         String pathname = localPath + fileNameTemp;
+
 
 
                         File dest = new File(pathname);
@@ -600,7 +608,8 @@ public class ProjectManagementController {
                 if (fileName != null && fileName.size() > 0) {
                     System.out.println("上传成功！");
                     System.out.println(response.toString() + fileName);
-                    String path = "http://localhost:8088/download/"+fileName;
+
+                    String path = "http://localhost:8088/download/"+  fileNameTemp ;
                     FileEntity fileEntity = new FileEntity();
                     fileEntity.setFileStatus(Const.FileStatus.NORMAL);
                     fileEntity.setFilePath(path);
@@ -681,7 +690,7 @@ public class ProjectManagementController {
         projectEntity.setMembers(members);
         Result result= projectManagementService.updateProjectMembers(projectEntity,operator);
 
-        //  Result result = new Result(true, "AddProject");
+         //Result result = new Result(true, "AddProject");
    return result.toString();
     }
 

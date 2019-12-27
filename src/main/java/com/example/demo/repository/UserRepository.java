@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Repository
-public interface UserRepository extends JpaRepository<UserEntity,String>, JpaSpecificationExecutor<UserEntity> {
+public interface UserRepository extends JpaRepository<UserEntity,String> {
    // List<UserEntity> findAllBy(Specification<UserEntity> spec);
     
     ArrayList<UserEntity> findByUserStatusNot(Const.UserStatus userStatus);

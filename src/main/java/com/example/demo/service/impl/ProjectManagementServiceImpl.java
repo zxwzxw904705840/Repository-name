@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class ProjectManagementServiceImpl implements ProjectManagementService {
@@ -31,27 +32,11 @@ public class ProjectManagementServiceImpl implements ProjectManagementService {
 
 
     @Override
-    public Result findAllProject(Integer limit, Integer offset, UserEntity operator) {
-        Result result = checkUser(operator);
-        if(!result.isSuccess()){
-            return result;
-        }
-        ArrayList<ProjectEntity> projectEntities = projectRepository.findAll();
-        /*
-        分页
-         */
-       // int index = offset * limit;
-        ArrayList<ProjectEntity> projectEntityArrayList = new ArrayList<ProjectEntity>();
-        for(int i = offset ; i<offset+limit;i++){
-            if(i>=projectEntities.size()){
-                break;
-            }
-            projectEntityArrayList.add(projectEntities.get(i));
-        }
-        result = new Result(true);
-        result.addObject("rows",projectEntityArrayList);
-        result.addObject("total",projectEntities.size());
-        return result;
+    public List<ProjectEntity> findAllProject( UserEntity operator) {
+
+        List<ProjectEntity> projectEntities = projectRepository.findAll();
+
+        return projectEntities;
     }
 
     @Override

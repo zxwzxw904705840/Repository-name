@@ -14,7 +14,7 @@
 
     <link href="../assets/css/fileinput.css" rel="stylesheet">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" crossorigin="anonymous">
-    <link href="../assets/themes/explorer-fas/theme.css" rel="stylesheet" >
+    <link href="../assets/themes/explorer-fas/theme.css" rel="stylesheet">
 
     <link rel="stylesheet" href="../css/style.css" type="text/css">
     <!-- color scheme -->
@@ -28,16 +28,21 @@
 
 </head>
 <body>
-<header  class="smaller">
+<header class="smaller">
     <div class="row">
         <!-- mainmenu begin -->
-        <nav  class="navbar" role="navigation" style="margin-bottom: 0">
+        <nav class="navbar" role="navigation" style="margin-bottom: 0">
             <ul id="mainmenu" class="navbar-left">
-                <li><a class="J_menuItem black" th:href="@{/index}" shiro:hasAnyRoles ="student,teacher,Administration">Home</a></li>
-                <li><a class="J_menuItem" th:href="@{/MyThesis}" shiro:hasAnyRoles="teacher,Administration">My Thesis</a></li>
-                <li><a class="J_menuItem" th:href="@{/MySoftwareCopyright}" shiro:hasAnyRoles="teacher,Administration">My Software Copyright</a></li>
-                <li><a class="J_menuItem" th:href="@{/projectManagement}" shiro:hasAnyRoles="teacher,Administration">My Project</a></li>
-                <li><a class="J_menuItem" th:href="@{/userManagement}" shiro:hasRole="Administration">Management</a></li>
+                <li><a class="J_menuItem black" th:href="@{/index}" shiro:hasAnyRoles="student,teacher,Administration">Home</a>
+                </li>
+                <li><a class="J_menuItem" th:href="@{/MyThesis}" shiro:hasAnyRoles="teacher,Administration">My
+                    Thesis</a></li>
+                <li><a class="J_menuItem" th:href="@{/MySoftwareCopyright}" shiro:hasAnyRoles="teacher,Administration">My
+                    Software Copyright</a></li>
+                <li><a class="J_menuItem" th:href="@{/projectManagement}" shiro:hasAnyRoles="teacher,Administration">My
+                    Project</a></li>
+                <li><a class="J_menuItem" th:href="@{/userManagement}" shiro:hasRole="Administration">Management</a>
+                </li>
                 <li><a class="J_menuItem" th:href="@{/test}" shiro:hasRole="Administration">Report Statistics</a></li>
                 <li><a class="J_menuItem" th:text="${session.user.getUserName()}">谢文仲</a></li>
                 <li><a class="J_menuItem" th:href="@{logout}">退出</a></li>
@@ -190,7 +195,7 @@
                                     <div style="display: flex">
                                         <span>立项日期：</span>
                                         <!--指定 date标记-->
-                                        <div class='input-group date mydatetimepicker' >
+                                        <div class='input-group date mydatetimepicker'>
                                             <input type='text' id="panel_projectEstablishDate"
                                                    name="projectEstablishDate" class="form-control"/>
                                             <span class="input-group-addon">
@@ -385,7 +390,7 @@
                         <span> 计划完成日期</span>
                     </div>
                     <div class="col-md-8 add_col8">
-                        <div class='input-group date mydatetimepicker2' >
+                        <div class='input-group date mydatetimepicker2'>
                             <input type='text' id="ma_projectPlannedDateInput" placeholder="请输入计划完成日期"
                                    name="projectPlannedDate" class="form-control"/>
                             <span class="input-group-addon">
@@ -402,7 +407,7 @@
                         <span> 结项日期</span>
                     </div>
                     <div class="col-md-8 add_col8">
-                        <div class='input-group date mydatetimepicker2' >
+                        <div class='input-group date mydatetimepicker2'>
                             <input type='text' id="ma_projectFinishDateInput" placeholder="请输入结项日期"
                                    name="projectFinishDate" class="form-control"/>
                             <span class="input-group-addon">
@@ -524,7 +529,8 @@
                             <a class="nav-link" href="#common" data-toggle="tab">基本信息</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link active show" href="#user"  onclick="InitMember()" data-toggle="tab">项目成员</a>
+                            <a class="nav-link active show" href="#user" onclick="InitMember()"
+                               data-toggle="tab">项目成员</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link active show" href="#file" data-toggle="tab">项目文件</a>
@@ -540,11 +546,13 @@
                                     <span> 项目代码</span>
                                 </div>
                                 <div class="col-md-7 add_col8">
-                                    <input type="text" class="form-control" id="me_projectCodeInput" placeholder="请输入项目代码"
+                                    <input type="text" class="form-control" id="me_projectCodeInput"
+                                           placeholder="请输入项目代码"
                                            name="projectCode" disabled="disabled">
                                 </div>
                                 <div class="col-md-2 add_col8 ">
-                                    <a type="botton" class="ahide paddingTop5" href="javascript:void(0);" id="me_projectCode_a">修改</a>
+                                    <a type="botton" class="ahide paddingTop5" href="javascript:void(0);"
+                                       id="me_projectCode_a">修改</a>
                                 </div>
 
                             </div>
@@ -554,29 +562,31 @@
                                     <span> 项目名称</span>
                                 </div>
                                 <div class="col-md-7 add_col8">
-                                    <input type="text" class="form-control" id="me_projectNameInput" placeholder="请输入项目名称"
+                                    <input type="text" class="form-control" id="me_projectNameInput"
+                                           placeholder="请输入项目名称"
                                            name="projectName" disabled="disabled">
                                 </div>
                                 <div class="col-md-2 add_col8 ">
-                                    <a type="botton" class="ahide paddingTop5" href="javascript:void(0);" id="me_projectName_a">修改</a>
+                                    <a type="botton" class="ahide paddingTop5" href="javascript:void(0);"
+                                       id="me_projectName_a">修改</a>
                                 </div>
                             </div>
 
-                          <!--  <div class="row margin10b adiv">
-                                <div class="col-md-3  add_span">
-                                    <span> 项目负责人</span>
-                                </div>
-                                <div class="col-md-7 add_col8">
-                                    <input type="text" class="form-control" id="me_projectManagerIdInput" placeholder="请输入项目负责人"
-                                           name="projectManagerId">
-                                </div>
-                                <div class="col-md-2 add_col8 ">
-                                    <a type="botton" class="ahide paddingTop5" href="javascript:void(0);" id="me_projectManagerId_a">修改</a>
-                                </div>
-                            </div>-->
+                            <!--  <div class="row margin10b adiv">
+                                  <div class="col-md-3  add_span">
+                                      <span> 项目负责人</span>
+                                  </div>
+                                  <div class="col-md-7 add_col8">
+                                      <input type="text" class="form-control" id="me_projectManagerIdInput" placeholder="请输入项目负责人"
+                                             name="projectManagerId">
+                                  </div>
+                                  <div class="col-md-2 add_col8 ">
+                                      <a type="botton" class="ahide paddingTop5" href="javascript:void(0);" id="me_projectManagerId_a">修改</a>
+                                  </div>
+                              </div>-->
 
 
-                            <div class="row margin10b adiv " >
+                            <div class="row margin10b adiv ">
                                 <div class="col-md-3  add_span">
                                     <span> 项目类型</span>
                                 </div>
@@ -589,7 +599,8 @@
                                     </select>
                                 </div>
                                 <div class="col-md-2 add_col8 ">
-                                    <a type="botton" class="ahide paddingTop5" href="javascript:void(0);" id="me_projectType_a">修改</a>
+                                    <a type="botton" class="ahide paddingTop5" href="javascript:void(0);"
+                                       id="me_projectType_a">修改</a>
                                 </div>
                             </div>
 
@@ -600,7 +611,7 @@
                                 <div class="col-md-7 add_col8">
                                     <span id="me_projectLevelInput">校级</span>
 
-                                    <select id="me_projectLevelSelect" name="projectLevel"  class="hide">
+                                    <select id="me_projectLevelSelect" name="projectLevel" class="hide">
                                         <option value="SCHOOL">校级</option>
                                         <option value="CITY">市级</option>
                                         <option value="PROVINCIAL">省级</option>
@@ -609,7 +620,8 @@
                                     </select>
                                 </div>
                                 <div class="col-md-2 add_col8 ">
-                                    <a type="botton" class="ahide paddingTop5" href="javascript:void(0);" id="me_projectLevel_a">修改</a>
+                                    <a type="botton" class="ahide paddingTop5" href="javascript:void(0);"
+                                       id="me_projectLevel_a">修改</a>
                                 </div>
                             </div>
 
@@ -628,7 +640,8 @@
                                     </select>
                                 </div>
                                 <div class="col-md-2 add_col8 ">
-                                    <a type="botton" class="ahide paddingTop5" href="javascript:void(0);" id="me_projectProgress_a">修改</a>
+                                    <a type="botton" class="ahide paddingTop5" href="javascript:void(0);"
+                                       id="me_projectProgress_a">修改</a>
                                 </div>
                             </div>
 
@@ -637,11 +650,13 @@
                                     <span> 项目来源单位</span>
                                 </div>
                                 <div class="col-md-7 add_col8">
-                                    <input type="text" class="form-control" id="me_projectSourceInput" placeholder="请输入项目来源单位"
+                                    <input type="text" class="form-control" id="me_projectSourceInput"
+                                           placeholder="请输入项目来源单位"
                                            name="projectSource" disabled="disabled">
                                 </div>
                                 <div class="col-md-2 add_col8 ">
-                                    <a type="botton" class="ahide paddingTop5" href="javascript:void(0);" id="me_projectSource_a">修改</a>
+                                    <a type="botton" class="ahide paddingTop5" href="javascript:void(0);"
+                                       id="me_projectSource_a">修改</a>
                                 </div>
                             </div>
 
@@ -650,7 +665,7 @@
                                     <span> 项目立项日期</span>
                                 </div>
                                 <div class="col-md-7 add_col8">
-                                    <div class='input-group date mydatetimepicker2' >
+                                    <div class='input-group date mydatetimepicker2'>
                                         <input type='text' id="me_projectEstablishDateInput" placeholder="请输入项目立项日期"
                                                name="projectEstablishDate" class="form-control" disabled="disabled"/>
                                         <span class="input-group-addon">
@@ -659,7 +674,8 @@
                                     </div>
                                 </div>
                                 <div class="col-md-2 add_col8 ">
-                                    <a type="botton" class="ahide paddingTop5" href="javascript:void(0);" id="me_projectEstablishDate_a">修改</a>
+                                    <a type="botton" class="ahide paddingTop5" href="javascript:void(0);"
+                                       id="me_projectEstablishDate_a">修改</a>
                                 </div>
 
                             </div>
@@ -670,7 +686,7 @@
                                     <span> 计划完成日期</span>
                                 </div>
                                 <div class="col-md-7 add_col8">
-                                    <div class='input-group date mydatetimepicker2' >
+                                    <div class='input-group date mydatetimepicker2'>
                                         <input type='text' id="me_projectPlannedDateInput" placeholder="请输入计划完成日期"
                                                name="projectPlannedDate" class="form-control" disabled="disabled"/>
                                         <span class="input-group-addon">
@@ -680,7 +696,8 @@
 
                                 </div>
                                 <div class="col-md-2 add_col8 ">
-                                    <a type="botton" class="ahide paddingTop5" href="javascript:void(0);" id="me_projectPlannedDate_a">修改</a>
+                                    <a type="botton" class="ahide paddingTop5" href="javascript:void(0);"
+                                       id="me_projectPlannedDate_a">修改</a>
                                 </div>
 
                             </div>
@@ -690,7 +707,7 @@
                                     <span> 结项日期</span>
                                 </div>
                                 <div class="col-md-7 add_col8">
-                                    <div class='input-group date mydatetimepicker2' >
+                                    <div class='input-group date mydatetimepicker2'>
                                         <input type='text' id="me_projectFinishDateInput" placeholder="请输入结项日期"
                                                name="projectFinishDate" class="form-control" disabled="disabled"/>
                                         <span class="input-group-addon">
@@ -700,7 +717,8 @@
 
                                 </div>
                                 <div class="col-md-2 add_col8 ">
-                                    <a type="botton" class="ahide paddingTop5" href="javascript:void(0);" id="me_projectFinishDate_a">修改</a>
+                                    <a type="botton" class="ahide paddingTop5" href="javascript:void(0);"
+                                       id="me_projectFinishDate_a">修改</a>
                                 </div>
 
                             </div>
@@ -711,11 +729,13 @@
                                     <span> 合同经费</span>
                                 </div>
                                 <div class="col-md-7 add_col8">
-                                    <input type="text" class="form-control" id="me_projectFundInput" placeholder="请输入项目来源单位"
+                                    <input type="text" class="form-control" id="me_projectFundInput"
+                                           placeholder="请输入项目来源单位"
                                            name="projectFund" disabled="disabled">
                                 </div>
                                 <div class="col-md-2 add_col8 ">
-                                    <a type="botton" class="ahide paddingTop5" href="javascript:void(0);" id="me_projectFund_a">修改</a>
+                                    <a type="botton" class="ahide paddingTop5" href="javascript:void(0);"
+                                       id="me_projectFund_a">修改</a>
                                 </div>
 
                             </div>
@@ -736,7 +756,8 @@
                                     </select>
                                 </div>
                                 <div class="col-md-2 add_col8 ">
-                                    <a type="botton" class="ahide paddingTop5" href="javascript:void(0);" id="me_projectSourceType_a">修改</a>
+                                    <a type="botton" class="ahide paddingTop5" href="javascript:void(0);"
+                                       id="me_projectSourceType_a">修改</a>
                                 </div>
                             </div>
 
@@ -746,7 +767,7 @@
                                 </div>
                                 <div class="col-md-7 add_col8">
                                     <span id="me_projectResearchTypeInput">基础研究</span>
-                                    <select id="me_projectResearchTypeSelect" name="projectResearchType"  class="hide">
+                                    <select id="me_projectResearchTypeSelect" name="projectResearchType" class="hide">
                                         <option value="BASIC_RESEARCH">基础研究</option>
                                         <option value="APPLIED_RESEARCH">应用基础研究</option>
                                         <option value="TECHNOLOGY_DEVELOPMENT">技术开发</option>
@@ -754,9 +775,21 @@
                                     </select>
                                 </div>
                                 <div class="col-md-2 add_col8 ">
-                                    <a type="botton" class="ahide paddingTop5" href="javascript:void(0);" id="me_projectResearchType_a">修改</a>
+                                    <a type="botton" class="ahide paddingTop5" href="javascript:void(0);"
+                                       id="me_projectResearchType_a">修改</a>
                                 </div>
                             </div>
+
+                            <div class="row margin10b adiv">
+                                <div class="col-md-3  add_span">
+                                    <span> url</span>
+                                </div>
+                                <div class="col-md-7 add_col8">
+                                    <span id="filepath"></span>
+                                </div>
+
+                            </div>
+
                         </div>
                         <div class="tab-pane" id="user">
                             <button type="button" id="addMemberBtn" class="btn btn_purple searchBtn marginBottom10">
@@ -775,7 +808,7 @@
                                         单位
                                     </th>
                                     <th>
-                                       职称
+                                        职称
                                     </th>
                                     <th>
                                         手机
@@ -791,12 +824,12 @@
                                 </tbody>
                             </table>
 
-                          <!--  <button type="button" id="searchMemberBtn"
-                                    class="btn btn_purple searchBtn margin5"><span
-                                    aria-hidden="true"></span> 搜索
-                            </button>
-                            <input class="searchInput" id="projectMemberIdInput" name="userId" type="text"
-                                   placeholder="名称"/>-->
+                            <!--  <button type="button" id="searchMemberBtn"
+                                      class="btn btn_purple searchBtn margin5"><span
+                                      aria-hidden="true"></span> 搜索
+                              </button>
+                              <input class="searchInput" id="projectMemberIdInput" name="userId" type="text"
+                                     placeholder="名称"/>-->
                         </div>
                         <div class="tab-pane" id="file">
                             <form id="form" action="" method="post" enctype="multipart/form-data">
@@ -817,7 +850,6 @@
                 </div>
 
 
-
             </div>
         </div>
 
@@ -827,7 +859,7 @@
 
 
 <!-- 添加项目成员 -->
-<div class="modal fade" id="addMemberModal"  style="display: none;" tabindex="-1" role="dialog"
+<div class="modal fade" id="addMemberModal" style="display: none;" tabindex="-1" role="dialog"
      aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -839,12 +871,12 @@
                     添加成员
                 </h4>
             </div>
-            <div class="modal-body"  style="padding: 0">
+            <div class="modal-body" style="padding: 0">
 
                 <div class="modal-body">
 
-                    人员代号: <input type="text" id="addMUserIdInput" />
-                    <button  class="btn btn_purple searchMargin retop noradius"  onclick="searchAddMember()">查找</button>
+                    人员代号: <input type="text" id="addMUserIdInput"/>
+                    <button class="btn btn_purple searchMargin retop noradius" onclick="searchAddMember()">查找</button>
                     <div id="searchMemberList"></div>
 
 
@@ -854,7 +886,6 @@
         </div>
     </div>
 </div>
-
 
 
 <script src="../assets/js/jquery.min.js"></script>

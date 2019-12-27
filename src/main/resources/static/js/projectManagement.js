@@ -93,6 +93,21 @@ $(function() {
  * 初始化BootstrapTable,动态从服务器加载数据
  * */
 $(document).ready(function() {
+
+/*
+       $.ajax({
+                url: "/FindProjectList",
+               // dataType: "json",
+
+                success: function(data) {
+                   console.log(data)
+                },
+                error:function(data){
+                 console.log(data)
+                }
+            }); */
+
+
     $('input[type=radio][name=status]').change(function() {
         if (this.value == '0') {
             document.getElementById("typeDiv").classList.remove("hide");
@@ -120,8 +135,9 @@ $(document).ready(function() {
         pageList: [5, 10, 15, 20, 25],
         //是否启用查询
         search: false,
+        dataType:"json",
         //表示服务端请求
-        sidePagination: "server",
+        sidePagination: "client",
         //设置为undefined可以获取pageNumber，pageSize，searchText，sortName，sortOrder
         //设置为limit可以获取limit, offset, search, sort, order
         //  queryParamsType: "undefined",
@@ -129,12 +145,13 @@ $(document).ready(function() {
         queryParamsType: "",
         queryParams: getParams,
         //json数据解析
-        responseHandler: function(res) {
+         responseHandler: function(res) {
             console.log("res", res)
-            return {
+           /*  return {
                 "rows": res.rows,
                 "total": res.total
-            };
+            }; */
+            return res;
         },
         //数据列
         columns: [{
@@ -145,14 +162,7 @@ $(document).ready(function() {
         }, {
             title: "项目名称",
             field: "projectName"
-        }, {
-            title: "负责人",
-            field: "userInfo",
-            formatter: function(value, row, index) {
-                var operateHtml = '<span> ' + row.projectManager.userName + '</span>';
-                return operateHtml;
-            }
-        }, {
+        },  {
             title: "立项日期",
             field: "projectEstablishDate"
         }, {
@@ -230,6 +240,8 @@ function editModal(result) {
         modal.find('.modal-body #me_projectFundInput').val(data.projectFund);
         modal.find('.modal-body #me_projectSourceTypeInput').text(data.projectSourceType);
         modal.find('.modal-body #me_projectResearchTypeInput').text(data.projectResearchType);
+
+         modal.find('.modal-body #filepath').text(data.fileEntities[0].filePath);
     }).modal("show");
 }
 /**
