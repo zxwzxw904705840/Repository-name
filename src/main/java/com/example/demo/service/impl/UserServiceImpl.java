@@ -598,10 +598,10 @@ public class UserServiceImpl implements UserService {
         }catch (Exception e){
             return new Result(false, DataCheck.UserDataCheck.ILLEGAL_TELEPHONE.toString());
         }
-        if(user.getTitle()==null){
+       /* if(user.getTitle()==null){
 
             return new Result(false, DataCheck.UserDataCheck.EMPTY_TITLE.toString());
-        }
+        }*/
         return new Result(true, DataCheck.UserDataCheck.ACCOUNT_CAN_USE.toString());
     }
 

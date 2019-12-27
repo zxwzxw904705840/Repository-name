@@ -58,7 +58,12 @@ public class ProjectManagementController {
         List<ProjectEntity> result =null;
         result=projectManagementService.findAllProject( operator);
         String str = JSON.toJSONString(result);
-
+       /* String projectName = request.getParameter("projectName");//输入
+        if(projectName.equals("")){
+            result=projectManagementService.findAllProject( limit,  offset,  operator);
+        }else {
+            // result=projectManagementService.findAllProjectByProjectNameLike( limit,  offset, project, operator);
+        }*/
        /*// UserEntity operator = new UserEntity("222");
 
         int pageNumber = Integer.valueOf(request.getParameter("pageNumber"));
@@ -186,7 +191,13 @@ public class ProjectManagementController {
         projectEntity.setProjectLaunchDate(projectInfos.getDate("projectLaunchDate"));
         projectEntity.setProjectPlannedDate(projectInfos.getDate("projectPlannedDate"));
         System.out.println(projectEntity.getProjectEstablishDate().toString() + "123231213");
-        Result result = projectManagementService.addProject(projectEntity,operator);
+        Result result = null;
+        try{
+             result = projectManagementService.addProject(projectEntity,operator);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
         System.out.println(result);
         return result.toString();
     }
@@ -636,17 +647,16 @@ public class ProjectManagementController {
         UserEntity operator = (UserEntity) session.getAttribute("user");
         UserEntity userEntity = new UserEntity(userId);
 
-      /*  userEntity.setUserId(userId);
+        userEntity.setUserId(userId);
         userEntity.setUserName("2323");
         userEntity.setPhone("22222PHONE");
         userEntity.setEmail("22222MAIL");
         userEntity.setInstitute(new InstituteEntity("12", "图书馆"));
-*/
-        Result result= projectManagementService.findAllUserByUserIdLike(userEntity,operator);
+      //  Result result= projectManagementService.findAllUserByUserIdLike(userEntity,operator);
 
         //  Result result = new Result(true, "AddProject");
 
-        model.addAttribute("userInfo", result.getObject("userEntityArrayList"));
+        model.addAttribute("userInfo", userEntity);
 
 
         return "fragment::addMemberFragment";
@@ -688,9 +698,9 @@ public class ProjectManagementController {
          Set<UserEntity>members = new HashSet<>();
         members.add(userEntity);
         projectEntity.setMembers(members);
-        Result result= projectManagementService.updateProjectMembers(projectEntity,operator);
+     //   Result result= projectManagementService.updateProjectMembers(projectEntity,operator);
 
-         //Result result = new Result(true, "AddProject");
+         Result result = new Result(true, "AddProject");
    return result.toString();
     }
 
