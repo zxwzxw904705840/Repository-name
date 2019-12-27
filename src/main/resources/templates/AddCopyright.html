@@ -64,76 +64,65 @@
             <div class="col-md-offset-2 col-md-8">
                 <div class="panel panel-warning ">
                     <div class="panel-heading text-center">
-                        <h3 class="panel-title ">软件著作权详情</h3>
+                        <h3 class="panel-title ">登记软件著作权</h3>
                     </div>
                     <div class="panel-body">
-
+                        <form role="form" method="post" th:action="@{AddCopyrightSubmit}">
                             <div class="form-group">
                                 <div class="row">
-                                    <label  class="col-md-3 control-label col-md-offset-1 h3">软件著作标题:</label>
-                                    <div class="col-md-8 h3">
-                                        <p th:text="${copyrightinf.getBookName()}"></p>
+                                    <label for="input1" class="col-md-2 control-label">软件著作权标题</label>
+                                    <div class="col-md-4">
+                                        <input class="form-control" id="input1" name="input1" type="text" placeholder="">
                                     </div>
                                 </div>
+                                <br>
+                                <div class="row">
+                                    <label for="input2" class="col-md-2 control-label">著作权编号</label>
+                                    <div class="col-md-4"><input class="form-control" type="text"  id="input2" name="input2"></div>
+                                </div>
                             </div>
-
                             <div class="form-group">
                                 <div class="row">
-                                    <label class="col-md-2 control-label" style="text-align: center">著作编号</label>
-                                    <div class="col-md-2">
-                                        <p th:text="${copyrightinf.getBookId()}"></p>
-                                    </div>
-                                    </div>
+                                    <label for="input3" class="col-md-2 control-label">作者一</label>
+                                    <div class="col-md-2"><input class="form-control" type="text"  id="input3" name="input3"></div>
+                                    <label for="input4" class="col-md-2 control-label">作者二</label>
+                                    <div class="col-md-2"><input class="form-control" type="text"  id="input4" name="input4"></div>
+                                    <label for="input5" class="col-md-2 control-label">作者三</label>
+                                    <div class="col-md-2"><input class="form-control" type="text"  id="input5" name="input5"></div>
                                 </div>
+                                <br>
                                 <div class="row">
-                                    <label class="col-md-2 control-label" style="text-align: center">发表时间</label>
-                                    <div class="col-md-6">
-                                        <p th:text="${copyrightinf.getBookPublishDate()}"></p>
+                                    <label for="input6" class="col-md-2 control-label">发表时间</label>
+                                    <div class="col-md-4"><input class="form-control" type="text"  id="input6" name="input6" placeholder="请按照’2000-01-10‘格式输入"></div>
                                 </div>
+                                <br>
+                                <div class="row">
+                                    <label for="input7" class="col-md-2 control-label">著作简介</label>
+                                    <div class="col-md-10"><input class="form-control" type="text"  id="input7" name="input7"></div>
+                                </div>
+
                             </div>
 
-                                <div class="row">
-                                    <label  class="col-md-2 control-label" style="text-align: center">作者一</label>
-                                    <div class="col-md-2">
-                                        <p th:text="${copyrightinf.getAuthor1().getUserName()}"></p>
-                                    </div>
-                                    <label  class="col-md-2 control-label" style="text-align: center">作者二</label>
-                                    <div class="col-md-2">
-                                        <p th:text="${copyrightinf.getAuthor2().getUserName()}"></p>
-                                    </div>
-                                    <label  class="col-md-2 control-label" style="text-align: center">作者三</label>
-                                    <div class="col-md-2">
-                                        <p th:text="${copyrightinf.getAuthor3().getUserName()}"></p>
-                                    </div>
-
-                                 <!--   <label  class="col-md-1 control-label">发表状态</label>
-                                    <div class="col-md-3">
-                                        <p th:text="${copyrightinf.getBookPublishStatus()}"></p>
-                                    </div>
-                                   -->
-                                </div>
-                            <div class="row">
-                                    <label  class="col-md-2 control-label" style="text-align: center">创作性质</label>
-                                    <div class="col-md-2">
-                                        <p th:text="${copyrightinf.getCreativeNature()}"></p>
-                                    </div>
-                            </div>
 
                             <div class="row">
-                                <label  class="col-md-2 control-label" style="text-align: center">著作简介</label>
-                                <div class="col-md-10">
-                                    <div th:text="${copyrightinf.getBookInformation()}"></div>
+                                <div class="col-md-2 col-md-offset-4">
+                                <button th:type="submit" class="btn btn-warning"> 提交</button>
+                                </div>
+                                <div class="col-md-2 ">
+                                    <a th:href="@{MySoftwareCopyright}" ><div class="btn btn-warning"> 取消</div></a>
                                 </div>
                             </div>
-                        </div>
 
-
+                        </form>
 
                     </div>
                 </div>
 
             </div>
-            <br/>
+
+
+                <br/>
+
 
         </div>
 

@@ -67,37 +67,59 @@
                         <h3 class="panel-title ">登记论文</h3>
                     </div>
                     <div class="panel-body">
-                        <form role="form" method="post" th:action="@{AddThesisSubmit}" name="myform1">
+                        <form role="form" method="post" th:action="@{/EditThesisSubmit}" name="myform1">
+                            <input name="inputtmp" type="hidden" th:value="${thesistmpId}"/>
                             <div class="form-group">
                                 <div class="row">
-                                    <label for="input1" class="col-md-1 control-label col-md-offset-3">论文标题</label>
-                                    <div class="col-md-4">
-                                        <input class="form-control" id="input1" name="input1" type="text" placeholder="">
+                                    <label for="input1" class="col-md-1 control-label  col-md-offset-3 ">论文标题</label>
+                                    <div class="col-md-5 ">
+                                        <input class="form-control" id="input1" name="input1" type="text" th:value="${thesisinf.getThesisTitle()}">
                                     </div>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="row">
                                     <label for="input2" class="col-md-1 control-label">文章编号</label>
-                                    <div class="col-md-2"><input class="form-control" type="text"  id="input2" name="input2"></div>
-                                    <label for="input3" class="col-md-1 control-label">作者一</label>
-                                    <div class="col-md-2"><input class="form-control" type="text"  id="input3" name="input3"></div>
-                                    <label for="input4" class="col-md-1 control-label">作者二</label>
-                                    <div class="col-md-2"><input class="form-control" type="text"  id="input4" name="input4"></div>
-                                    <label for="input5" class="col-md-1 control-label">作者三</label>
-                                    <div class="col-md-2"><input class="form-control" type="text"  id="input5" name="input5"></div>
+                                    <div class="col-md-4"><input class="form-control" type="text"  id="input2" name="input2" th:value="${thesisinf.getThesisId()}"></div>
+
+                                    <label for="input3" class="col-md-1 col-md-offset-2 control-label">作者一</label>
+                                    <div class="col-md-3"><input class="form-control" type="text"  id="input3" name="input3" th:value="${thesisinf.getAuthor1().getUserName()}"></div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-md-1 control-label">作者二</div>
+                                    <div class="col-md-3">
+                                        <input class="form-control" type="text"  name="input4" th:value="${thesisinf.getAuthor2().getUserName()}" th:if="${thesisinf.getAuthor2()!=null}">
+                                        <input class="form-control" type="text"   name="input4" th:if="${thesisinf.getAuthor2()==null}">
+                                    </div>
+                                    <div class="col-md-1 col-md-offset-3 control-label">作者三</div>
+                                    <div class="col-md-3">
+                                        <input class="form-control" type="text"   name="input5" th:value="${thesisinf.getAuthor3().getUserName()}" th:if="${thesisinf.getAuthor3()!=null}">
+                                        <input class="form-control" type="text"  name="input5" th:if="${thesisinf.getAuthor3()==null}">
+                                    </div>
                                 </div>
                             </div>
 
                             <div class="form-group">
                                 <div class="row">
-                                    <label for="input6" class="col-md-1 control-label">刊名</label>
-                                    <div class="col-md-2"><input class="form-control" type="text"  id="input6" name="input6"></div>
-                                    <label for="input7" class="col-md-1 control-label">期，卷</label>
-                                    <div class="col-md-2"><input class="form-control" type="text"  id="input7" name="input7"></div>
-                                    <label for="input8" class="col-md-1 control-label">页数</label>
-                                    <div class="col-md-2"><input class="form-control" type="number"  id="input8" name="input8"></div>
-                                    <label  class="col-md-1 control-label">私密性</label>
+                                    <div class="col-md-1 control-label">刊名</div>
+                                    <div class="col-md-4">
+                                        <input class="form-control" type="text"  name="input6" th:value="${thesisinf.getJournal()}" th:if="${thesisinf.getJournal()!=null}">
+                                        <input class="form-control" type="text" name="input6" th:if="${thesisinf.getJournal()==null}">
+                                    </div>
+                                    <div  class="col-md-1 col-md-offset-2 control-label">期，卷</div>
+                                    <div class="col-md-3">
+                                        <input class="form-control" type="text"  name="input7" th:value="${thesisinf.getVolume()}" th:if="${thesisinf.getJournal()!=null}">
+                                        <input class="form-control" type="text"  name="input7" th:if="${thesisinf.getJournal()==null}">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="row">
+                                    <div  class="col-md-1 control-label">页数</div>
+                                    <div class="col-md-3"><input class="form-control" type="number"  id="input8" name="input8" th:value="${thesisinf.getPages()}"></div>
+                                    <label  class="col-md-1  col-md-offset-3 control-label">私密性</label>
                                     <label class="radio-inline">
                                         <input type="radio" name="optionsRadiosinline" id="optionsRadios3" value="0" checked> 公开
                                     </label>
@@ -110,7 +132,7 @@
                             <div class="form-group">
                                 <div class="row">
                                 <label for="input10" class="col-md-1 control-label">全文url</label>
-                                <div class="col-md-11"><input class="form-control" type="text"  id="input10" name="input10"></div>
+                                <div class="col-md-11"><input class="form-control" type="text"  id="input10" name="input10" th:value="${thesisinf.getUrl()}"></div>
                                 </div>
                             </div>
                             <div class="row">
@@ -156,8 +178,9 @@
         }else{
             myform1.submit();
         }
-        
     }
+
+
 </script>
 
 </body>

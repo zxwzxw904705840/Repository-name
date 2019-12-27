@@ -89,7 +89,8 @@ public class CopyrightManagement {
         BookEntity book =new BookEntity();
         UserEntity user=new UserEntity();
         String userid=request.getSession().getAttribute("userId").toString();
-        user=(UserEntity)userService.getUserById(userid).getObject(userid);
+        //user=(UserEntity)userService.getUserById(userid).getObject(userid);
+        user=userService.getUserById(userid);
 
         String title=request.getParameter("input1");
         String bookId=request.getParameter("input2");
@@ -167,7 +168,8 @@ public class CopyrightManagement {
     public String deleteCopyright(HttpServletRequest request,@RequestParam("params")List<String> bookidlist) {
         String userid=request.getSession().getAttribute("userId").toString();
         UserEntity user=new UserEntity();
-        user=(UserEntity)userService.getUserById(userid).getObject(userid);
+        //user=(UserEntity)userService.getUserById(userid).getObject(userid);
+        user=userService.getUserById(userid);
         System.out.println("/deleteCopyright:"+bookidlist);
         for(int i=0;i<bookidlist.size();i++){
             BookEntity book=new BookEntity();

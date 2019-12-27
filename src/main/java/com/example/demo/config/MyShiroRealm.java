@@ -39,7 +39,7 @@ public class MyShiroRealm extends AuthorizingRealm {
         param.put("passwd",passwd);
         System.out.println(param);
         // 从数据库获取对应用户名密码的用户
-        UserEntity userList = (UserEntity)userService.getUserById(userid).getObject(userid);
+        UserEntity userList = userService.getUserById(userid);//.getObject(userid);
         if (userList != null) {
             // 用户为禁用状态
 
@@ -63,27 +63,32 @@ public class MyShiroRealm extends AuthorizingRealm {
         logger.info("---------------- 执行 Shiro 权限获取 ---------------------");
         Object principal = principals.getPrimaryPrincipal();
         SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();
+
         // List<String> permissions = new ArrayList<String>();
+
         if (principal instanceof UserEntity) {
             UserEntity userLogin = (UserEntity) principal;
-            UserEntity user = (UserEntity)userService.getUserById(userLogin.getUserId()).getObject(userLogin.getUserId());
+            UserEntity user = userService.getUserById(userLogin.getUserId());//.getObject(userLogin.getUserId());
             Set<String> role = new HashSet<>();
             Set<String> permissions = new HashSet<>();
-            if (user.getCharacters().equals(0)) {
+            System.out.println("role="+user.getCharacters());
+            System.out.println("role number="+user.getCharacters().ordinal());
+            if (user.getCharacters().ordinal()==0) {
                 //Administration
                 role.add("Administration");
                 //  permissions.add("user:create");//用户的创建
                 //  permissions.add("items:add");//商品添加权限
 
-            } else if (user.getCharacters().equals(1)) {
+            } else if (user.getCharacters().ordinal()==1) {
                 //teacher
                 role.add("teacher");
-            } else if (user.getCharacters().equals(2)) {
+            } else if (user.getCharacters().ordinal()==2) {
                 //student
                 role.add("student");
             }
             authorizationInfo.addRoles(role);
-
+            System.out.println("role----------start-------------------");
+            System.out.println(authorizationInfo.getRoles().toString());
             logger.info(authorizationInfo.getRoles().toString());
             //  Set<String> permissions = userService.findPermissionsByUserId(userLogin.getId());
             //   authorizationInfo.addStringPermissions(permissions);

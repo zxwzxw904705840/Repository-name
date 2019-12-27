@@ -37,12 +37,12 @@
             <!-- mainmenu begin -->
             <nav  class="navbar" role="navigation" style="margin-bottom: 0">
                 <ul id="mainmenu" class="navbar-left">
-                    <li><a class="J_menuItem black" th:href="@{/index}">Home</a></li>
-                    <li><a class="J_menuItem" th:href="@{/MyThesis}">My Thesis</a></li>
-                    <li><a class="J_menuItem" th:href="@{/MySoftwareCopyright}">My Software Copyright</a></li>
-                    <li><a class="J_menuItem" th:href="@{/MyProject}">My Project</a></li>
-                    <li><a class="J_menuItem" th:href="@{/userManagement}">Management</a></li>
-                    <li><a class="J_menuItem" th:href="@{/}">Report Statistics</a></li>
+                    <li><a class="J_menuItem black" th:href="@{/index}" shiro:hasAnyRoles ="student,teacher,Administration">Home</a></li>
+                    <li><a class="J_menuItem" th:href="@{/MyThesis}" shiro:hasAnyRoles="teacher,Administration">My Thesis</a></li>
+                    <li><a class="J_menuItem" th:href="@{/MySoftwareCopyright}" shiro:hasAnyRoles="teacher,Administration">My Software Copyright</a></li>
+                    <li><a class="J_menuItem" th:href="@{/subjectManagement}" shiro:hasAnyRoles="teacher,Administration">My Project</a></li>
+                    <li><a class="J_menuItem" th:href="@{/userManagement}" shiro:hasRole="Administration">Management</a></li>
+                    <li><a class="J_menuItem" th:href="@{/}" shiro:hasRole="Administration">Report Statistics</a></li>
                     <li><a class="J_menuItem" th:text="${session.user.getUserName()}">谢文仲</a></li>
                     <li><a class="J_menuItem" th:href="@{logout}">退出</a></li>
                 </ul>
@@ -65,16 +65,22 @@
                 <div class="panel panel-warning ">
                     <div class="panel-heading text-center">
                         <h3 class="panel-title ">论文详情</h3>
-                    </div>
+                </div>
                     <div class="panel-body">
                             <div class="form-group">
-                                <div class="row">
-                                    <label  class="col-md-2 control-label col-md-offset-4 h3">论文标题:</label>
-                                    <div class="col-md-4 h3">
+                                <div class="row text-center">
+                                    <div class="h3 text-center">
                                         <p th:text="${thesisinf.getThesisTitle()}"></p>
                                     </div>
                                 </div>
                             </div>
+                        <div style="margin-left:68%;"  th:if="${thesisinf.getAuthor1().userId}==${session.user.getUserId()}">
+                            <!--                                <div class="btn-warning btn" th:onclick="edit1()">编辑</div>-->
+                            <a th:href="@{'/EditThesis/'+${ThesistmpId}}">
+                            <button class="btn-warning btn">编辑</button>
+                            </a>
+                        </div>
+                        <br/>
                             <div class="form-group">
                                 <div class="row">
                                     <label class="col-md-1 control-label">文章编号</label>
@@ -87,7 +93,7 @@
                                     </div>
                                     <label  class="col-md-1 control-label">作者二</label>
                                     <div class="col-md-3">
-                                        <p th:text="${thesisinf.getAuthor2().getUserName()}"></p>
+                                        <p th:text="${thesisinf.getAuthor2().getUserName()}" th:if="${thesisinf.getAuthor2()!=null}"></p>
                                     </div>
                                 </div>
                             </div>
@@ -96,15 +102,15 @@
                                 <div class="row">
                                     <label  class="col-md-1 control-label">作者三</label>
                                     <div class="col-md-3">
-                                        <p th:text="${thesisinf.getAuthor3().getUserName()}"></p>
+                                        <p th:text="${thesisinf.getAuthor3().getUserName()}" th:if="${thesisinf.getAuthor3()!=null}"></p>
                                     </div>
                                     <label class="col-md-1 control-label">刊名</label>
                                     <div class="col-md-3">
-                                        <p th:text="${thesisinf.getJournal()}"></p>
+                                        <p th:text="${thesisinf.getJournal()}" th:if="${thesisinf.getJournal()!=null}"></p>
                                     </div>
                                     <label  class="col-md-1 control-label">期，卷</label>
                                     <div class="col-md-3">
-                                        <p th:text="${thesisinf.getVolume()}"></p>
+                                        <p th:text="${thesisinf.getVolume()}" th:if="${thesisinf.getVolume()!=null}"></p>
                                     </div>
                                 </div>
                             </div>
@@ -113,7 +119,7 @@
                             <div class="row">
                                     <label  class="col-md-1 control-label">页数</label>
                                     <div class="col-md-3">
-                                        <p th:text="${thesisinf.getPages()}"></p>
+                                        <p th:text="${thesisinf.getPages()}" th:if="${thesisinf.getPages()!=null}"></p>
                                     </div>
                                     <label  class="col-md-1 control-label">私密性</label>
                                     <div class="col-md-3">
@@ -140,6 +146,8 @@
 
     </div>
     <input id="labeluserid" type="hidden" th:value="${session.userId}" />
+    <input id="labelThesistmpId" type="hidden" th:value="${ThesistmpId}" />
+
 </div>
 
 
@@ -149,6 +157,31 @@
 <script src="../js/bootstrap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
 <script src="../js/bootstrap-table.min.js"></script>
+<script>
+
+    function edit1() {
+        var ThesistmpId=document.getElementById("labelThesistmpId").value;
+        var url='/EditThesis/${'+ThesistmpId+'}';
+        console.log("url"+url);
+        url=encodeURI(url);
+        console.log("url1"+url);
+        url=encodeURI(url); //最重要的部分,两次调用encodeURI ,就是编码两次
+        console.log("url1"+url);
+        $.ajax({
+            type: "post",
+            url: "@{url}",
+            data: JSON.stringify(params),
+            dataType: 'json',
+            contentType: 'application/json;charset=UTF-8',
+            success: function (r) {
+                alert(r)
+            }
+        })
+
+
+
+    }
+</script>
 
 
 </body>

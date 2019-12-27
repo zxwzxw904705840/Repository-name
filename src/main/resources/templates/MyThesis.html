@@ -37,12 +37,12 @@
             <!-- mainmenu begin -->
             <nav  class="navbar" role="navigation" style="margin-bottom: 0">
                 <ul id="mainmenu" class="navbar-left">
-                    <li><a class="J_menuItem black" th:href="@{/index}">Home</a></li>
-                    <li><a class="J_menuItem" th:href="@{/MyThesis}">My Thesis</a></li>
-                    <li><a class="J_menuItem" th:href="@{/MySoftwareCopyright}">My Software Copyright</a></li>
-                    <li><a class="J_menuItem" th:href="@{/projectManagement}">My Project</a></li>
-                    <li><a class="J_menuItem" th:href="@{/userManagement}">Management</a></li>
-                    <li><a class="J_menuItem" th:href="@{/test}">Report Statistics</a></li>
+                    <li><a class="J_menuItem black" th:href="@{/index}" shiro:hasAnyRoles ="student,teacher,Administration">Home</a></li>
+                    <li><a class="J_menuItem" th:href="@{/MyThesis}" shiro:hasAnyRoles="teacher,Administration">My Thesis</a></li>
+                    <li><a class="J_menuItem" th:href="@{/MySoftwareCopyright}" shiro:hasAnyRoles="teacher,Administration">My Software Copyright</a></li>
+                    <li><a class="J_menuItem" th:href="@{/subjectManagement}" shiro:hasAnyRoles="teacher,Administration">My Project</a></li>
+                    <li><a class="J_menuItem" th:href="@{/userManagement}" shiro:hasRole="Administration">Management</a></li>
+                    <li><a class="J_menuItem" th:href="@{/}" shiro:hasRole="Administration">Report Statistics</a></li>
                     <li><a class="J_menuItem" th:text="${session.user.getUserName()}">谢文仲</a></li>
                     <li><a class="J_menuItem" th:href="@{logout}">退出</a></li>
 
@@ -64,7 +64,7 @@
         <div class="row">
             <div class="col-md-10 col-md-offset-1">
               <div class="row">
-                  <div class="col-md-7">
+                  <div class="col-md-8">
                 <form class="form-inline" id="search_from" name="search_from">
                     <label class="control-label" for="inputthesisId">Thesis ID：</label>
                     <input class="form-control headmargin" type="text" id="inputthesisId" name="thesisId"/>
@@ -89,24 +89,25 @@
 
                 <br/>
                 <!--table  class="table table-bordered" id="table_list"></table-->
-                <div class="panel panel-warning" th:each="list:${thesisList}">
+                <div class="panel panel-warning" th:each="list,listStat:${thesisList}">
                     <a th:href="@{'/ThesisDetail/'+${list.getThesisId()}}">
+                        <input id="labelurl" type="hidden"  />
                         <div class="panel-body">
                             <div class="row">
-                                <div class="col-md-2 panel-title">
-                                    <p th:text="${list.getThesisId()}"></p>
+                                <div class="col-md-3 panel-title">
+                                    <p th:text="${urlreal.get(listStat.index)}"></p>
                                 </div>
                                 <div class="col-md-3  panel-title">
                                     <p th:text="${list.getThesisTitle()}">名称</p>
                                 </div>
-                                <div class="col-md-2 panel-title">
+                                <div class="col-md-1 panel-title">
                                     <p th:text="${list.getAuthor1().getUserName()}">作者1名称</p>
                                 </div>
-                                <div class="col-md-2 panel-title">
+                                <div class="col-md-3 panel-title">
                                     <p th:text="${list.getJournal()}"></p>
                                 </div>
                                 <label class="checkbox-inline col-md-1">
-                                    <input type="checkbox" name="optionsCheckboxinline"  th:value="${list.getThesisId()}">
+                                    <input type="checkbox" name="optionsCheckboxinline"  th:value="${urlreal.get(listStat.index)}">
                                 </label>
                             </div>
                         </div>
@@ -141,94 +142,9 @@
 
         var userid = document.getElementById("labeluserid").value;
 
-        dataTableHot = $("#table_list").bootstrapTable({
-            //使用get请求到服务器获取数据
-            method: "POST",
-            //必须设置，不然request.getParameter获取不到请求参数
-            contentType: "application/x-www-form-urlencoded",
-            //获取数据的Servlet地址
-            url: "/findTBlist",
-            //表格显示条纹
-            striped: true,
-            //启动分页
-            pagination: true,
-            //每页显示的记录数
-            pageSize: 10,
-            //当前第几页
-            pageNumber: 1,
-            //记录数可选列表
-            pageList: [5, 10, 15, 20, 25],
-            //是否启用查询
-            search: false,
-            //表示服务端请求
-            sidePagination: "server",
-            //设置为undefined可以获取pageNumber，pageSize，searchText，sortName，sortOrder
-            //设置为limit可以获取limit, offset, search, sort, order
-            //  queryParamsType: "undefined",
-            // queryParams: queryParams,
-            queryParamsType: "",
-            queryParams: getParams,
-            //json数据解析
-            responseHandler: function (res) {
-                console.log("res", res)
-                return {
-                    "rows": res.rows,
-                    "total": res.total
-                };
-            },
-            //数据列
-            columns: [
-                {
-                    checkbox: true
-                },
-                {
-                    field: 'Number',//可不加
-                    title: '序号',//标题  可不加
-                    formatter: function (value, row, index) {
-                        return index + 1;
-                    }
-                }, {
-                    title: "Thesis ID",
-                    field: "Thesis ID",
 
-                }, {
-                    title: "Thesis Title",
-                    field: "Thesis Title"
-                }, {
-                    title: "Author1",
-                    field: "author1"
-                }, {
-                    title: "Journal",
-                    field: "Journal"
-                }]
-
-
-        });
     });
 
-    /*
-* 设置额外BootstrapTable请求参数
-**/
-    // function queryParams(params) {
-    function getParams(params) {
-
-        return {
-            //表格显示条纹
-            striped: true,
-            //启动分页
-            pagination: true,
-            //     pageSize: 10,
-            //当前第几页
-            //    pageNumber: 1,
-            pageSize : params.pageSize,
-            pageNumber : params.pageNumber,
-            //记录数可选列表
-            pageList: [5, 10, 15, 20, 25],
-            thesisId: $('#search_from input[name=\'Thesis ID\']').val(),	// 请求时向服务端传递的参数
-            thesisTitle: $('#search_from input[name=\'Thesis Title\']').val(),		// 请求时向服务端传递的参数
-
-        }
-    }
     function deleteThesis() {
         var thsisidlist =new Array();
         var dd = '';
