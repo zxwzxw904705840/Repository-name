@@ -37,7 +37,7 @@ public class ProjectManagementServiceImpl implements ProjectManagementService {
         /*
         分页
          */
-        int index = offset * limit;
+        int index = offset;
         ArrayList<ProjectEntity> projectEntityArrayList = new ArrayList<ProjectEntity>();
         for(int i = index ; i<index+limit;i++){
             if(i>=projectEntities.size()){
@@ -63,7 +63,7 @@ public class ProjectManagementServiceImpl implements ProjectManagementService {
         String projectName = "%" + project.getProjectName() + "%";
         ArrayList<ProjectEntity> projectEntities = projectRepository.findAllByProjectNameLike(projectName);
 
-        int index = offset * limit;
+        int index = offset;
         ArrayList<ProjectEntity> projectEntityArrayList = new ArrayList<ProjectEntity>();
         for(int i = index ; i<index+limit;i++){
             if(i>=projectEntities.size()){
@@ -85,7 +85,7 @@ public class ProjectManagementServiceImpl implements ProjectManagementService {
         }
         ArrayList<InstituteEntity> instituteEntities = instituteRepository.findAll();
 
-        int index = offset * limit;
+        int index = offset;
         ArrayList<InstituteEntity> instituteEntityArrayList = new ArrayList<InstituteEntity>();
         for(int i = index ; i<index+limit;i++){
             if(i>=instituteEntities.size()){
