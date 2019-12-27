@@ -36,12 +36,12 @@
                         <!-- mainmenu begin -->
                         <nav  class="navbar" role="navigation" style="margin-bottom: 0">
                             <ul id="mainmenu" class="navbar-left">
-                                <li><a class="J_menuItem black" th:href="@{index}">Home</a></li>
-                                <li><a class="J_menuItem" th:href="@{MyThesis}">My Thesis</a></li>
-                                <li><a class="J_menuItem" th:href="@{MySoftwareCopyright}">My Software Copyright</a></li>
-            <li><a class="J_menuItem" href="ThesisListResult.html">My Project</a></li>
-            <li><a class="J_menuItem" href="AddThesis.html">Management</a></li>
-            <li><a class="J_menuItem" href="ThesisDetail.html">Report Statistics</a></li>
+                                <li><a class="J_menuItem black" th:href="@{/index}">Home</a></li>
+                                <li><a class="J_menuItem" th:href="@{/MyThesis}">My Thesis</a></li>
+                                <li><a class="J_menuItem" th:href="@{/MySoftwareCopyright}">My Software Copyright</a></li>
+                                <li><a class="J_menuItem" th:href="@{/MyProject}">My Project</a></li>
+                                <li><a class="J_menuItem" th:href="@{/userManagement}">Management</a></li>
+                                <li><a class="J_menuItem" th:href="@{/}">Report Statistics</a></li>
                                 <li><a class="J_menuItem" th:text="${session.user.getUserName()}">谢文仲</a></li>
                                 <li><a class="J_menuItem" th:href="@{logout}">退出</a></li>
              
@@ -63,7 +63,9 @@
             </div>
             <div class="row">
                 <div class="col-md-8 col-md-offset-2" >
-                    <div class="panel panel-warning" th:each="list:${thesisList}">
+                    <br>
+                    <h3 th:if="${thesisList.size()==0}" class="text-center" style="margin-top: 100px;"> 未查询到结果！</h3>
+                    <div class="panel panel-warning" th:each="list:${thesisList}" th:if="${thesisList.size()!=0}">
                         <a th:href="@{'/ThesisDetail/'+${list.getThesisId()}}">
 
                             <div class="panel-heading panel-warning">
@@ -84,7 +86,7 @@
                             </div>
                         </a>
 
-                    </div>
+                    </div> <!-- panel panel-warning -->
                 </div>
             </div>
 

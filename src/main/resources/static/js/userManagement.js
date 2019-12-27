@@ -62,7 +62,7 @@ $(document).ready(function () {
         //是否启用查询
         search: false,
         //表示服务端请求
-        sidePagination: "server",
+        sidePagination: "client", //server
         //设置为undefined可以获取pageNumber，pageSize，searchText，sortName，sortOrder
         //设置为limit可以获取limit, offset, search, sort, order
         //  queryParamsType: "undefined",
@@ -70,13 +70,13 @@ $(document).ready(function () {
         queryParamsType: "",
         queryParams: getParams,
         //json数据解析
-        responseHandler: function (res) {
+        /*responseHandler: function (res) {
             console.log("res", res)
             return {
                 "rows": res.rows,
-                "total": res.total
+             /!*   "total": res.total*!/
             };
-        },
+        },*/
         //数据列
         columns: [
             {
@@ -94,12 +94,30 @@ $(document).ready(function () {
 
             }, {
                 title: "职称",
-                field: "title"
+                field: "title",
+                formatter: function (value, row, index) {
+                    var operateHtml='';
+                    var exp = row.title;
+                    var tt=title(exp);
+                    operateHtml  = '<span> '+tt+'</span>';
+
+                    return operateHtml;
+                }
             }, {
                 title: "所属学院",
-                field: "institutefunction",
+                field: "instituteOpt",
                 formatter: function (value, row, index) {
-                    var operateHtml  = '<span> '+row.institute.instituteName+'</span>';
+                    var operateHtml='';
+                    var exp = row.institute;
+
+                    if (!exp && typeof(exp)!="undefined" && exp!=0)
+                    {
+                        operateHtml  = '<span> '+"暂无"+'</span>';
+                    }else{
+                        operateHtml  = '<span> '+exp.instituteName+'</span>';
+                    }
+
+
                     return operateHtml;
                 }
             }, {
@@ -113,10 +131,12 @@ $(document).ready(function () {
                 field: "userStatus",
                 formatter: function (value, row, index) {
                     var operateHtml;
-                    if (row.user_status == 0) {
+                    if (row.userStatus == "NORMAL") {
                         operateHtml = '<span> 正常</span>';
-                    } else {
+                    } else if(row.userStatus == "REVIEWING"){
                         operateHtml = '<span class=" btn_blue" onclick="agreeModal(\'' + row.userId + '\')"> 升级审核</span>';
+                    }else{
+                        operateHtml = '<span> 删除</span>';
                     }
 
                     return operateHtml;
@@ -197,8 +217,18 @@ function editModal(result) {
         modal.find('.modal-body #me_phoneInput').val(data.phone);
         modal.find('.modal-body #me_passwordInput').val(data.password);
         modal.find('.modal-body #me_userNameInput').val(data.userName);
-        modal.find('.modal-body #me_instituteNameInput').val(data.institute.instituteName);
-        modal.find('.modal-body #me_titleInput').val(data.title);
+        var exp =data.institute;
+
+        if (!exp && typeof(exp)!="undefined" && exp!=0)
+        {
+            modal.find('.modal-body #me_instituteNameInput').val("暂无");
+
+        }else{
+            modal.find('.modal-body #me_instituteNameInput').val(exp.instituteName);
+        }
+
+
+        modal.find('.modal-body #me_titleInput').val(title(data.title));
 
 
     }).modal("show");
@@ -283,8 +313,8 @@ function search() {
  * 页面 批量删除
  */
 $("#deleteBtn").on("click", function () {
-    layer.confirm('是否确认删除？', {title:"删除提醒"} ,{
-        btn: ['确认', '再考虑一下'] //按钮
+    layer.confirm('是否确认删除？', {
+        btn: ['确认', '删除'] //按钮
     }, function () {
         var rows = $("#table_list").bootstrapTable('getSelections');// 获得要删除的数据
         if (rows.length == 0) {// rows 主要是为了判断是否选中，下面的else内容才是主要
@@ -297,14 +327,14 @@ $("#deleteBtn").on("click", function () {
             deleteMs(ids)
         }
     });
-
-
 })
+
 
 /**
  * 页面 批量删除续 ajax
  */
 function deleteMs(ids) {
+    console.log("deleteMs",ids)
     $.ajax({
         url: "/RemoveUser",
         data: "ids=" + ids,
@@ -337,6 +367,8 @@ function deleteMs(ids) {
 $("#ma_addBtn").on("click", function () {
 
     var userInfo = new Object();
+
+    userInfo.userId = document.getElementById("ma_userIdInput").value;
     userInfo.userName = document.getElementById("ma_userNameInput").value;
     userInfo.password = document.getElementById("ma_passwordInput").value;
     userInfo.phone = document.getElementById("ma_phoneInput").value;
@@ -368,6 +400,7 @@ $("#ma_addBtn").on("click", function () {
                 layer.msg('成功', {icon: 1});
                 $('#addUserModal').modal('hide');//隐藏modal
                 $('.modal-backdrop').remove();//去掉遮罩层
+                $('#table_list').bootstrapTable(('refresh'));// 很重要的一步，刷新url
             }else{
                 layer.msg('失败', {icon: 2});
             }
@@ -404,7 +437,7 @@ $("#ImportUserExcelBtn").on("click", function () {
             success: function (data) {
 
                 console.log(data)
-                if(data=="true"){
+                if(data.split(" ")[0]=="true"){
                     layer.msg('导入成功', {icon: 1});
                     $('#importUserModal').modal('hide');//隐藏modal
                     $('.modal-backdrop').remove();//去掉遮罩层
@@ -469,6 +502,8 @@ $("#me_userName_a").on("click", function () {
                 }else{
                     layer.msg('修改失败', {icon: 2});
                 }
+            },  error: function (data) {
+                layer.alert('操作失败', {icon: 2});
             }
 
         })
@@ -494,7 +529,7 @@ $("#me_password_a").on("click", function () {
         console.log(password, userId)
         $.ajax({
             url: "/SetPassword",
-            dataType: "json",
+
             data: {
                 userId: userId,
                 password:password
@@ -509,6 +544,8 @@ $("#me_password_a").on("click", function () {
                 }else{
                     layer.msg('修改失败', {icon: 2});
                 }
+            },  error: function (data) {
+                layer.alert('操作失败', {icon: 2});
             }
 
         })
@@ -534,7 +571,7 @@ $("#me_phone_a").on("click", function () {
         console.log(phone, userId)
         $.ajax({
             url: "/SetPhone",
-            dataType: "json",
+
             data: {
                 userId: userId,
                 phone:phone
@@ -549,6 +586,8 @@ $("#me_phone_a").on("click", function () {
                 }else{
                     layer.msg('修改失败', {icon: 2});
                 }
+            },  error: function (data) {
+                layer.alert('操作失败', {icon: 2});
             }
 
         })
@@ -574,7 +613,7 @@ $("#me_email_a").on("click", function () {
         console.log(email, userId)
         $.ajax({
             url: "/SetEmail",
-            dataType: "json",
+
             data: {
                 userId: userId,
                 email:email
@@ -589,6 +628,8 @@ $("#me_email_a").on("click", function () {
                 }else{
                     layer.msg('修改失败', {icon: 2});
                 }
+            },  error: function (data) {
+                layer.alert('操作失败', {icon: 2});
             }
 
         })
@@ -618,7 +659,7 @@ $("#me_title_a").on("click", function () {
 
         $.ajax({
             url: "/SetTitle",
-            dataType: "json",
+
             data: {
                 userId: userId,
                 title:title
@@ -633,6 +674,8 @@ $("#me_title_a").on("click", function () {
                 }else{
                     layer.msg('修改失败', {icon: 2});
                 }
+            },  error: function (data) {
+                layer.alert('操作失败', {icon: 2});
             }
 
         })
@@ -662,7 +705,7 @@ $("#me_instituteName_a").on("click", function () {
         console.log(instituteName, instituteId, userId)
         $.ajax({
             url: "/SetInstituteId",
-            dataType: "json",
+
             data: {
                 userId: userId,
                 instituteId:instituteId
@@ -677,6 +720,8 @@ $("#me_instituteName_a").on("click", function () {
                 }else{
                     layer.msg('修改失败', {icon: 2});
                 }
+            },  error: function (data) {
+                layer.alert('操作失败', {icon: 2});
             }
 
         })
@@ -684,5 +729,21 @@ $("#me_instituteName_a").on("click", function () {
     }
 
 
-
 })
+
+
+function title(tt) {
+    if(tt=="LECTURER"){
+        return  "讲师"
+    } else if(tt=="ASSOCIATE_PROFESSOR") {
+        return "副教授"
+    }else if(tt=="PROFESSOR") {
+        return  "教授"
+    }else if(tt=="ASSOCIATE_RESEARCHER") {
+        return "副研究员"
+    }else if(tt=="RESEARCHER") {
+        return "研究员"
+    }else {
+        return "暂无"
+    }
+}

@@ -2,7 +2,7 @@
 <html lang="zh_CN">
 <head>
     <meta charset="UTF-8">
-    <title>科研论文管理</title>
+    <title>科研著作管理</title>
     <link href="../assets/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/4.7.0/css/font-awesome.css">
     <link href="../assets/css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
@@ -22,7 +22,7 @@
 
 </head>
 <body>
-
+<input type="hidden" id="authorType"/>
 <div class="container-fluid margin10Top">
     <div class="row container-row">
         <div class="col-md-12">
@@ -32,14 +32,14 @@
                     <!--title -->
                     <div class="row row_title">
                         <div class="col-md-12 row_title_column">
-                            <strong class="row_title_strong">科研论文管理</strong>
+                            <strong class="row_title_strong">科研著作管理</strong>
 
                             <button type="button" id="searchBtn" onclick="search()"
                                     class="btn btn_purple searchBtn margin5"><span
                                     aria-hidden="true"></span> 搜索
                             </button>
-                            <input class="searchInput" id="thesisTitleInput" name="thesisTitle" type="text"
-                                   placeholder="论文标题"/>
+                            <input class="searchInput" id="bookNameInput" name="bookName" type="text"
+                                   placeholder="著作标题"/>
 
                         </div>
                     </div>
@@ -55,7 +55,9 @@
                                     class="btn btn_purple floatR margin5"><span
                                     aria-hidden="true"></span> 导入
                             </button>
-
+                            <button type="button" id="deleteBtn" class="btn btn_purple floatR margin5"><span
+                                    aria-hidden="true"></span> 删除
+                            </button>
                             <button type="button" id="addBtn"
                                     class="btn btn_purple floatR margin5"><span
                                     aria-hidden="true"></span> 登记
@@ -107,15 +109,43 @@
 
                 <div class="row margin10b">
                     <div class="col-md-3  add_span">
-                        <span> 作者</span>
+                        <span> 作者1</span>
                     </div>
                     <div class="col-md-8 add_col8 span-div">
-                        <div id="ma_authorSpan">
-                            <span> 123<i  class="iDelete" onclick="deleteMemberSpan(this)">x</i></span>
-                        </div>
-                        <button class=" btn noradius btn_purple flexright " id="addModalAddUser" onclick="addAuthorModal()">添加</button>
+
+                        <input type="hidden" class="form-control" id="ma_author1idInput"/>
+                        <input type="text" class="form-control" id="ma_author1Input"  disabled="disabled" placeholder="请输入第一作者"/>
+                        <button class=" btn noradius btn_purple flexright "  onclick="addAuthorModal(1)">添加</button>
+                        <button class=" btn noradius btn_purple flexright " onclick="deleteAuthor(1)">清空</button>
+
                     </div>
                 </div>
+                <div class="row margin10b">
+                    <div class="col-md-3  add_span">
+                        <span> 作者2</span>
+                    </div>
+                    <div class="col-md-8 add_col8 span-div">
+
+                        <input type="hidden" class="form-control" id="ma_author2idInput"/>
+
+                        <input type="text" class="form-control" id="ma_author2Input"  disabled="disabled" placeholder="请输入第二作者"/>
+                        <button class=" btn noradius btn_purple flexright "  onclick="addAuthorModal(2)">添加</button>
+                        <button class=" btn noradius btn_purple flexright " onclick="deleteAuthor(2)">清空</button>
+                    </div>
+                </div>
+
+                <div class="row margin10b">
+                    <div class="col-md-3  add_span">
+                        <span> 作者3</span>
+                    </div>
+                    <div class="col-md-8 add_col8 span-div">
+                        <input type="hidden" class="form-control" id="ma_author3idInput"/>
+                        <input type="text" class="form-control" id="ma_author3Input" disabled="disabled" placeholder="请输入第三作者"/>
+                        <button class=" btn noradius btn_purple flexright "  onclick="addAuthorModal(3)">添加</button>
+                        <button class=" btn noradius btn_purple flexright " onclick="deleteAuthor(3)">清空</button>
+                    </div>
+                </div>
+
 
                 <div class="row margin10b">
                     <div class="col-md-3  add_span">
@@ -167,18 +197,7 @@
                     </div>
                 </div>
 
-                <div class="row margin10b " id="levelDiv">
-                    <div class="col-md-3  add_span">
-                        <span> 私密性</span>
-                    </div>
-                    <div class="col-md-8 add_col8">
-                        <select id="ma_statusSelect" name="status">
-                            <option value="NORMAL">正常</option>
-                            <option value="REVIEWING">审核中</option>
-                            <option value="DELETED">被删除</option>
-                        </select>
-                    </div>
-                </div>
+
 
             </div>
             <div class="modal-footer">
@@ -236,337 +255,167 @@
                     &times;
                 </button>
                 <h4 class="modal-title" id="editModalLabel">
-                    项目详情
+                    论文详情
                 </h4>
             </div>
             <div class="modal-body" style="padding: 20px">
                 <div class="tabbable" id="tabs-860429">
-                    <ul class="nav nav-tabs">
-                        <li class="nav-item">
-                            <a class="nav-link" href="#common" data-toggle="tab">基本信息</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link active show" href="#user" data-toggle="tab">项目成员</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link active show" href="#file" data-toggle="tab">项目文件</a>
-                        </li>
 
-                    </ul>
                     <div class="tab-content">
                         <div class="tab-pane active" id="common">
 
-                            <input type="hidden" id="me_projectIdInput"/>
+                            <input type="hidden" id="me_thesisIdInput"/>
                             <div class="row margin10b adiv">
                                 <div class="col-md-3  add_span">
-                                    <span> 项目代码</span>
+                                    <span> 论文标题</span>
                                 </div>
                                 <div class="col-md-7 add_col8">
-                                    <input type="text" class="form-control" id="me_projectCodeInput" placeholder="请输入项目代码"
-                                           name="projectCode" disabled="disabled">
+                                    <input type="text" class="form-control" id="me_thesisTitleInput" placeholder="请输入论文标题"
+                                           name="thesisTitle" disabled="disabled">
                                 </div>
                                 <div class="col-md-2 add_col8 ">
-                                    <a type="botton" class="ahide paddingTop5" href="javascript:void(0);" id="me_projectCode_a">修改</a>
+                                    <a type="botton" class="ahide paddingTop5" href="javascript:void(0);" id="me_thesisTitle_a">修改</a>
                                 </div>
 
                             </div>
 
                             <div class="row margin10b adiv">
                                 <div class="col-md-3  add_span">
-                                    <span> 项目名称</span>
+                                    <span> 作者1</span>
                                 </div>
                                 <div class="col-md-7 add_col8">
-                                    <input type="text" class="form-control" id="me_projectNameInput" placeholder="请输入项目名称"
-                                           name="projectName" disabled="disabled">
+                                    <input type="text" class="form-control" id="me_author1Input" placeholder="请输入第一作者"
+                                           name="author1" disabled="disabled"/>
+                                    <input type="hidden" id="me_author1idInput"/>
                                 </div>
                                 <div class="col-md-2 add_col8 ">
-                                    <a type="botton" class="ahide paddingTop5" href="javascript:void(0);" id="me_projectName_a">修改</a>
+                                    <a type="botton" class="ahide paddingTop5" href="javascript:void(0);" id="me_author1_a">修改</a>
                                 </div>
+
                             </div>
 
-                            <!--  <div class="row margin10b adiv">
-                                  <div class="col-md-3  add_span">
-                                      <span> 项目负责人</span>
-                                  </div>
-                                  <div class="col-md-7 add_col8">
-                                      <input type="text" class="form-control" id="me_projectManagerIdInput" placeholder="请输入项目负责人"
-                                             name="projectManagerId">
-                                  </div>
-                                  <div class="col-md-2 add_col8 ">
-                                      <a type="botton" class="ahide paddingTop5" href="javascript:void(0);" id="me_projectManagerId_a">修改</a>
-                                  </div>
-                              </div>-->
+                            <div class="row margin10b adiv">
+                                <div class="col-md-3  add_span">
+                                    <span> 作者2</span>
+                                </div>
+                                <div class="col-md-7 add_col8">
+                                    <input type="text" class="form-control" id="me_author2Input" placeholder="请输入第二作者"
+                                           name="author1" disabled="disabled"/>
+                                    <input type="hidden" id="me_author2idInput"/>
+                                </div>
+                                <div class="col-md-2 add_col8 ">
+                                    <a type="botton" class="ahide paddingTop5" href="javascript:void(0);" id="me_author2_a">修改</a>
+                                </div>
 
+                            </div>
+
+                            <div class="row margin10b adiv">
+                                <div class="col-md-3  add_span">
+                                    <span> 作者3</span>
+                                </div>
+                                <div class="col-md-7 add_col8">
+                                    <input type="text" class="form-control" id="me_author3Input" placeholder="请输入第三作者"
+                                           name="author1" disabled="disabled">
+                                    <input type="hidden" id="me_author3idInput"/>
+                                </div>
+                                <div class="col-md-2 add_col8 ">
+                                    <a type="botton" class="ahide paddingTop5" href="javascript:void(0);" id="me_author3_a">修改</a>
+                                </div>
+
+                            </div>
+
+                            <div class="row margin10b adiv">
+                                <div class="col-md-3  add_span">
+                                    <span> 刊名</span>
+                                </div>
+                                <div class="col-md-7 add_col8">
+                                    <input type="text" class="form-control" id="me_journalInput" placeholder="请输入刊名"
+                                           name="journal" disabled="disabled">
+                                </div>
+                                <div class="col-md-2 add_col8 ">
+                                    <a type="botton" class="ahide paddingTop5" href="javascript:void(0);" id="me_journal_a">修改</a>
+                                </div>
+
+                            </div>
+
+                            <div class="row margin10b adiv">
+                                <div class="col-md-3  add_span">
+                                    <span> 期，卷</span>
+                                </div>
+                                <div class="col-md-7 add_col8">
+                                    <input type="text" class="form-control" id="me_volumeInput" placeholder="请输入期，卷"
+                                           name="volume" disabled="disabled">
+                                </div>
+                                <div class="col-md-2 add_col8 ">
+                                    <a type="botton" class="ahide paddingTop5" href="javascript:void(0);" id="me_volume_a">修改</a>
+                                </div>
+
+                            </div>
+
+                            <div class="row margin10b adiv">
+                                <div class="col-md-3  add_span">
+                                    <span> 全文url</span>
+                                </div>
+                                <div class="col-md-7 add_col8">
+                                    <input type="text" class="form-control" id="me_urlInput" placeholder="请输入全文url"
+                                           name="url" disabled="disabled">
+                                </div>
+                                <div class="col-md-2 add_col8 ">
+                                    <a type="botton" class="ahide paddingTop5" href="javascript:void(0);" id="me_url_a">修改</a>
+                                </div>
+
+                            </div>
+
+                            <div class="row margin10b adiv">
+                                <div class="col-md-3  add_span">
+                                    <span> 页数</span>
+                                </div>
+                                <div class="col-md-7 add_col8">
+                                    <input type="text" class="form-control" id="me_pagesInput" placeholder="请输入页数"
+                                           name="pages" disabled="disabled">
+                                </div>
+                                <div class="col-md-2 add_col8 ">
+                                    <a type="botton" class="ahide paddingTop5" href="javascript:void(0);" id="me_pages_a">修改</a>
+                                </div>
+
+                            </div>
 
                             <div class="row margin10b adiv " >
                                 <div class="col-md-3  add_span">
-                                    <span> 项目类型</span>
+                                    <span> 私密性</span>
                                 </div>
-                                <div class="col-md-7 add_col8">
-                                    <span id="me_projectTypeInput">创业类</span>
-                                    <select id="me_projectTypeSelect" name="projectType" class="hide">
-                                        <option value="INNOVATION">创新类</option>
-                                        <option value="ENTREPRENEUR">创业类</option>
+                                <div class="col-md-7 add_col8 span-div">
+                                    <span id="me_privacyInput" class="paddingTop5">公开</span>
+                                    <select id="me_privacySelect" name="privacy" class="hide">
+                                        <option value="PUBLIC">公开</option>
+                                        <option value="PRIVATE">私密</option>
 
                                     </select>
                                 </div>
                                 <div class="col-md-2 add_col8 ">
-                                    <a type="botton" class="ahide paddingTop5" href="javascript:void(0);" id="me_projectType_a">修改</a>
+                                    <a type="botton" class="ahide paddingTop5" href="javascript:void(0);" id="me_privacy_a">修改</a>
                                 </div>
                             </div>
 
-                            <div class="row margin10b adiv ">
-                                <div class="col-md-3  add_span">
-                                    <span> 项目等级</span>
-                                </div>
-                                <div class="col-md-7 add_col8">
-                                    <span id="me_projectLevelInput">校级</span>
-
-                                    <select id="me_projectLevelSelect" name="projectLevel"  class="hide">
-                                        <option value="SCHOOL">校级</option>
-                                        <option value="CITY">市级</option>
-                                        <option value="PROVINCIAL">省级</option>
-                                        <option value="NATIONAL">国家级</option>
-                                        <option value="OTHER">其他</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-2 add_col8 ">
-                                    <a type="botton" class="ahide paddingTop5" href="javascript:void(0);" id="me_projectLevel_a">修改</a>
-                                </div>
-                            </div>
-
-                            <div class="row margin10b adiv ">
-                                <div class="col-md-3  add_span">
-                                    <span> 项目进度</span>
-                                </div>
-                                <div class="col-md-7 add_col8">
-                                    <span id="me_projectProgressInput">开题</span>
-                                    <select id="me_projectProgressSelect" name="projectProgress" class="hide">
-
-                                        <option value="OPEN_QUESTION">开题</option>
-                                        <option value="IN_PROGRESS">进行中</option>
-                                        <option value="COMPLETE">完成</option>
-
-                                    </select>
-                                </div>
-                                <div class="col-md-2 add_col8 ">
-                                    <a type="botton" class="ahide paddingTop5" href="javascript:void(0);" id="me_projectProgress_a">修改</a>
-                                </div>
-                            </div>
-
-                            <div class="row margin10b adiv">
-                                <div class="col-md-3  add_span">
-                                    <span> 项目来源单位</span>
-                                </div>
-                                <div class="col-md-7 add_col8">
-                                    <input type="text" class="form-control" id="me_projectSourceInput" placeholder="请输入项目来源单位"
-                                           name="projectSource" disabled="disabled">
-                                </div>
-                                <div class="col-md-2 add_col8 ">
-                                    <a type="botton" class="ahide paddingTop5" href="javascript:void(0);" id="me_projectSource_a">修改</a>
-                                </div>
-                            </div>
-
-                            <div class="row margin10b adiv">
-                                <div class="col-md-3  add_span">
-                                    <span> 项目立项日期</span>
-                                </div>
-                                <div class="col-md-7 add_col8">
-                                    <div class='input-group date mydatetimepicker' >
-                                        <input type='text' id="me_projectEstablishDateInput" placeholder="请输入项目立项日期"
-                                               name="projectEstablishDate" class="form-control" disabled="disabled"/>
-                                        <span class="input-group-addon">
-                    <span class="glyphicon glyphicon-calendar"></span>
-                </span>
-                                    </div>
-                                </div>
-                                <div class="col-md-2 add_col8 ">
-                                    <a type="botton" class="ahide paddingTop5" href="javascript:void(0);" id="me_projectEstablishDate_a">修改</a>
-                                </div>
-
-                            </div>
-
-                            <div class="row margin10b adiv">
-                                <div class="col-md-3  add_span">
-                                    <span> 计划完成日期</span>
-                                </div>
-                                <div class="col-md-7 add_col8">
-                                    <div class='input-group date mydatetimepicker' >
-                                        <input type='text' id="me_projectPlannedDateInput" placeholder="请输入计划完成日期"
-                                               name="projectPlannedDate" class="form-control" disabled="disabled"/>
-                                        <span class="input-group-addon">
-                    <span class="glyphicon glyphicon-calendar"></span>
-                </span>
-                                    </div>
-
-                                </div>
-                                <div class="col-md-2 add_col8 ">
-                                    <a type="botton" class="ahide paddingTop5" href="javascript:void(0);" id="me_projectPlannedDate_a">修改</a>
-                                </div>
-
-                            </div>
-
-                            <div class="row margin10b adiv">
-                                <div class="col-md-3  add_span">
-                                    <span> 结项日期</span>
-                                </div>
-                                <div class="col-md-7 add_col8">
-                                    <div class='input-group date mydatetimepicker' >
-                                        <input type='text' id="me_projectFinishDateInput" placeholder="请输入结项日期"
-                                               name="projectFinishDate" class="form-control" disabled="disabled"/>
-                                        <span class="input-group-addon">
-                    <span class="glyphicon glyphicon-calendar"></span>
-                </span>
-                                    </div>
-
-                                </div>
-                                <div class="col-md-2 add_col8 ">
-                                    <a type="botton" class="ahide paddingTop5" href="javascript:void(0);" id="me_projectFinishDate_a">修改</a>
-                                </div>
-
-                            </div>
 
 
-                            <div class="row margin10b adiv">
-                                <div class="col-md-3  add_span">
-                                    <span> 合同经费</span>
-                                </div>
-                                <div class="col-md-7 add_col8">
-                                    <input type="text" class="form-control" id="me_projectFundInput" placeholder="请输入项目来源单位"
-                                           name="projectFund" disabled="disabled">
-                                </div>
-                                <div class="col-md-2 add_col8 ">
-                                    <a type="botton" class="ahide paddingTop5" href="javascript:void(0);" id="me_projectFund_a">修改</a>
-                                </div>
-
-                            </div>
-
-                            <div class="row margin10b adiv">
-                                <div class="col-md-3  add_span">
-                                    <span> 项目来源类别</span>
-                                </div>
-                                <div class="col-md-7 add_col8">
-                                    <span id="me_projectSourceTypeInput">企业</span>
-                                    <select id="me_projectSourceTypeSelect" name="projectSourceType" class="hide">
-                                        <option value="ENTERPRISE">企业</option>
-                                        <option value="GOVERNMENT">政府</option>
-                                        <option value="SCHOOL">学校</option>
-                                        <option value="COMMUNITY">学校</option>
-                                        <option value="PERSONAL">个人</option>
-
-                                    </select>
-                                </div>
-                                <div class="col-md-2 add_col8 ">
-                                    <a type="botton" class="ahide paddingTop5" href="javascript:void(0);" id="me_projectSourceType_a">修改</a>
-                                </div>
-                            </div>
-
-                            <div class="row margin10b adiv">
-                                <div class="col-md-3  add_span">
-                                    <span> 研究类别</span>
-                                </div>
-                                <div class="col-md-7 add_col8">
-                                    <span id="me_projectResearchTypeInput">基础研究</span>
-                                    <select id="me_projectResearchTypeSelect" name="projectResearchType"  class="hide">
-                                        <option value="BASIC_RESEARCH">基础研究</option>
-                                        <option value="APPLIED_RESEARCH">应用基础研究</option>
-                                        <option value="TECHNOLOGY_DEVELOPMENT">技术开发</option>
-                                        <option value="OTHER">其他</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-2 add_col8 ">
-                                    <a type="botton" class="ahide paddingTop5" href="javascript:void(0);" id="me_projectResearchType_a">修改</a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="tab-pane" id="user">
-                            <button type="button" id="addMemberBtn" class="btn btn_purple searchBtn marginBottom10">
-                                添加
-                            </button>
-                            <table class="table table-sm table-striped">
-                                <thead>
-                                <tr>
-                                    <th>
-                                        代号
-                                    </th>
-                                    <th>
-                                        姓名
-                                    </th>
-                                    <th>
-                                        单位
-                                    </th>
-                                    <th>
-                                        职称
-                                    </th>
-                                    <th>
-                                        手机
-                                    </th>
-                                    <th>
-                                        邮箱
-                                    </th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr onclick="deleteRow(this)">
-                                    <td>
-                                        1001
-                                    </td>
-                                    <td>
-                                        郭丽丽
-                                    </td>
-                                    <td>
-                                        图书馆
-                                    </td>
-                                    <td>
-                                        /
-                                    </td>
-                                    <td>
-                                        159732232323
-                                    </td>
-                                    <td>
-                                        231187777@qq.com
-                                    </td>
-                                </tr>
-
-                                </tbody>
-                            </table>
-
-                            <!--  <button type="button" id="searchMemberBtn"
-                                      class="btn btn_purple searchBtn margin5"><span
-                                      aria-hidden="true"></span> 搜索
-                              </button>
-                              <input class="searchInput" id="projectMemberIdInput" name="userId" type="text"
-                                     placeholder="名称"/>-->
-                        </div>
-                        <div class="tab-pane" id="file">
-                            <form id="form" action="" method="post" enctype="multipart/form-data">
-                                <div class="row form-group">
-                                    <div class="panel panel-primary">
-
-                                        <div class="panel-body">
-                                            <div class="file-loading">
-                                                <input id="input-id" name="file" type="file" multiple>
-                                            </div>
-
-                                        </div>
-                                    </div>
-                                </div>
-                            </form>
                         </div>
                     </div>
+
                 </div>
-
-
-
             </div>
+
+
+
         </div>
-
-
     </div>
+
+
+</div>
 </div>
 
 
-<!-- 添加项目成员 -->
+<!-- 添加论文作者 -->
 <div class="modal fade" id="addMemberModal"  style="display: none;" tabindex="-1" role="dialog"
      aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">

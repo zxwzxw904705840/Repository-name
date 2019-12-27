@@ -5,7 +5,9 @@ import com.example.demo.utils.MD5;
 
 import javax.persistence.*;
 import javax.xml.crypto.Data;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -29,6 +31,7 @@ public class ProjectEntity {
     private Const.ProjectResearchType projectResearchType;
     private Set<UserEntity>members;
     private Set<ThesisEntity>thesis;
+    private List<FileEntity> fileEntities = new ArrayList<>();
 
     public ProjectEntity(){
         this.projectId=MD5.getMD5(String.valueOf(new Date().getTime()));
@@ -200,5 +203,14 @@ public class ProjectEntity {
 
     public void setThesis(Set<ThesisEntity> thesis) {
         this.thesis = thesis;
+    }
+
+    @OneToMany(mappedBy="project", orphanRemoval = true)
+    public List<FileEntity> getFileEntities() {
+        return fileEntities;
+    }
+
+    public void setFileEntities(ArrayList<FileEntity> fileEntities) {
+        this.fileEntities = fileEntities;
     }
 }

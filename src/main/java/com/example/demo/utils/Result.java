@@ -33,6 +33,7 @@ public class Result {
     }
     public long  getTimestamp(){return this.timestamp;}
 
+
     @Override
     public String toString(){
         return this.success + " " + this.message;

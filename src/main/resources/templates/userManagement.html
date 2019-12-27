@@ -3,19 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <title>科研人员管理</title>
-    <link href="../assets/css/bootstrap.min.css" rel="stylesheet">
+    <    <link href="../assets/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/4.7.0/css/font-awesome.css">
     <link href="../assets/css/plugins/bootstrap-table/bootstrap-table.min.css" rel="stylesheet">
-    <link href="../assets/css/style.css" rel="stylesheet">
+    <!--   <link href="../assets/css/style.css" rel="stylesheet">-->
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.12.4/css/bootstrap-select.min.css">
+    <link href="https://cdn.bootcss.com/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.min.css"
+          rel="stylesheet">
+
+    <link href="../assets/css/fileinput.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" crossorigin="anonymous">
+    <link href="../assets/themes/explorer-fas/theme.css" rel="stylesheet" >
+
+    <link rel="stylesheet" href="../css/style.css" type="text/css">
+    <!-- color scheme -->
+    <link rel="stylesheet" href="../css/color.css" type="text/css">
+    <!-- revolution slider -->
+    <link rel="stylesheet" href="../css/rev-settings.css" type="text/css">
+
+
     <link href="../css/uPManagement.css" rel="stylesheet">
     <!-- #7266ba -->
 
 </head>
 <body>
+<header  class="smaller">
+    <div class="row">
+        <!-- mainmenu begin -->
+        <nav  class="navbar" role="navigation" style="margin-bottom: 0">
+            <ul id="mainmenu" class="navbar-left">
+                <li><a class="J_menuItem black" th:href="@{/index}">Home</a></li>
+                <li><a class="J_menuItem" th:href="@{/MyThesis}">My Thesis</a></li>
+                <li><a class="J_menuItem" th:href="@{/MySoftwareCopyright}">My Software Copyright</a></li>
+                <li><a class="J_menuItem" th:href="@{/projectManagement}">My Project</a></li>
+                <li><a class="J_menuItem" th:href="@{/userManagement}">Management</a></li>
+                <li><a class="J_menuItem" th:href="@{/test}">Report Statistics</a></li>
+                <!-- <li><a class="J_menuItem" th:text="${session.user.getUserName()}">谢文仲</a></li>-->
+                <li><a class="J_menuItem" th:href="@{logout}">退出</a></li>
 
-<div class="container-fluid margin10Top ">
+            </ul>
+        </nav>
+
+
+        <!-- mainmenu close -->
+
+    </div>
+
+</header>
+
+<div class="container-fluid  "  style="margin-top: 70px">>
     <div class="row container-row">
         <div class="col-md-12">
             <div class="row">
@@ -37,7 +74,7 @@
                                 <select id="user_instituteSelect" name="user_institute"
                                         class="selectpicker show-tick commonSelect user_statusSelect"
                                         data-live-search="true" s>
-                                    <option value="ALL" selected="selected">所有</option>
+                                    <option value="ALL" selected="selected">所有学院</option>
 
                                     <option th:each="list:${lists}" th:value="${list.getInstituteId()}"
                                             th:text="${list.getInstituteName()}"
@@ -46,10 +83,9 @@
 
                             </div>
                             <select id="user_statusSelect" name="user_status" class="user_statusSelect">
-                                <option value="ALL" selected="selected">所有</option>
+                                <option value="ALL" selected="selected">所有状态</option>
                                 <option value="NORMAL">正常</option>
                                 <option value="REVIEWING">升级审核</option>
-                                <option value="DELETED">删除</option>
 
                             </select>
 
@@ -108,6 +144,16 @@
             </div>
             <div class="modal-body" id="modalcontent" style="padding: 20px">
 
+
+                <div class="row margin10b">
+                    <div class="col-md-3  add_span">
+                        <span> 职工号</span>
+                    </div>
+                    <div class="col-md-8 add_col8">
+                        <input type="text" class="form-control" id="ma_userIdInput" placeholder="请输入id"
+                               name="userId">
+                    </div>
+                </div>
                 <div class="row margin10b">
                     <div class="col-md-3  add_span">
                         <span> 姓名</span>
@@ -186,9 +232,9 @@
                         <select id="ma_instituteNameSelect" class="selectpicker show-tick form-control"
                                 name="instituteName"
                                 data-live-search="true">
-                            <option value="0"> 信息学院与管理工程</option>
-                            <option value="1"> 外院</option>
-                            <option value="2"> 法院信息学院与管理工程</option>
+                            <option th:each="list:${lists}" th:value="${list.getInstituteId()}"
+                                    th:text="${list.getInstituteName()}"
+                                    th:selected="${param.current==list}"></option>
                         </select>
                     </div>
                 </div>
@@ -344,9 +390,9 @@
                             <select id="me_instituteNameSelect" class="selectpicker show-tick form-control "
                                     name="instituteName"
                                     data-live-search="true" style="display: none">
-                                <option value="0"> 信息学院与管理工程</option>
-                                <option value="1"> 外院</option>
-                                <option value="2"> 法院信息学院与管理工程</option>
+                                <option th:each="list:${lists}" th:value="${list.getInstituteId()}"
+                                        th:text="${list.getInstituteName()}"
+                                        th:selected="${param.current==list}"></option>
                             </select>
                         </div>
                     </div>

@@ -1,30 +1,24 @@
 package com.example.demo;
 
 import com.example.demo.Entity.UserEntity;
+import com.example.demo.repository.UserRepository;
 import com.example.demo.utils.Const;
 import com.example.demo.utils.Result;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.ArrayList;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
 class DemoApplicationTests {
-    @Test
-    void timeTest() throws ParseException {
-          Date time = new Date();
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-            String timeStr = "2019-12-25";
-            time = sdf.parse(timeStr);
-            System.out.println(time);
-        System.out.println(timeStr);
 
-    }
+    @Autowired
+    private UserRepository userRepository;
 
     @Test
     void TestResult(){
@@ -44,6 +38,9 @@ class DemoApplicationTests {
     }
     @Test
     void contextLoads() {
+
+
+
     }
 
 }

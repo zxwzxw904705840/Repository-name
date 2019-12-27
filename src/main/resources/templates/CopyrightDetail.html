@@ -64,74 +64,77 @@
             <div class="col-md-offset-2 col-md-8">
                 <div class="panel panel-warning ">
                     <div class="panel-heading text-center">
-                        <h3 class="panel-title ">登记论文</h3>
+                        <h3 class="panel-title ">论文详情</h3>
                     </div>
                     <div class="panel-body">
-                        <form role="form" method="post" th:action="@{AddThesisSubmit}" name="myform1">
                             <div class="form-group">
                                 <div class="row">
-                                    <label for="input1" class="col-md-1 control-label col-md-offset-3">论文标题</label>
-                                    <div class="col-md-4">
-                                        <input class="form-control" id="input1" name="input1" type="text" placeholder="">
+                                    <label  class="col-md-2 control-label col-md-offset-4 h3">论文标题:</label>
+                                    <div class="col-md-4 h3">
+                                        <p th:text="${copyrightinf.getBookName()}"></p>
                                     </div>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <div class="row">
-                                    <label for="input2" class="col-md-1 control-label">文章编号</label>
-                                    <div class="col-md-2"><input class="form-control" type="text"  id="input2" name="input2"></div>
-                                    <label for="input3" class="col-md-1 control-label">作者一</label>
-                                    <div class="col-md-2"><input class="form-control" type="text"  id="input3" name="input3"></div>
-                                    <label for="input4" class="col-md-1 control-label">作者二</label>
-                                    <div class="col-md-2"><input class="form-control" type="text"  id="input4" name="input4"></div>
-                                    <label for="input5" class="col-md-1 control-label">作者三</label>
-                                    <div class="col-md-2"><input class="form-control" type="text"  id="input5" name="input5"></div>
+                                    <label class="col-md-1 control-label">文章编号</label>
+                                    <div class="col-md-3">
+                                        <p th:text="${copyrightinf.getBookId()}"></p>
+                                    </div>
+                                    <label  class="col-md-1 control-label">作者一</label>
+                                    <div class="col-md-3">
+                                        <p th:text="${copyrightinf.getAuthor1().getUserName()}"></p>
+                                    </div>
+                                    <label  class="col-md-1 control-label">作者二</label>
+                                    <div class="col-md-3">
+                                        <p th:text="${copyrightinf.getAuthor2().getUserName()}"></p>
+                                    </div>
                                 </div>
                             </div>
 
                             <div class="form-group">
                                 <div class="row">
-                                    <label for="input6" class="col-md-1 control-label">刊名</label>
-                                    <div class="col-md-2"><input class="form-control" type="text"  id="input6" name="input6"></div>
-                                    <label for="input7" class="col-md-1 control-label">期，卷</label>
-                                    <div class="col-md-2"><input class="form-control" type="text"  id="input7" name="input7"></div>
-                                    <label for="input8" class="col-md-1 control-label">页数</label>
-                                    <div class="col-md-2"><input class="form-control" type="number"  id="input8" name="input8"></div>
-                                    <label  class="col-md-1 control-label">私密性</label>
-                                    <label class="radio-inline">
-                                        <input type="radio" name="optionsRadiosinline" id="optionsRadios3" value="0" checked> 公开
-                                    </label>
-                                    <label class="radio-inline">
-                                        <input type="radio" name="optionsRadiosinline" id="optionsRadios4"  value="1"> 私密
-                                    </label>
+                                    <label  class="col-md-1 control-label">作者三</label>
+                                    <div class="col-md-3">
+                                        <p th:text="${copyrightinf.getAuthor3().getUserName()}"></p>
+                                    </div>
+                                    <label class="col-md-1 control-label">发表时间</label>
+                                    <div class="col-md-3">
+                                        <p th:text="${copyrightinf.getBookPublishDate()}"></p>
+                                    </div>
+                                    <label  class="col-md-1 control-label">发表状态</label>
+                                    <div class="col-md-3">
+                                        <p th:text="${copyrightinf.getBookPublishStatus()}"></p>
+                                    </div>
                                 </div>
                             </div>
 
-                            <div class="form-group">
-                                <div class="row">
-                                <label for="input10" class="col-md-1 control-label">全文url</label>
-                                <div class="col-md-11"><input class="form-control" type="text"  id="input10" name="input10"></div>
-                                </div>
-                            </div>
+                        <div class="form-group">
                             <div class="row">
-                                <div class="col-md-2 col-md-offset-4">
-                                <div onclick="checksubmit();" class="btn btn-warning"> 提交</div>
-                                </div>
-                                <div class="col-md-2 ">
-                                    <a th:href="@{MyThesis}" ><div class="btn btn-warning"> 取消</div></a>
-                                </div>
+                                    <label  class="col-md-1 control-label">创作性质</label>
+                                    <div class="col-md-3">
+                                        <p th:text="${copyrightinf.getCreativeNature()}"></p>
+                                    </div>
                             </div>
+                        </div>
 
-                        </form>
+                        <div class="form-group">
+                            <div class="row">
+                                <label  class="col-md-1 control-label">著作简介</label>
+                                <div class="col-md-10">
+                                    <div th:text="${copyrightinf.getBookInformation()}"></div>
+                                </div>
+
+                            </div>
+                        </div>
+
+
 
                     </div>
                 </div>
 
             </div>
-
-
-                <br/>
-
+            <br/>
 
         </div>
 
@@ -146,19 +149,7 @@
 <script src="../js/bootstrap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
 <script src="../js/bootstrap-table.min.js"></script>
-<script>
-    function checksubmit() {
-        var input1= $("[name='input1']").val();
-        var input2= $("[name='input2']").val();
-        var input3= $("[name='input3']").val();
-        if($.trim(input1)==""||$.trim(input2)==""||$.trim(input3)==""){
-            alert("标题、文章编号、作者一不能为空！");
-        }else{
-            myform1.submit();
-        }
-        
-    }
-</script>
+
 
 </body>
 </html>

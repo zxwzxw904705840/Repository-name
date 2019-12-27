@@ -1,10 +1,16 @@
 
 body {
-    background-color: #f3f3f3;
+    background-color: #f3f3f3 !important;
 }
 
 input {
     padding-left: 10px;
+}
+.borderBottomOrange{
+    border-bottom: 2px solid #eea236
+}
+.span_orange{
+    color: #eea236;
 }
 
 label {
@@ -37,9 +43,14 @@ input{
 }
 .span-div{
     display: flex;
-    justify-content:center;
     align-items:center;
 }
+
+
+.marginTop80{
+    margin-top: 80px;
+}
+
 .marginTop20{
     margin-top: 20px;
 }

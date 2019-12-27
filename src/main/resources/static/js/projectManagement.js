@@ -1,11 +1,12 @@
 $(function() {
     $("#input-id").fileinput({
         'theme': 'explorer-fas',
+        /* 'uploadUrl': '../../cwupload', */
         'uploadUrl': '../../cwupload',
         overwriteInitial: false,
         initialPreviewAsData: true,
-        initialPreview: ["http://lorempixel.com/1920/1080/nature/1", "http://lorempixel.com/1920/1080/nature/2", "http://lorempixel.com/1920/1080/nature/3"],
-        initialPreviewConfig: [{
+       // initialPreview: ["http://localhost:8080/download/%E8%AF%BE%E4%BB%B64.png", "http://lorempixel.com/1920/1080/nature/2", "http://lorempixel.com/1920/1080/nature/3"],
+     /*    initialPreviewConfig: [{
             caption: "nature-1.jpg",
             size: 329892,
             width: "120px",
@@ -23,7 +24,7 @@ $(function() {
             width: "120px",
             url: "{$url}",
             key: 3
-        }]
+        }] */
     });
     $('#searcMoreRow').css('display', 'none');
     $('#searchMoreBtn').click(function() {
@@ -323,21 +324,20 @@ function deleteMs(ids) {
         data: "ids=" + ids,
         type: "post",
         success: function(data) {
-            layer.msg('删除成功', {
-                icon: 1
-            });
-            /*var obj = eval("("+data+")");
-            var obj1 = JSON.parse(data);
-            console.log(obj.message);
-            console.log(obj1.message);*/
-            /*     if (data == "success") {
-                     layer.msg('删除成功', {icon: 1});
-                 } else {
-                     layer.msg('删除失败', {icon: 2});
-                 }*/
-            //   var teachcourseid=document.getElementById("teachcourseidInput").value;
-            //   var turl = "../../findTBlist?teachcourseid=" + teachcourseid;
-            // $('#table_list').bootstrapTable('refresh',turl);	// 很重要的一步，刷新url！
+             var isSuccess = data.split(" ")[0];
+                            console.log(isSuccess)
+                            if (isSuccess == "true") {
+                                layer.msg('成功', {
+                                    icon: 1
+                                });
+                                $('#table_list').bootstrapTable(('refresh')); // 很重要的一步，刷新url
+                            } else {
+                                layer.msg('失败', {
+                                    icon: 2
+                                });
+                            }
+
+
         },
         error: function(data) {
             layer.msg('操作失败', {
@@ -353,13 +353,15 @@ function deleteMs(ids) {
 $("#ma_addBtn").on("click", function() {
     var projectInfo = new Object();
     projectInfo.projectCode = document.getElementById("ma_projectCodeInput").value;
-    projectInfo.projectCode = document.getElementById("ma_projectCodeInput").value;
+    projectInfo.projectName = document.getElementById("ma_projectNameInput").value;
     projectInfo.projectManagerId = document.getElementById("ma_projectManagerIdInput").value;
     projectInfo.projectSource = document.getElementById("ma_projectSourceInput").value;
     projectInfo.projectEstablishDate = document.getElementById("ma_projectEstablishDateInput").value;
     projectInfo.projectPlannedDate = document.getElementById("ma_projectPlannedDateInput").value;
     projectInfo.projectFinishDate = document.getElementById("ma_projectFinishDateInput").value;
+       projectInfo.projectLaunchDate = document.getElementById("ma_projectLaunchDateInput").value;
     projectInfo.projectFund = document.getElementById("ma_projectFundInput").value;
+
     projectInfo.projectType = $('#ma_projectTypeSelect option:selected').val();
     projectInfo.projectLevel = $('#ma_projectLevelSelect option:selected').val();
     projectInfo.projectProgress = $('#ma_projectProgressSelect option:selected').val();
@@ -397,38 +399,44 @@ $("#ma_addBtn").on("click", function() {
 /**
  * 模态框 导入按钮
  * */
-$("#ImportUserExcelBtn").on("click", function() {
+
+$("#ImportProjectExcelBtn").on("click", function () {
     var userFile = $('#userFile').val();
+
     if (userFile != '') {
         var formData = new FormData($("#importUserForm")[0]);
         formData.append("userFile", userFile);
         $.ajax({
-            url: "/ImportUserExcel",
+            url: "/ImportProjectExcel",
             type: 'POST',
             data: formData,
             async: false,
             cache: false,
             contentType: false,
             processData: false,
-            success: function(data) {
-                layer.alert('删除成功', {
-                    icon: 1
-                });
-                $('#importUserModal').modal('hide'); //隐藏modal
-                $('.modal-backdrop').remove(); //去掉遮罩层
+            success: function (data) {
+
+                console.log(data)
+                if(data=="true"){
+                    layer.msg('导入成功', {icon: 1});
+                    $('#importUserModal').modal('hide');//隐藏modal
+                    $('.modal-backdrop').remove();//去掉遮罩层
+
+                }else{
+                    layer.msg('导入失败', {icon: 2});
+                }
+
+
             },
-            error: function(data) {
-                layer.alert('操作失败', {
-                    icon: 2
-                });
+            error: function (data) {
+                layer.alert('操作失败', {icon: 2});
             }
         });
     } else {
-        layer.alert('请先选择文件', {
-            icon: 0
-        });
+        layer.alert('请先选择文件', {icon: 0});
     }
 })
+
 /**
  * 页面 导出按钮——待讨论
  */
@@ -945,13 +953,38 @@ var mhtml=" <tr onclick=\"deleteRow(this)\"><td>"+userInfo.userId+" </td><td> "+
 }
 
 function deleteRow(obj) {
+ var projectId = document.getElementById("me_projectIdInput").value;
+
+ var userId= obj.childNodes.item(1).innerText;
+
     var tbody = obj.parentNode;
     layer.confirm('确定删除吗？', {
         btn: ['确定', '再想想']
     }, function() {
-        layer.msg('删除成功', {
-            icon: 1
-        });
-        tbody.removeChild(obj);
+  $.ajax({
+                url: "/DeleteRow",
+
+                data: {
+                    projectId: projectId,
+                    userId:userId
+
+                },
+                success: function (data) {
+
+                    var isSuccess = data.split(" ")[0];
+                    console.log(isSuccess)
+                    if(isSuccess=="true"){
+                      tbody.removeChild(obj);
+                        layer.msg('删除成功', {icon: 1});
+
+                    }else{
+                        layer.msg('删除失败', {icon: 2});
+                    }
+                },
+                        error: function (data) {
+                            layer.msg('操作失败', {icon: 2});
+                        }
+            })
+
     });
 }

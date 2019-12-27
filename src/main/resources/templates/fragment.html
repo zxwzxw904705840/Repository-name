@@ -33,6 +33,34 @@
     </div>
 </div>
 
+
+
+<div th:fragment="addAuthorFragment">
+
+    <div class="panel panel-default  marginTop20">
+        <div class="panel-body">
+            <div>
+                <span>代号:</span>
+                <span th:text="${userInfo.getUserId()}">1001</span>
+                <span>姓名:</span>
+                <span th:text="${userInfo.getUserName()}">>郭丽丽</span>
+                <span>职称:</span>
+                <span th:text="${userInfo.getTitle()}">>/</span>
+                <span>单位:</span>
+                <span th:text="${userInfo.getInstitute().getInstituteName()}">>图书馆</span>
+                <button class="btn btn_purple searchMargin retop noradius floatR "
+                        th:onclick="addMember(this)">添加
+                </button>
+                <div>
+                </div>
+            </div>
+
+        </div>
+
+
+    </div>
+</div>
+
 <div th:fragment="MemberFragment">
 
     <tr onclick="deleteRow(this)" th:each="list:${lists}">

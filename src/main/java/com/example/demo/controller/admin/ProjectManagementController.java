@@ -2,12 +2,15 @@ package com.example.demo.controller.admin;
 
 
 import com.alibaba.fastjson.JSONObject;
+import com.example.demo.Entity.FileEntity;
 import com.example.demo.Entity.InstituteEntity;
 import com.example.demo.Entity.ProjectEntity;
 import com.example.demo.Entity.UserEntity;
+import com.example.demo.controller.ExcelOpt;
 import com.example.demo.service.ProjectManagementService;
 import com.example.demo.utils.Const;
 import com.example.demo.utils.Result;
+import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
@@ -29,9 +32,8 @@ import java.util.*;
  */
 @Controller
 public class ProjectManagementController {
-   /* @Autowired
+    @Autowired
     private ProjectManagementService projectManagementService;
-*/
 
     /**
      * 页面 表格
@@ -48,9 +50,11 @@ public class ProjectManagementController {
     @ResponseBody
     @RequestMapping("/FindProjectList")
     public Map<String, Object> findTBlist(HttpServletRequest request, HttpSession session) throws ParseException {
-        System.out.println("FindUserList");
+        System.out.println("FindProjectList");
 
-        UserEntity userInfo = (UserEntity) session.getAttribute("userInfo");
+        UserEntity operator = (UserEntity) session.getAttribute("user");
+
+       // UserEntity operator = new UserEntity("222");
 
         int pageNumber = Integer.valueOf(request.getParameter("pageNumber"));
         int limit = Integer.valueOf(request.getParameter("pageSize")); //输入
@@ -62,6 +66,13 @@ public class ProjectManagementController {
         String projectLevel = request.getParameter("projectLevel");//输入
         String rojectResearchType = request.getParameter("rojectResearchType");//输入
         String projectEstablishDates = request.getParameter("projectEstablishDate");//输入
+        ProjectEntity project = new ProjectEntity(projectName);
+        Result result =null;
+        if(projectName.equals("")){
+            result=projectManagementService.findAllProject( limit,  offset,  operator);
+        }else {
+            result=projectManagementService.findAllProjectByProjectNameLike( limit,  offset, project, operator);
+        }
         if (instituteId.equals("ALL")) {
 
         }
@@ -83,14 +94,8 @@ public class ProjectManagementController {
         }
 
 
-        Map<String, Object> params = new HashMap<>();
-        params.put("projectName", projectName);
-        params.put("limit", limit);
 
-        params.put("offset", offset);
-        System.out.println("params" + params);
-
-        List<ProjectEntity> lists = new ArrayList<>();
+       /* List<ProjectEntity> lists = new ArrayList<>();
         for (int i = offset; i < offset + 10; i++) {
             ProjectEntity temp = new ProjectEntity();
             temp.setProjectId("id" + i);
@@ -112,14 +117,13 @@ public class ProjectManagementController {
             temp.setProjectManager(user);
             lists.add(temp);
         }
-
-
-        Map<String, Object> result = new HashMap<>();
-        result.put("rows", lists);
-        result.put("total", 100); //整个表的总数*/
-
-
-        return result;
+*/
+        Map<String, Object> param = new HashMap<>();
+         param.put("rows", result.getObject("rows"));
+        param.put("total", result.getObject("total")); //整个表的总数*/
+        /*param.put("rows", lists);
+        param.put("total",100); //整个表的总数*/
+        return param;
 
     }
 
@@ -133,10 +137,16 @@ public class ProjectManagementController {
      */
     @ResponseBody
     @RequestMapping("/RemoveProject")
-    public String RemoveUser(String[] ids) {
+    public String RemoveUser(String[] ids, HttpSession session) {
         System.out.println("RemoveProject");
-
-        Result result = new Result(true, "ADD");
+        UserEntity operator = (UserEntity) session.getAttribute("user");
+        ArrayList<ProjectEntity> lists = new ArrayList<>();
+        for(String id :ids){
+           ProjectEntity projectEntity =  new ProjectEntity(id);
+            lists.add(projectEntity);
+        }
+        Result result= projectManagementService.deleteAllProjectsByProjectId(lists,operator);
+      //  Result result = new Result(true, "ADD");
         return result.toString();
     }
 
@@ -153,30 +163,27 @@ public class ProjectManagementController {
     public String AddUser(@RequestBody JSONObject projectInfos, HttpSession session) {
         System.out.println("AddProject");
         System.out.println(projectInfos);
-        try {
-            ProjectEntity projectEntity = new ProjectEntity();
-            UserEntity operator = (UserEntity) session.getAttribute("user");
-            projectEntity.setProjectResearchType(Const.ProjectResearchType.valueOf(projectInfos.getString("projectResearchType")));
-            projectEntity.setProjectCode(projectInfos.getString("projectCode"));
-            projectEntity.setProjectLevel(Const.ProjectLevel.valueOf(projectInfos.getString("projectLevel")));
-            projectEntity.setProjectProcess(Const.ProjectProgress.valueOf(projectInfos.getString("projectProgress")));
-            projectEntity.setProjectType(Const.ProjectType.valueOf(projectInfos.getString("projectType")));
-            projectEntity.setProjectSourceType(Const.ProjectSourceType.valueOf(projectInfos.getString("projectSourceType")));
-            UserEntity temp = new UserEntity(projectInfos.getString("projectManagerId"));
-            projectEntity.setProjectManager(temp);
-            projectEntity.setProjectCode(projectInfos.getString("projectSource"));
-            projectEntity.setProjectFund(projectInfos.getInteger("projectFund"));
-            projectEntity.setProjectEstablishDate(projectInfos.getDate("projectEstablishDate"));
-            projectEntity.setProjectFinishDate(projectInfos.getDate("projectFinishDate"));
-            projectEntity.setProjectPlannedDate(projectInfos.getDate("projectPlannedDate"));
-            System.out.println(projectEntity.getProjectEstablishDate().toString() + "123231213");
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-
-        Result result = new Result(true, "AddProject");
+        ProjectEntity projectEntity = new ProjectEntity();
+           UserEntity operator = (UserEntity) session.getAttribute("user");
+       // UserEntity operator = new UserEntity ("222");
+        projectEntity.setProjectName((projectInfos.getString("projectName")));
+        projectEntity.setProjectResearchType(Const.ProjectResearchType.valueOf(projectInfos.getString("projectResearchType")));
+        projectEntity.setProjectCode(projectInfos.getString("projectCode"));
+        projectEntity.setProjectLevel(Const.ProjectLevel.valueOf(projectInfos.getString("projectLevel")));
+        projectEntity.setProjectProcess(Const.ProjectProgress.valueOf(projectInfos.getString("projectProgress")));
+        projectEntity.setProjectType(Const.ProjectType.valueOf(projectInfos.getString("projectType")));
+        projectEntity.setProjectSourceType(Const.ProjectSourceType.valueOf(projectInfos.getString("projectSourceType")));
+        UserEntity temp = new UserEntity(projectInfos.getString("projectManagerId"));
+        projectEntity.setProjectManager(temp);
+        projectEntity.setProjectSource(projectInfos.getString("projectSource"));
+        projectEntity.setProjectFund(projectInfos.getInteger("projectFund"));
+        projectEntity.setProjectEstablishDate(projectInfos.getDate("projectEstablishDate"));
+        projectEntity.setProjectFinishDate(projectInfos.getDate("projectFinishDate"));
+        projectEntity.setProjectLaunchDate(projectInfos.getDate("projectLaunchDate"));
+        projectEntity.setProjectPlannedDate(projectInfos.getDate("projectPlannedDate"));
+        System.out.println(projectEntity.getProjectEstablishDate().toString() + "123231213");
+        Result result = projectManagementService.addProject(projectEntity,operator);
+        System.out.println(result);
         return result.toString();
     }
 
@@ -197,7 +204,11 @@ public class ProjectManagementController {
         projectEntity.setProjectCode(projectCode);
 
 
-        Result result = new Result(true, "SetProjectCode");
+
+      //  Result result= projectManagementService.deleteAllProjectsByProjectId(lists,operator);
+
+
+       Result result = new Result(true, "SetProjectCode");
         return result.toString();
     }
 
@@ -218,8 +229,9 @@ public class ProjectManagementController {
         ProjectEntity projectEntity = new ProjectEntity(projectId);
         projectEntity.setProjectName(projectName);
 
+        Result result= projectManagementService.updateProjectSetProjectName(projectEntity,operator);
 
-        Result result = new Result(true, "AddProject");
+     //   Result result = new Result(true, "AddProject");
         return result.toString();
     }
 
@@ -239,8 +251,9 @@ public class ProjectManagementController {
         ProjectEntity projectEntity = new ProjectEntity(projectId);
         projectEntity.setProjectType(projectType);
 
+        Result result= projectManagementService.updateProjectSetProjectType(projectEntity,operator);
 
-        Result result = new Result(true, "AddProject");
+      //  Result result = new Result(true, "AddProject");
         return result.toString();
     }
 
@@ -261,8 +274,9 @@ public class ProjectManagementController {
         UserEntity temp = new UserEntity(userId);
         projectEntity.setProjectManager(temp);
 
+        Result result= projectManagementService.updateProjectSetProjectManager(projectEntity,operator);
 
-        Result result = new Result(true, "AddProject");
+     //   Result result = new Result(true, "AddProject");
         return result.toString();
     }
 
@@ -283,7 +297,9 @@ public class ProjectManagementController {
         projectEntity.setProjectLevel(projectLevel);
 
 
-        Result result = new Result(true, "AddProject");
+        Result result= projectManagementService.updateProjectSetProjectLevel(projectEntity,operator);
+
+//        Result result = new Result(true, "AddProject");
         return result.toString();
     }
 
@@ -304,8 +320,9 @@ public class ProjectManagementController {
         ProjectEntity projectEntity = new ProjectEntity(projectId);
         projectEntity.setProjectProcess(projectProgress);
 
+        Result result= projectManagementService.updateProjectSetProjectProgress(projectEntity,operator);
 
-        Result result = new Result(true, "AddProject");
+      //  Result result = new Result(true, "AddProject");
         return result.toString();
     }
 
@@ -325,8 +342,9 @@ public class ProjectManagementController {
         ProjectEntity projectEntity = new ProjectEntity(projectId);
         projectEntity.setProjectSource(projectSource);
 
+        Result result= projectManagementService.updateProjectSetProjectSource(projectEntity,operator);
 
-        Result result = new Result(true, "AddProject");
+        //  Result result = new Result(true, "AddProject");
         return result.toString();
     }
 
@@ -353,7 +371,9 @@ public class ProjectManagementController {
             projectEntity.setProjectEstablishDate(projectEstablishDate);
         }
 
-        Result result = new Result(true, "AddProject");
+        Result result= projectManagementService.updateProjectSetProjectEstablishDate(projectEntity,operator);
+
+        //  Result result = new Result(true, "AddProject");
         return result.toString();
     }
 
@@ -378,7 +398,9 @@ public class ProjectManagementController {
             Date projectPlannedDate = df.parse(projectPlannedDates);
             projectEntity.setProjectPlannedDate(projectPlannedDate);
         }
-        Result result = new Result(true, "AddProject");
+        Result result= projectManagementService.updateProjectSetProjectPlannedDate(projectEntity,operator);
+
+        //  Result result = new Result(true, "AddProject");
         return result.toString();
     }
 
@@ -403,7 +425,10 @@ public class ProjectManagementController {
             projectEntity.setProjectLaunchDate(projectLauchDate);
         }
 
-        Result result = new Result(true, "AddProject");
+        Result result= projectManagementService.updateProjectSetProjectLaunchDate(projectEntity,operator);
+
+        //  Result result = new Result(true, "AddProject");
+
         return result.toString();
     }
 
@@ -429,7 +454,9 @@ public class ProjectManagementController {
         }
 
 
-        Result result = new Result(true, "AddProject");
+        Result result= projectManagementService.updateProjectSetProjectFinishDate(projectEntity,operator);
+
+        //  Result result = new Result(true, "AddProject");
         return result.toString();
     }
 
@@ -450,7 +477,9 @@ public class ProjectManagementController {
         projectEntity.setProjectFund(projectFund);
 
 
-        Result result = new Result(true, "AddProject");
+        Result result= projectManagementService.updateProjectSetProjectFund(projectEntity,operator);
+
+        //  Result result = new Result(true, "AddProject");
         return result.toString();
     }
 
@@ -472,7 +501,9 @@ public class ProjectManagementController {
         projectEntity.setProjectSourceType(projectSourceType);
 
 
-        Result result = new Result(true, "AddProject");
+        Result result= projectManagementService.updateProjectSetProjectSourceType(projectEntity,operator);
+
+        //  Result result = new Result(true, "AddProject");
         return result.toString();
     }
 
@@ -493,7 +524,9 @@ public class ProjectManagementController {
         projectEntity.setProjectResearchType(projectResearchType);
 
 
-        Result result = new Result(true, "AddProject");
+        Result result= projectManagementService.updateProjectSetProjectResearchType(projectEntity,operator);
+
+        //  Result result = new Result(true, "AddProject");
         return result.toString();
     }
 
@@ -525,10 +558,11 @@ public class ProjectManagementController {
 
     @RequestMapping("/cwupload")
     @ResponseBody
-    public Object insert(HttpServletRequest request, HttpServletResponse response
+    public Object insert(HttpServletRequest request, HttpServletResponse response,HttpSession session
             , @RequestParam("file") MultipartFile[] file) throws Exception {
         System.out.println("cwupload+++++++++++++++++++++++++++++++++++++++++++++++");
-
+        UserEntity operator = (UserEntity) session.getAttribute("user");
+        Result result=null;
         if (file != null && file.length > 0) {
             //组合image名称，“;隔开”
             List<String> fileName = new ArrayList<String>();
@@ -537,8 +571,13 @@ public class ProjectManagementController {
                 for (int i = 0; i < file.length; i++) {
                     if (!file[i].isEmpty()) {
                         fileName.add(file[i].getOriginalFilename());
-                        String localPath = "/Users/zl/share/";
+                       // String localPath = "/Users/zl/share/";
+                       //  String localPath = "/templates/";
+                        String localPath = request.getSession().getServletContext().getRealPath("/")+"upload/";
+                    //在项目新建一个 你重新生成名称的文件
+                        System.out.println(localPath);
                         String fileNameTemp = file[i].getOriginalFilename();
+
                         String pathname = localPath + fileNameTemp;
 
 
@@ -561,7 +600,13 @@ public class ProjectManagementController {
                 if (fileName != null && fileName.size() > 0) {
                     System.out.println("上传成功！");
                     System.out.println(response.toString() + fileName);
-                    ;
+                    String path = "http://localhost:8088/download/"+fileName;
+                    FileEntity fileEntity = new FileEntity();
+                    fileEntity.setFileStatus(Const.FileStatus.NORMAL);
+                    fileEntity.setFilePath(path);
+                    fileEntity.setProject(new ProjectEntity("001"));
+                     result= projectManagementService.addFile(fileEntity,operator);
+
                 } else {
                     System.out.println(response.toString() + "上传失败！文件格式错误！");
                 }
@@ -577,19 +622,24 @@ public class ProjectManagementController {
         return object;
     }
 
-
     @RequestMapping(value = "/SearchMember")
     public String SearchMember(Model model, String projectId, String userId, HttpSession session) {
         UserEntity operator = (UserEntity) session.getAttribute("user");
         UserEntity userEntity = new UserEntity(userId);
 
-        userEntity.setUserId(userId);
+      /*  userEntity.setUserId(userId);
         userEntity.setUserName("2323");
         userEntity.setPhone("22222PHONE");
         userEntity.setEmail("22222MAIL");
         userEntity.setInstitute(new InstituteEntity("12", "图书馆"));
+*/
+        Result result= projectManagementService.findAllUserByUserIdLike(userEntity,operator);
 
-        model.addAttribute("userInfo", userEntity);
+        //  Result result = new Result(true, "AddProject");
+
+        model.addAttribute("userInfo", result.getObject("userEntityArrayList"));
+
+
         return "fragment::addMemberFragment";
     }
 
@@ -618,6 +668,57 @@ public class ProjectManagementController {
         model.addAttribute("lists", lists);
         return "fragment::MemberFragment";
     }
+
+    @ResponseBody
+    @RequestMapping(value = "/DeleteRow")
+    public String InitMember( String projectId, HttpSession session,String userId) {
+        System.out.println("DeleteRow");
+        UserEntity operator = (UserEntity) session.getAttribute("user");
+        UserEntity userEntity = new UserEntity(userId);
+        ProjectEntity projectEntity = new ProjectEntity(projectId);
+         Set<UserEntity>members = new HashSet<>();
+        members.add(userEntity);
+        projectEntity.setMembers(members);
+        Result result= projectManagementService.updateProjectMembers(projectEntity,operator);
+
+        //  Result result = new Result(true, "AddProject");
+   return result.toString();
+    }
+
+
+    /**
+     * 模态框  导入 文件
+     * 注：已经从excel中抽取出内容 但为未进行详细校验 和保存到数据库中，具体请看 excelOpt类 batchImport方法
+     * @param projectFile
+     * @return
+     *
+     * 输出：成功/失败
+     */
+    @ResponseBody
+    @PostMapping("/ImportProjectExcel")
+    public String  addProject( MultipartFile projectFile,HttpSession session) {
+        System.out.println("ImportProjectExcel");
+        Result result=null;
+      //  UserEntity operator =(UserEntity) session.getAttribute("user");
+        UserEntity operator = new UserEntity ("222");
+        ExcelOpt excelOpt = new ExcelOpt();
+        boolean a = false;
+        String fileName = projectFile.getOriginalFilename();
+        try {
+            List<ProjectEntity> projectEntities = excelOpt.projectImport(fileName, projectFile);
+            for(ProjectEntity temp:projectEntities){
+                 result = projectManagementService.addProject(temp,operator);
+                System.out.println(result);
+            }
+
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return String.valueOf(result.toString());
+    }
+
 
 
 }

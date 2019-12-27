@@ -5,10 +5,13 @@ import com.alibaba.fastjson.JSONObject;
 import com.example.demo.Entity.InstituteEntity;
 import com.example.demo.Entity.UserEntity;
 import com.example.demo.controller.ExcelOpt;
+import com.example.demo.service.ProjectManagementService;
+import com.example.demo.service.UserService;
 import com.example.demo.utils.Const;
 import com.example.demo.utils.Result;
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.hssf.util.HSSFColor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -28,6 +31,13 @@ import java.util.*;
 @Controller
 public class UserManagementController {
 
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private ProjectManagementService projectManagementService;
+
+
+
     /**
      * 页面 表格
      * @param request
@@ -44,7 +54,7 @@ public class UserManagementController {
      */
     @ResponseBody
     @RequestMapping("/FindUserList")
-    public Map<String, Object> findTBlist(HttpServletRequest request) {
+    public  List<UserEntity> findTBlist(HttpServletRequest request,HttpSession session) {
         System.out.println("FindUserList");
 
         int pageNumber = Integer.valueOf(request.getParameter("pageNumber"));
@@ -59,31 +69,12 @@ public class UserManagementController {
         String userName = request.getParameter("userName");// 可能为空
         String instituteId = request.getParameter("instituteId"); //ALL
 
-       List<UserEntity> lists = new ArrayList<>();
-        for(int i =offset;i<offset+10;i++){
-            UserEntity temp = new UserEntity();
 
-            temp.setEmail("email"+i+"@qq.com");
-            temp.setUserName("username"+i);
-            temp.setUserId("userId"+i);
-            temp.setPassword("password"+i);
-            temp.setPhone("phone"+i);
-            temp.setTitle(Const.UserTitle.LECTURER);
-            InstituteEntity institute = new InstituteEntity();
-            institute.setInstituteId("instituteId"+i);
-            institute.setInstituteName("InstituteName"+i);
-            temp.setInstitute(institute);
-            lists.add(temp);
-        }
+        //List<UserEntity> lists = user2Service.findAll();
+        List<UserEntity> lists = userService.findByserStatusNot(Const.UserStatus.DELETED);
 
-
-        Map<String, Object> result = new HashMap<>();
-        result.put("rows", lists);
-        result.put("total",100); //整个表的总数*/
-
-         //测试用数据end
-
-        return result;
+        session.setAttribute("downloadsUser",lists);
+        return lists;
 
     }
 
@@ -101,8 +92,14 @@ public class UserManagementController {
     @RequestMapping("/RemoveUser")
     public String RemoveUser(String[] ids) {
         System.out.println("RemoveUser");
+        Result   result=null;
+        try{
+               result= userService.DeleteUsersById(ids);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
 
-        Result result = new Result(true,"delete");
+
         return  result.toString();
     }
 
@@ -122,25 +119,36 @@ public class UserManagementController {
 
         UserEntity userEntity = new UserEntity();
         UserEntity operator = (UserEntity) session.getAttribute("user");
-        userEntity.setUserName(userInfos.get("userName").toString());
-        userEntity.setPassword(userInfos.get("password").toString());
-        if(!userInfos.get("phone").toString().equals("")){
-            userEntity.setPhone(userInfos.get("phone").toString()); //可以为空
-        }
-        if(!userInfos.get("email").toString().equals("")){
-            userEntity.setEmail(userInfos.get("email").toString()); //可以为空
-        }
-        InstituteEntity instituteEntity = new InstituteEntity(userInfos.get("instituteId").toString());
-        userEntity.setInstitute(instituteEntity);
+        try{
+            userEntity.setUserId(userInfos.get("userId").toString());
+            userEntity.setUserName(userInfos.get("userName").toString());
+            userEntity.setPassword(userInfos.get("password").toString());
+            if(!userInfos.get("phone").toString().equals("")){
+                userEntity.setPhone(userInfos.get("phone").toString()); //可以为空
+            }else{
+                userEntity.setPhone(null); //可以为空
+            }
+            if(!userInfos.get("email").toString().equals("")){
+                userEntity.setEmail(userInfos.get("email").toString()); //可以为空
+            }else{
+                userEntity.setEmail(null); //可以为空
+            }
+            InstituteEntity instituteEntity = new InstituteEntity(userInfos.get("instituteId").toString());
+            userEntity.setInstitute(instituteEntity);
 
-        userEntity.setUserStatus(Const.UserStatus.NORMAL);
-        if(userInfos.size()==6){
-            userEntity.setTitle(Const.UserTitle.valueOf(userInfos.get("title").toString())); //可以为空
+            if(userInfos.size()==7){
+                userEntity.setTitle(Const.UserTitle.valueOf(userInfos.get("title").toString())); //可以为空
+            }else {
+                userEntity.setTitle(null);
+            }
+            userEntity.setCharacters(Const.UserCharacter.TEACHER);
+        }catch (Exception e){
+            e.printStackTrace();
         }
+
         //调用sevice
+        Result result= userService.addUser(userEntity);
 
-
-        Result result = new Result(true,"ADD");
         return  result.toString();
     }
 
@@ -161,8 +169,7 @@ public class UserManagementController {
         UserEntity operator = (UserEntity) session.getAttribute("user");
         //调用sevice
 
-
-        Result result = new Result(true,"AgreeUserUpdate");
+        Result result= userService.SetStatus(userId,operator,Const.UserStatus.NORMAL);
 
         return  result.toString();
     }
@@ -182,14 +189,25 @@ public class UserManagementController {
         UserEntity operator =(UserEntity) session.getAttribute("user");
         ExcelOpt excelOpt = new ExcelOpt();
         boolean a = false;
+        Result result=null;
         String fileName = userFile.getOriginalFilename();
         try {
-            a = excelOpt.batchImport(fileName, userFile,operator);
+            List<UserEntity> userEntities = excelOpt.batchImport(fileName, userFile);
+            for(UserEntity temp:userEntities){
+                temp.setCharacters(Const.UserCharacter.TEACHER);
+                System.out.println(temp.getUserName());
+                 result = userService.addUser(temp);
+                System.out.println(result);
+            }
+
+            System.out.println(String.valueOf(a));
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return String.valueOf(a);
+        return String.valueOf(result.toString());
     }
+
+
 
     /**
      * 模态框 修改研究人员名称
@@ -207,7 +225,7 @@ public class UserManagementController {
         System.out.println(userId+":::"+userName);
 
 
-        Result result = new Result(true,"SetUserName");
+        Result result= userService.SetUserName( userId, userName);
 
         return  result.toString();
     }
@@ -227,7 +245,7 @@ public class UserManagementController {
         System.out.println(userId+":::"+instituteId);
 
 
-        Result result = new Result(true,"SetInstituteId");
+        Result result= userService.SetInstituteId( userId, instituteId);
 
         return  result.toString();
     }
@@ -242,12 +260,15 @@ public class UserManagementController {
      */
     @ResponseBody
     @RequestMapping("/SetTitle")
-    public String SetTitle(String userId,@RequestParam(value="title") Const.UserTitle title) {
+    public String SetTitle(String userId,String title) {
         System.out.println("SetTitle");
         System.out.println(userId+":::"+title);
+        Const.UserTitle titles= null;
+        if(!title.equals("STUDENT")){
+            titles =  Const.UserTitle.valueOf(title);
+        }
 
-
-        Result result = new Result(true,"SetTitle");
+        Result result= userService.SetTitle( userId, titles);
         return  result.toString();
     }
     /**
@@ -265,9 +286,7 @@ public class UserManagementController {
 
         System.out.println(userId+":::"+email);
 
-
-
-        Result result = new Result(true,"SetEmail");
+        Result result= userService.SetEmail( userId, email);
         return  result.toString();
     }
     /**
@@ -285,9 +304,7 @@ public class UserManagementController {
 
         System.out.println(userId+":::"+password);
 
-
-
-        Result result = new Result(true,"SetPassword");
+        Result result= userService.SetPassword( userId, password);
         return  result.toString();
     }
     /**
@@ -305,9 +322,10 @@ public class UserManagementController {
 
         System.out.println(userId+":::"+phone);
 
-        Result result = new Result(true,"SetPhone");
+        Result result= userService.SetPhone( userId, phone);
         return  result.toString();
     }
+
 
     /**
      * 页面  研究人员信息导出 - 待讨论
@@ -322,8 +340,8 @@ public class UserManagementController {
 
         System.out.println("userExcelExport");
 
-        /*  List<userEnity> lists = (List)session.getAttribute("purchaselist");*/
-
+          List<UserEntity> lists = (List)session.getAttribute("downloadsUser");
+       // System.out.println(lists.size());
         //EXCEL表导出核心代码
         //   声明一个Excel
         HSSFWorkbook wb=null;
@@ -343,7 +361,7 @@ public class UserManagementController {
 
         //二维数组铺满整个Excel
 
-        /*   String[][] content = new String[lists.size()][title.length];*/
+           String[][] content = new String[lists.size()][title.length];
         //--------------------------------------------------------------------------------------------
 
         // 第一步，创建一个HSSFWorkbook，对应一个Excel文件
@@ -388,6 +406,8 @@ public class UserManagementController {
         sheet.setColumnWidth(1, 4567);//第一个参数代表列id（从1开始），第二个参数代表宽度值
         sheet.setColumnWidth(2, 4567);//第一个参数代表列id（从2开始），第二个参数代表宽度值
         sheet.setColumnWidth(3, 4567);//第一个参数代表列id（从3开始），第二个参数代表宽度值
+        sheet.setColumnWidth(4, 4567);//第一个参数代表列id（从2开始），第二个参数代表宽度值
+        sheet.setColumnWidth(5, 4567);//第一个参数代表列id（从3开始），第二个参数代表宽度值
 
         style.setWrapText(true);//设置自动换行
 
@@ -416,19 +436,34 @@ public class UserManagementController {
         /**
          * 填充内容
          */
-       /*
-        for (int i = 0; i < lists.size(); i++) {
-            content[i] = new String[title.length];
-            userEnity obj = lists.get(i);
-            content[i][0] = obj.getIsbn();
-            content[i][1] = obj.getBookname();
-            content[i][2] = obj.getApplynum().toString();
-            content[i][3] = obj.getAgreeDate();
+try {
 
-
+    for (int i = 0; i < lists.size(); i++) {
+        content[i] = new String[title.length];
+        UserEntity obj = lists.get(i);
+        content[i][0] = obj.getUserName();
+        content[i][1] = obj.getEmail();
+        content[i][2] = obj.getPhone().toString();
+        if(obj.getTitle()!=null){
+            content[i][3] = obj.getTitle().toString();
+        }else{
+            content[i][3] = "";
+        }
+        if(obj.getInstitute()!=null){
+            content[i][4] = obj.getInstitute().getInstituteName();
+        }else{
+            content[i][4] = "";
         }
 
 
+        content[i][5] = obj.getUserStatus().toString();
+
+    }
+}catch (Exception e){
+    e.printStackTrace();
+}
+
+        System.out.println(1);
         for(int i=0;i<content.length;i++){
 
             row = sheet.createRow(i + 1);
@@ -439,7 +474,7 @@ public class UserManagementController {
                 HSSFCell cel = row.createCell(j);
                 cel.setCellValue(content[i][j]);
 
-            } }*/
+            } }
 
 
         //响应到客户端

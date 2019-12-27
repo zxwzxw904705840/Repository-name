@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.example.demo.Entity.FileEntity;
 import com.example.demo.Entity.InstituteEntity;
 import com.example.demo.Entity.ProjectEntity;
 import com.example.demo.Entity.UserEntity;
@@ -8,9 +9,11 @@ import com.example.demo.utils.Result;
 import java.util.ArrayList;
 
 public interface ProjectManagementService {
+
     Result findAllProject(Integer limit, Integer offset, UserEntity operator);
     Result findAllProjectByProjectNameLike(Integer limit, Integer offset, ProjectEntity project, UserEntity operator);
-    Result findAllInstitute(Integer limit, Integer offset, UserEntity operator);
+    Result findAllInstitute();
+   // Result findAllInstitute(Integer limit, Integer offset, UserEntity operator);
     Result deleteAllProjectsByProjectId(ArrayList<ProjectEntity> projectEntities,UserEntity operator);
     Result addProject(ProjectEntity project,UserEntity operator);
     Result updateProjectSetProjectName(ProjectEntity project,UserEntity operator);
@@ -28,4 +31,7 @@ public interface ProjectManagementService {
     Result updateProjectSetProjectResearchType(ProjectEntity project,UserEntity operator);
     Result findAllUserByUserIdLike(UserEntity userEntity,UserEntity operator);
     Result findAllUserByUserNameLike(UserEntity userEntity,UserEntity operator);
+    Result updateProjectMembers(ProjectEntity project,UserEntity operator);
+    Result addFile(FileEntity file,UserEntity operator);
+    Result deleteFile(FileEntity file,UserEntity operator);
 }

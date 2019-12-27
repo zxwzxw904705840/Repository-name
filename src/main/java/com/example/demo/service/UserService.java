@@ -5,9 +5,13 @@ import com.example.demo.Entity.UserEntity;
 import com.example.demo.utils.Const;
 import com.example.demo.utils.Result;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public interface UserService {
+
+
+    ArrayList<UserEntity> findByserStatusNot(Const.UserStatus userStatus);
     List<UserEntity> getUserList();
     Result getUserById(String userId);
     List<UserEntity> getUsersById(List<String> userId);
