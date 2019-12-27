@@ -210,7 +210,7 @@ public class ProjectEntity {
         return fileEntities;
     }
 
-    public void setFileEntities(ArrayList<FileEntity> fileEntities) {
+    public void setFileEntities(List<FileEntity> fileEntities) {
         this.fileEntities = fileEntities;
     }
 }
