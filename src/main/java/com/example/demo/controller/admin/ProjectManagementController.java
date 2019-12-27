@@ -103,17 +103,36 @@ public class ProjectManagementController {
             Date time = new Date();
 
             String timeStr = "2019-12-25";
+            if(i/2==0){
+                timeStr="2017-2-15";
+            }
+            if(i/3==0){
+                timeStr="2010-10-20";
+            }
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             time = sdf.parse(timeStr);
             temp.setProjectEstablishDate(time);
-            temp.setProjectCode("code" + i);
+            temp.setProjectCode("11" + i*56);
             temp.setProjectName("projectName" + i);
+            if(i==1){
+                temp.setProjectName("无人机捕捉研究及应用");
+            }else if(i==2){
+                temp.setProjectName("油价对人民生活水平的影响");
+            }else if(i==3){
+                temp.setProjectName("卷积神经网络");
+            }
+            else if(i==3){
+                temp.setProjectName("高等学校新旧会计制度比较分析");
+            }else if(i==4){
+                temp.setProjectName("我国网络银行存在的问题及对策分析");
+            }
+
             temp.setProjectFund(100);
             temp.setProjectLevel(Const.ProjectLevel.CITY);
             temp.setProjectProcess(Const.ProjectProgress.COMPLETE);
             UserEntity user = new UserEntity();
-            user.setUserId("userId" + i);
-            user.setUserName("userName" + i);
+            user.setUserId("115");
+            user.setUserName("张章");
             temp.setProjectManager(user);
             lists.add(temp);
         }
