@@ -628,8 +628,8 @@ public class ProjectManagementController {
         UserEntity userEntity = new UserEntity(userId);
 
         userEntity.setUserId(userId);
-        userEntity.setUserName("2323");
-        userEntity.setPhone("22222PHONE");
+        userEntity.setUserName("谢章");
+        userEntity.setPhone("1878653456");
         userEntity.setEmail("22222MAIL");
         userEntity.setInstitute(new InstituteEntity("12", "图书馆"));
 
@@ -637,7 +637,7 @@ public class ProjectManagementController {
 
           Result result = new Result(true, "AddProject");
 
-    //    model.addAttribute("userInfo", result.getObject("userEntityArrayList"));
+       model.addAttribute("userInfo",userEntity);
 
 
         return "fragment::addMemberFragment";
