@@ -40,9 +40,9 @@ public class ProjectManagementServiceImpl implements ProjectManagementService {
         /*
         分页
          */
-        int index = offset * limit;
+       // int index = offset * limit;
         ArrayList<ProjectEntity> projectEntityArrayList = new ArrayList<ProjectEntity>();
-        for(int i = index ; i<index+limit;i++){
+        for(int i = offset ; i<offset+limit;i++){
             if(i>=projectEntities.size()){
                 break;
             }

@@ -10,6 +10,12 @@ public class Result {
     private HashMap<String,Object> objectMap;
     private long timestamp;
 
+    public Result(boolean success){
+        this.success=success;
+        this.message="";
+        this.objectMap=new HashMap();
+        this.timestamp=new Date().getTime();
+    }
     public Result(boolean success, String message){
         this.success=success;
         this.message=message;

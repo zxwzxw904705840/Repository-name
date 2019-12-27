@@ -1,13 +1,10 @@
 package com.example.demo.repository;
 
-import com.example.demo.Entity.InstituteEntity;
 import com.example.demo.Entity.UserEntity;
 import com.example.demo.utils.Const;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -28,7 +25,7 @@ public interface UserRepository extends JpaRepository<UserEntity,String>, JpaSpe
 
     UserEntity findByUserName(String userName);
 
-    List<UserEntity> findByUserNameContaining(String userName);
+    UserEntity findByUserNameContaining(String userName);
 
     List<UserEntity> findUserEntitiesByUserStatus(Const.UserStatus user_status);
     
@@ -39,27 +36,9 @@ public interface UserRepository extends JpaRepository<UserEntity,String>, JpaSpe
 
     List<UserEntity> findByUserNameEndingWith(String username);
 
-    List<UserEntity> findAllByUserNameContainingAndUserStatusIs(String userName, Const.UserStatus ustatus);
-
-    List<UserEntity> findAllByUserNameContainingAndInstituteIs(String userName, InstituteEntity instituteEntity);
-
-    List<UserEntity> findAllByUserNameContainingAndUserStatusIsAndInstituteIs(String userName, Const.UserStatus ustatus, InstituteEntity instituteEntity);
-
-    List<UserEntity> findAllByUserStatusIs(Const.UserStatus status);
-
-    List<UserEntity> findAllByInstituteIs(InstituteEntity instituteEntity);
-
-    List<UserEntity> findAllByUserStatusIsAndInstituteIs(Const.UserStatus ustatus, InstituteEntity instituteEntity);
+    List<UserEntity> findByUserNameContainingOrInstituteContainingOrUserStatusContaining(String username,String instituteid, Const.UserStatus status);
 
     List<UserEntity> findUserEntitiesByCharacters(Const.UserCharacter role);
-
-
-    @Query(value = "select t1.name as cityName,t2.name as hotelName\n" +
-            "from t_city t1\n" +
-            "  left join t_hotel t2 on t2.city = t1.id\n" +
-            "where t2.name = :name"
-         )
-   Object[] findCityAndHotel(@Param("name") String name);
 
 
 

@@ -1,23 +1,26 @@
 package com.example.demo.controller;
 
+import com.example.demo.Entity.BookEntity;
 import com.example.demo.Entity.ThesisEntity;
 import com.example.demo.Entity.UserEntity;
 import com.example.demo.service.UserService;
+import com.example.demo.utils.Const;
+import com.example.demo.utils.Result;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.ui.Model;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import org.apache.shiro.subject.Subject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 
@@ -42,7 +45,6 @@ public class indexSearch {
         String passwd =  request.getParameter("passwd");
         UsernamePasswordToken token = new UsernamePasswordToken(userid, passwd);
         Subject subject = SecurityUtils.getSubject();
-        System.out.println("userid passwd:"+userid+"   "+passwd);
         try {
             subject.login(token);  //完成登录
             UserEntity user=(UserEntity) subject.getPrincipal();
@@ -61,7 +63,7 @@ public class indexSearch {
     @RequestMapping("/index")
     public  String index1(Model model, HttpServletRequest request){
         String userid=request.getSession().getAttribute("userId").toString();
-        System.out.println("userid.toString="+userid);
+        System.out.println("/index");
         return "index";
     }
 
@@ -80,54 +82,118 @@ public class indexSearch {
         System.out.println("GoToThesisList,type="+type);
         List<ThesisEntity> thesisList=new ArrayList<>();
 
-        UserEntity user=new UserEntity();
-        System.out.println(" UserEntity user=new UserEntity();");
-        user.setUserName("叶元卯");
-        System.out.println(" user.setUserId();"+user.getUserId());
-        
-        //临时假数据
-        for(int i=0;i<15;i++){
-            ThesisEntity thesistmp=new ThesisEntity();
-            thesistmp.setAuthor1(user);
-            thesistmp.setJournal("机械动力期刊");
-            thesistmp.setThesisId("100"+i*2+"4-2-85"+i);
-            thesistmp.setThesisTitle("动态规划");
-            if(i/3==0)
-                thesistmp.setThesisTitle("基于视觉的天眼机器研究");
-            if(i/2==0)
-                thesistmp.setThesisTitle("类脑研究");
-            thesisList.add(thesistmp);
-        }
         if(type.equals("0")){//按论文ID搜索查询
-            System.out.println("type0,thesisList"+thesisList.get(0).getThesisId());
+            thesisList.add(userService.findByThesisId(input));
+            model.addAttribute("thesisList",thesisList);
+        }else if(type.equals("1")){//按标题搜索查询
+            thesisList=userService.findAllThesisByThesisTitleLike(input);
             model.addAttribute("thesisList",thesisList);
 
-        }else if(type.equals("1")){//按标题搜索查询
-
         }else if(type.equals("2")){//作者1
+            thesisList=userService.findAllThesisByAuthor1(input);
+            System.out.println("size"+thesisList.size());
+//            if(thesisList!=null&&thesisList.size()>0){
+//                System.out.println("按作者1："+thesisList.get(0).getThesisTitle());
+//            }
 
+            model.addAttribute("thesisList",thesisList);
         }else if(type.equals("3")){//作者2
-
+            thesisList=userService.findAllThesisByAuthor2(input);
+            model.addAttribute("thesisList",thesisList);
         }else if(type.equals("4")){//作者3
-
+            thesisList=userService.findAllThesisByAuthor3(input);
+            model.addAttribute("thesisList",thesisList);
         }else if(type.equals("5")){//刊名
-
+            thesisList=userService.findAllThesisByJournal(input);
+            model.addAttribute("thesisList",thesisList);
         }
+        List<String> urltmp=new ArrayList<>();
+        //先把url中的“/”都替换成“%2F”
+        for(int i=0;i<thesisList.size();i++){
+            String str=thesisList.get(i).getThesisId();
+            String str2=str.replace("/", "--2F-2F-");
+            urltmp.add(i,str2);
+        }
+        model.addAttribute("urltmp",urltmp);
         return "ThesisListResult";
 
     }
 
     /**
-     * 跳转到搜索结果软件著作列表
+     *  跳转到搜索结果软件著作列表
      * @param request
+     * @param model
      * @return
      */
     @RequestMapping("/GoToCopyrightList")
-    public  String GoToCopyrightList(HttpServletRequest request){
+    public  String GoToCopyrightList(HttpServletRequest request,Model model){
+        String userid=request.getSession().getAttribute("userId").toString();
+        String type=request.getParameter("selecttype2");
+        String input=request.getParameter("input2");
+        System.out.println("GoToCopyrightList,type="+type);
+        List<BookEntity> copyrightList=new ArrayList<>();
+
+        if(type.equals("0")){//按软件著作ID搜索查询
+            copyrightList.add(userService.findByBookId(input));
+            model.addAttribute("copyrightList",copyrightList);
+        }else if(type.equals("1")){//按标题搜索查询
+            copyrightList=userService.findByBookNameLike(input);
+            model.addAttribute("copyrightList",copyrightList);
+        }else if(type.equals("2")){//作者1
+            copyrightList=userService.findAllBookByAuthor1(input);
+            model.addAttribute("copyrightList",copyrightList);
+        }else if(type.equals("3")){//作者2
+            copyrightList=userService.findAllBookByAuthor2(input);
+            model.addAttribute("copyrightList",copyrightList);
+        }else if(type.equals("4")){//作者3
+            copyrightList=userService.findAllBookByAuthor3(input);
+            model.addAttribute("copyrightList",copyrightList);
+        }
 
         return "CopyrightListResult";
     }
 
 
+    /**
+     * 跳转到论文ID对应的论文详情界面
+     * @param request
+     * @param ThesisId
+     * @param model
+     * @return
+     */
+    @RequestMapping("/ThesisDetail/{ThesisId}")
+    public  String ThesisDetail(HttpServletRequest request, @PathVariable("ThesisId") String ThesisId, Model model){
+        String userid=request.getSession().getAttribute("userId").toString();
+        UserEntity user=new UserEntity();
+        user=(UserEntity)userService.getUserById(userid).getObject(userid);
+        
+        System.out.println("/ThesisDetail/{ThesisId}:-------------"+ThesisId);
+        System.out.println("/ThesisDetail/{ThesisId}:----------------"+ThesisId);
+        model.addAttribute("ThesistmpId",ThesisId);
+        String thesisId=ThesisId.replace("--2F-2F-", "/");
+        //临时假数据
+        ThesisEntity thesistmp=new ThesisEntity();
+        thesistmp=userService.findByThesisId(thesisId);
+        if(thesistmp.getUrl()==null){
+            thesistmp.setUrl("");
+        }
+
+        model.addAttribute("thesisinf",thesistmp);
+        return "ThesisDetail";
+
+
+
+    }
+
+    @RequestMapping("/CopyrightDetail/{CopyrightId}")
+    public  String CopyrightDetail(HttpServletRequest request, @PathVariable("CopyrightId") String CopyrightId, Model model){
+        System.out.println("/CopyrightDetail/{CopyrightId}+"+CopyrightId);
+        BookEntity tmp=new BookEntity();
+        tmp=userService.findByBookId(CopyrightId);
+
+
+        model.addAttribute("copyrightinf",tmp);
+        return "CopyrightDetail";
+    }
 
 }

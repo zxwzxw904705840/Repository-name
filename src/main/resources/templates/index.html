@@ -37,15 +37,14 @@
                         <!-- mainmenu begin -->
                         <nav  class="navbar" role="navigation" style="margin-bottom: 0">
                             <ul id="mainmenu" class="navbar-left" >
-                                <li><a class="J_menuItem black" th:href="@{index}">Home</a></li>
-                                 <li><a class="J_menuItem" th:href="@{MyThesis}">My Thesis</a></li>
-                                  <li><a class="J_menuItem" th:href="@{MySoftwareCopyright}">My Software Copyright</a></li>
-                                   <li><a class="J_menuItem" href="ThesisListResult.html">My Project</a></li>
-                                   <li><a class="J_menuItem" href="AddThesis.html">Management</a></li>
-
-                                  <li><a class="J_menuItem" href="ThesisDetail.html">Report Statistics</a></li>
+                                <li><a class="J_menuItem black" th:href="@{/index}">Home</a></li>
+                                <li><a class="J_menuItem" th:href="@{/MyThesis}">My Thesis</a></li>
+                                <li><a class="J_menuItem" th:href="@{/MySoftwareCopyright}">My Software Copyright</a></li>
+                                <li><a class="J_menuItem" th:href="@{/projectManagement}">My Project</a></li>
+                                <li><a class="J_menuItem" th:href="@{/userManagement}">Management</a></li>
+                                <li><a class="J_menuItem" th:href="@{/test}">Report Statistics</a></li>
                                 <li><a class="J_menuItem" th:text="${session.user.getUserName()}">谢文仲</a></li>
-                                 <li><a class="J_menuItem" th:href="@{logout}">退出</a></li>
+                                <li><a class="J_menuItem" th:href="@{logout}">退出</a></li>
                             </ul>
                         </nav>             
                     <!-- mainmenu close -->
@@ -82,7 +81,6 @@
                         <button class="btn btn-warning  fontsize20 menu3 " type="submit">查询</button>
                     </span>
            </div>
-
        </form>
           </div>
        </div>
@@ -94,6 +92,7 @@
       <div class="row">
           <div class="col-md-6  col-md-offset-3">
               <form method="post"  th:action="@{GoToCopyrightList}">
+                  <div class="input-group">
                   <div class="input-group-btn">
                       <select class="selectpicker show-tick fontsize20 select2"   name="selecttype2" data-live-search="true">
                           <option value="0">软件著作ID</option>
@@ -103,11 +102,11 @@
                           <option value="4">作者三</option>
                       </select>
                   </div> <!-- input-group-btn -->
-                  <input type="text" class="form-control searchtext "/>
+                  <input type="text" class="form-control searchtext" name="input2"/>
                   <span class="input-group-btn">
                         <button class="btn btn-warning  fontsize20 menu3" type="submit">查询</button>
                     </span>
-
+                  </div> <!-- input-group -->
               </form>
 
           </div><!-- col-md-6  col-md-offset-3-->
