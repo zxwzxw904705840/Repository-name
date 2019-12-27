@@ -61,17 +61,26 @@ public class UserManagementController {
         int limit = Integer.valueOf(request.getParameter("pageSize"));
         int offset = limit * (pageNumber - 1);
         Const.UserStatus  userStatus = null;
+        String userName = request.getParameter("userName");// 可能为空
         String userStatusTemp = request.getParameter("userStatus").toString();
-        if(!userStatusTemp.equals("ALL")){
+        String instituteId = request.getParameter("instituteId"); //ALL
+        InstituteEntity instituteEntity=null;
+        int choos1or2=2;
+        if(!userStatusTemp.equals("ALL")&&!instituteId.equals("ALL")){
             userStatus = Const.UserStatus.valueOf(userStatusTemp);
+            instituteEntity=new InstituteEntity(instituteId);
+            choos1or2=1;
         }
 
-        String userName = request.getParameter("userName");// 可能为空
-        String instituteId = request.getParameter("instituteId"); //ALL
 
 
-        //List<UserEntity> lists = user2Service.findAll();
-        List<UserEntity> lists = userService.findByserStatusNot(Const.UserStatus.DELETED);
+        List<UserEntity> lists=new ArrayList<>();
+        if(choos1or2==2){
+            lists = userService.findByserStatusNot(Const.UserStatus.DELETED);
+        }else if(choos1or2==1){
+            lists=userService.getUserList(userName,userStatus,instituteEntity);
+        }
+
 
         session.setAttribute("downloadsUser",lists);
         return lists;
